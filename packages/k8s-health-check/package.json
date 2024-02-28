@@ -12,7 +12,7 @@
   "exports": {
     ".": "./src/index.ts"
   },
-  "license": "UNLICENSED",
+  "license": "MIT",
   "publishConfig": {
     "access": "restricted"
   },

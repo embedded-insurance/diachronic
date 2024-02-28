@@ -18,7 +18,7 @@
     "email": "opensource@embeddedinsurance.com",
     "url": "https://embeddedinsurance.com"
   },
-  "license": "UNLICENSED",
+  "license": "MIT",
   "dependencies": {
     "@effect-use/gcp-gcs": "1.1.4",
     "@effect-use/gcp-logging": "4.0.0",

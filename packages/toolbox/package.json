@@ -20,7 +20,7 @@
     "./infra/*": "./src/infra/*.ts",
     ".": "./src/index.ts"
   },
-  "license": "UNLICENSED",
+  "license": "MIT",
   "dependencies": {
     "@diachronic/migrate": "workspace:^",
     "@diachronic/workflow": "workspace:^",

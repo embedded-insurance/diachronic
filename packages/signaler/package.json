@@ -19,7 +19,7 @@
     "./*": "./src/*.ts",
     ".": "./src/index.ts"
   },
-  "license": "UNLICENSED",
+  "license": "MIT",
   "dependencies": {
     "@diachronic/workflow-request-response": "workspace:^",
     "@effect-use/temporal-client": "3.0.0",

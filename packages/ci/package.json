@@ -22,7 +22,7 @@
     ".": "./src/index.ts",
     "./*": "./src/*.ts"
   },
-  "license": "UNLICENSED",
+  "license": "MIT",
   "dependencies": {
     "@diachronic/activity": "workspace:^",
     "@diachronic/feature-flag-client": "workspace:^",

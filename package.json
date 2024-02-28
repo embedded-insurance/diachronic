@@ -7,7 +7,7 @@
     "email": "opensource@embeddedinsurance.com",
     "url": "https://embeddedinsurance.com"
   },
-  "license": "UNLICENSED",
+  "license": "MIT",
   "workspaces": [
     "packages/*",
     "examples/*"

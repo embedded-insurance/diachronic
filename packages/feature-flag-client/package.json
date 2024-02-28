@@ -19,7 +19,7 @@
     "email": "opensource@embeddedinsurance.com",
     "url": "https://embeddedinsurance.com"
   },
-  "license": "UNLICENSED",
+  "license": "MIT",
   "dependencies": {
     "@diachronic/toolbox": "workspace:^",
     "@effect-use/http-client": "^1.0.1",
