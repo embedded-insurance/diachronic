@@ -1,0 +1,54 @@
+{
+  "name": "diachronic",
+  "packageManager": "yarn@3.5.1",
+  "private": true,
+  "author": {
+    "name": "Embedded Insurance",
+    "email": "opensource@embeddedinsurance.com",
+    "url": "https://embeddedinsurance.com"
+  },
+  "license": "UNLICENSED",
+  "workspaces": [
+    "packages/*",
+    "examples/*"
+  ],
+  "scripts": {
+    "format": "turbo format",
+    "build": "turbo build",
+    "test": "turbo test --continue",
+    "typecheck": "turbo typecheck --continue",
+    "clean": "turbo clean && rimraf node_modules"
+  },
+  "devDependencies": {
+    "@types/node": "20",
+    "rimraf": "^5.0.1",
+    "ts-node": "10.9.1",
+    "turbo": "1.10.13",
+    "typescript": "5.2.2"
+  },
+  "resolutions": {
+    "effect": "2.2.3",
+    "@effect/schema": "0.61.5",
+    "@effect-use/gcp-logging": "4.0.0",
+    "@effect-use/temporal-config": "3.0.0",
+    "@effect-use/temporal-client": "3.0.0",
+    "@temporalio/activity": "1.8.6",
+    "@temporalio/workflow": "1.8.6",
+    "@temporalio/worker": "1.8.6",
+    "@temporalio/client": "1.8.6",
+    "@temporalio/testing": "1.8.6",
+    "mqtt": "5.0.5",
+    "xstate": "5.0.0-beta.27"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "repository": {
+    "directory": ".",
+    "type": "git",
+    "url": "https://github.com/embedded-insurance/diachronic.git"
+  }
+}

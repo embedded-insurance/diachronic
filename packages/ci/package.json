@@ -1,0 +1,58 @@
+{
+  "name": "@diachronic/ci",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "jest",
+    "format": "prettier --write .",
+    "clean": "rimraf node_modules & rimraf dist & rimraf .turbo",
+    "typecheck": "tsc --noEmit",
+    "dev": "ts-node -T scripts/dev2.ts",
+    "build-deploy:once": "ts-node -T scripts/ci.ts"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Embedded Insurance",
+    "email": "opensource@embeddedinsurance.com",
+    "url": "https://embeddedinsurance.com"
+  },
+  "main": "./dist/index.js",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.ts"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@diachronic/activity": "workspace:^",
+    "@diachronic/feature-flag-client": "workspace:^",
+    "@diachronic/util": "workspace:^",
+    "@effect-use/temporal-client": "3.0.0",
+    "@temporalio/workflow": "^1.8.6",
+    "effect": "2.2.3",
+    "eventemitter3": "^5.0.1",
+    "luxon": "3.4.3"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.1",
+    "@types/luxon": "^3.4.2",
+    "@types/node": "20",
+    "fast-check": "^3.8.1",
+    "jest": "29.5.0",
+    "prettier": "2.8.8",
+    "ts-jest": "29.1.0",
+    "ts-node": "^10.9.1",
+    "typescript": "5.2.2"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "repository": {
+    "directory": "packages/ci",
+    "type": "git",
+    "url": "https://github.com/embedded-insurance/diachronic.git"
+  }
+}

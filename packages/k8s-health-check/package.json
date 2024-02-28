@@ -1,0 +1,40 @@
+{
+  "name": "@diachronic/k8s-health-check",
+  "author": {
+    "name": "Embedded Insurance",
+    "email": "opensource@embeddedinsurance.com",
+    "url": "https://embeddedinsurance.com"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "index.js",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "license": "UNLICENSED",
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "repository": {
+    "directory": "packages/k8s-health-check",
+    "type": "git",
+    "url": "https://github.com/embedded-insurance/diachronic.git"
+  },
+  "scripts": {
+    "clean": "rimraf node_modules & rimraf dist & rimraf .turbo",
+    "format": "prettier --write .",
+    "test": "jest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@effect/schema": "0.55.0",
+    "effect": "2.2.3",
+    "fastify": "^4.23.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.5",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1"
+  }
+}

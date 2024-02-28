@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es2022",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "lib": [
+      "es2023"
+    ],
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "exactOptionalPropertyTypes": false,
+    "skipLibCheck": true,
+    "outDir": "./dist",
+    "noErrorTruncation": false,
+  }
+}

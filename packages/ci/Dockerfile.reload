@@ -1,0 +1,6 @@
+# provides a custom reload worker with extra binaries for use in activities
+FROM --platform=linux/amd64 bitnami/kubectl:1.27.8 as kubectl
+
+
+FROM --platform=linux/amd64 us-docker.pkg.dev/diachronic/temporal-reload-worker:v1
+COPY --from=kubectl /opt/bitnami/kubectl/bin/kubectl /usr/local/bin/

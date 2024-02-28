@@ -1,0 +1,16 @@
+.DS_Store
+node_modules
+.idea
+.vscode
+*.code-workspace
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+dist
+.turbo
+_ignored
+*/.gitignore

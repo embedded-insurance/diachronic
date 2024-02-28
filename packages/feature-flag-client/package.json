@@ -1,0 +1,52 @@
+{
+  "name": "@diachronic/feature-flag-client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "clean": "rimraf node_modules & rimraf dist & rimraf .turbo",
+    "test": "jest",
+    "format": "prettier --write .",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Embedded Insurance",
+    "email": "opensource@embeddedinsurance.com",
+    "url": "https://embeddedinsurance.com"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@diachronic/toolbox": "workspace:^",
+    "@effect-use/http-client": "^1.0.1",
+    "@effect/schema": "0.36.3",
+    "effect": "^2.0.0-next.36",
+    "unleash-client": "^5.3.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.3",
+    "@types/node": "18",
+    "@types/ramda": "^0.29.9",
+    "jest": "29.5.0",
+    "prettier": "2.8.8",
+    "ramda": "^0.29.1",
+    "ts-jest": "29.1.0",
+    "ts-node": "^10.9.1",
+    "typescript": "5.2.2"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "repository": {
+    "directory": "packages/feature-flag-client",
+    "type": "git",
+    "url": "https://github.com/embedded-insurance/diachronic.git"
+  }
+}

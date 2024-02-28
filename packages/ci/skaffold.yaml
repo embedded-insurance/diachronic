@@ -1,0 +1,53 @@
+# used to build custom images that has kubectl binary needed for activities
+apiVersion: skaffold/v4beta2
+kind: Config
+metadata:
+  name: workflow-ci
+profiles:
+  - name: normal
+    build:
+      tagPolicy:
+        customTemplate:
+          template: "{{.git_sha}}_{{.date}}"
+          components:
+            - name: git_sha
+              gitCommit:
+                variant: AbbrevCommitSha
+            - name: date
+              dateTime:
+                timezone: "UTC"
+
+      artifacts:
+        - image: us-docker.pkg.dev/diachronic/workflow_ci
+          context: .
+          docker:
+            secrets:
+              - id: yarnrc
+                src: ~/.yarnrc.yml
+            dockerfile: Dockerfile
+      local:
+        useBuildkit: true
+
+  - name: reload
+    build:
+      tagPolicy:
+        customTemplate:
+          template: "{{.git_sha}}_{{.date}}"
+          components:
+            - name: git_sha
+              gitCommit:
+                variant: AbbrevCommitSha
+            - name: date
+              dateTime:
+                timezone: "UTC"
+
+      artifacts:
+        - image: us-docker.pkg.dev/diachronic/workflow_ci_reload
+          context: .
+          docker:
+            secrets:
+              - id: yarnrc
+                src: ~/.yarnrc.yml
+            dockerfile: Dockerfile.reload
+      local:
+        useBuildkit: true
