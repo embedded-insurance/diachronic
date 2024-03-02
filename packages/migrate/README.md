@@ -93,3 +93,10 @@ A workflow may be an entity workflow that writes part of its context to a databa
 You can update the database record on migration automatically by implementing the DbFns interface. These are just two functions: One takes the context and returns the value you want to write, the other writes it. 
 
 The function is memoized so write is only called when the row data changes. 
+
+### Migrate signal
+Diachronic workflows migrate when they receive a migrate signal.
+
+Mostly, there is nothing for you to do here except ensure the new version of your workflow is deployed on a separate Temporal task queue and send the signal. Tecnically, the first step is optional if your workflow can experience downtime -- your workflow will migrate to a task queue of your choosing and resume execution as soon as your new workflow is deployed. 
+
+Typically, for a migration in production you will want to signal all old workflows in a batch, to remove the old worker once the migration is complete, and to ensure new workflows start on the latest version. Because it isn't practical for developers to perform these every time they want to deploy new code, the ci workflow in the ci package was written to automate this process. 
