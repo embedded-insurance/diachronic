@@ -75,10 +75,21 @@ You may not need a migration function for most deployments. Some cases where you
 This will happen when you rename a state or remove it. 
 
 #### You messed up the shape of the machine context. 
-Suppose you save something to the workflow context and it got past the type checker and your tests. You can easily deploy a migration function that takes the old context and rewrites it to the shape the rest of tour program expects. 
+Suppose you save data to the workflow context in the wrong place and it got past the type checker and your tests. With your "normal" fix you can deploy a migration function that fixes it for all running workflows. Just write a function that takes the old context and returns it in the right shape. 
 
 #### You want to recalculate a running timer based on arbitrary logic. 
 You can return the timers the new machine will have as a function of the previous timers, context, and state. The framework will set them for you. 
 
 If you want to cancel a timer, simply omit it from the return value of the migration function. 
 
+Situations where a migration function is nice to have:
+
+#### Arbitrary domain data changes. 
+Perhaps you forgot to normalize email addresses to all lower case. You guessed it: You can deploy a migration function to fix this too. 
+
+#### Database migrations. 
+A workflow may be an entity workflow that writes part of its context to a database row whenever the context changes. 
+
+You can update the database record on migration automatically by implementing the DbFns interface. These are just two functions: One takes the context and returns the value you want to write, the other writes it. 
+
+The function is memoized so write is only called when the row data changes. 
