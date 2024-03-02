@@ -66,6 +66,19 @@ migration will not happen. If this happens to you, redeploying the current versi
 annotation that allows migration from this state is unlikely to trigger
 nondeterminism. As a best practice, handle invoke errors by transition the machine to a state that is migratory.
 
-complete
-before migrating unless they are
-specifically 
+### Migration function
+The migration function takes the previous workflow's data and returns the new workflow data. It is defined as part of the new workflow code and deployed with the new workflow. 
+
+You may not need a migration function for most deployments. Some cases where you will:
+
+#### A state in the previous workflow doesn't exist in the new one. 
+This will happen when you rename a state or remove it. 
+
+#### You messed up the shape of the machine context. 
+Suppose you save something to the workflow context and it got past the type checker and your tests. You can easily deploy a migration function that takes the old context and rewrites it to the shape the rest of tour program expects. 
+
+#### You want to recalculate a running timer based on arbitrary logic. 
+You can return the timers the new machine will have as a function of the previous timers, context, and state. The framework will set them for you. 
+
+If you want to cancel a timer, simply omit it from the return value of the migration function. 
+
