@@ -19,7 +19,7 @@ Because there is no previous version, an initial deployment has no migration, pr
 
 All other deployments of migration-cabable workfloes will progress though the following stages:
 1 & 2:
-Concurrently, we spawn child workflow processes foe rollout and migration. 
+Concurrently, we spawn child workflow processes for rollout and migration. 
 
 The rollout workflow increases the traffic sent to the new version on a schedule. 
 
@@ -35,7 +35,19 @@ The migration workflow runs until all old workflows have been told to migrate ex
 
 When rollout and migrate workflows are complete, the parent ci workflow for the deployment exits. 
 
+CI automated deployments run one at a time and have no queue. One can easily be implemented if needed.
 
+## Dark deploy
+A dark deployment waits to route live traffic. This is useful for testing in production. We provide a route rule isTest that lets developers, QA or automated tests run on the latest version before any live traffic. When acceptance criteria is met you can signal the ci workflow to continue the rollout and migration per normal. 
+
+## Nonmigratory workflow support
+The CI workflow supports workflows that do not implement Diachronic's migration pattern. For short running workflows this is often unnecessary. Waiting for current workflows to end won't take a year. 
+
+Even in this case you won't want deploy a new version of code that introduces nondeterminism. One way to eliminate that possibility is immutable task queues. 
+
+Since Diachronic already uses immutable task queues for ci/cd with migration we support a mode where we simply skip the migration step but perform all other steps you probably want (feature flag creation, progressive rollout and cleanup of old workers, and support for dark deploy). 
+
+In this case we spawn a cleanup workflow separate from migration that polls on a longer interval to check whether it's ok to remove the old worker. 
 
 
 ci process configuration matrix
