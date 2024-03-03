@@ -17,7 +17,7 @@ If it's not the initial deployment, the ci workflow uses the feature flag servic
 
 Because there is no previous version, an initial deployment has no migration, progressive rollout, or worker cleanup. 
 
-All other deployments of migration-cabable workfloes will progress though the following stages:
+All other deployments of migration-capable workflows will progress though the following stages:
 1 & 2:
 Concurrently, we spawn child workflow processes for rollout and migration. 
 
