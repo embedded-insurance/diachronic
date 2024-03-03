@@ -49,9 +49,18 @@ Since Diachronic already uses immutable task queues for ci/cd with migration we 
 
 In this case we spawn a cleanup workflow separate from migration that polls on a longer interval to check whether it's ok to remove the old worker. 
 
+## Simulation
+Simulation is an important aspect of Diachronic CI. A good workflow simulation will stress test the overall process in development and exercise all possible code paths. 
 
-ci process configuration matrix
+When in doubt, run the code. 
 
-- rollout + migrate + cleanup - ci process completes when rollout and migrate processes exit. this blocks concurrent rollout. 
-- rollout + cleanup - ci process completes when rollout exits. cleanup is a background process independent of future rollouts
+We recommend simulations run on every push to main as part of the development process. This gives developers feedback on their changes and the core pathways through the system without them needing to test manually. Even when observations must be made manually instead of via automated test assertions, you save valuable time setting up the various scenarios by hand on a repeat basis. 
 
+A good simulation will at minimum run the "happy path" of a workflow end to end to completion. This means you may want to "fake" some API calls and other side effects. For this we recommend you minimally supply fake activities that satisfy the contracts you have outlined in code. 
+
+Since these contracts are expressed in the framework as simple data structures with Effect schema you already have fake implementations for all activities by way of thenintegration with the generative testing framework fast-check. You have the ability to return a random failure  
+some percentage of the time. 
+
+To return a valid success value: sample1(getArbitrary(activityDefs[activityName].output)). 
+
+To return a valid error value: sample1(getArbitrary(activityDefs[activityName].error)). 
