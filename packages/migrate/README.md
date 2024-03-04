@@ -66,6 +66,37 @@ migration will not happen. If this happens to you, redeploying the current versi
 annotation that allows migration from this state is unlikely to trigger
 nondeterminism. As a best practice, handle invoke errors by transition the machine to a state that is migratory.
 
-complete
-before migrating unless they are
-specifically 
+### Migration function
+The migration function takes the previous workflow's data and returns the new workflow data. It is defined as part of the new workflow code and deployed with the new workflow. 
+
+You may not need a migration function for most deployments. Some cases where you will:
+
+#### A state in the previous workflow doesn't exist in the new one. 
+This will happen when you rename a state or remove it. 
+
+#### You messed up the shape of the machine context. 
+Suppose you save data to the workflow context in the wrong place and it got past the type checker and your tests. With your "normal" fix you can deploy a migration function that fixes it for all running workflows. Just write a function that takes the old context and returns it in the right shape. 
+
+#### You want to recalculate a running timer based on arbitrary logic. 
+You can return the timers the new machine will have as a function of the previous timers, context, and state. The framework will set them for you. 
+
+If you want to cancel a timer, simply omit it from the return value of the migration function. 
+
+Situations where a migration function is nice to have:
+
+#### Arbitrary domain data changes. 
+Perhaps you forgot to normalize email addresses to all lower case. You guessed it: You can deploy a migration function to fix this too. 
+
+#### Database migrations. 
+A workflow may be an entity workflow that writes part of its context to a database row whenever the context changes. 
+
+You can update the database record on migration automatically by implementing the DbFns interface. These are just two functions: One takes the context and returns the value you want to write, the other writes it. 
+
+The function is memoized so write is only called when the row data changes. 
+
+### Migrate signal
+Diachronic workflows migrate when they receive a migrate signal.
+
+Mostly, there is nothing for you to do here except ensure the new version of your workflow is deployed on a separate Temporal task queue and send the signal. Tecnically, the first step is optional if your workflow can experience downtime -- your workflow will migrate to a task queue of your choosing and resume execution as soon as your new workflow is deployed. 
+
+Typically, for a migration in production you will want to signal all old workflows in a batch, to remove the old worker once the migration is complete, and to ensure new workflows start on the latest version. Because it isn't practical for developers to perform these every time they want to deploy new code, the ci workflow in the ci package was written to automate this process. 
