@@ -1,3 +1,10 @@
+# @diachronic/migrate
+
+## Goals
+- Create an XState state machine that can run inside a Temporal workflow indefinitely
+- Make changes to durable function workflows with Temporal as easy as possible
+
+
 ## User manual
 
 ### Timers
