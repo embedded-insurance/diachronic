@@ -18,57 +18,9 @@ import { machine } from './lib/workflow1info'
 import { waitFor, AnyState } from 'xstate'
 import { migrateSignalName } from '../src/can-migrate'
 import { loggerSink } from '@diachronic/workflow/workflow-logging'
+import { untilTrue, waitForWorkflowCondition } from '../src/test'
 
 jest.setTimeout(200_000)
-
-/**
- *
- * @category helper
- * @param workflowHandle
- * @param condition
- * @param pollingIntervalMs
- */
-const waitForWorkflowCondition = async (
-  workflowHandle: WorkflowHandleWithSignaledRunId<any>,
-  condition: (snapshot: WorkflowSnapshot) => boolean,
-  pollingIntervalMs: number = 500
-): Promise<WorkflowSnapshot> => {
-  const t = new Trigger<WorkflowSnapshot>()
-  const int = setInterval(async () => {
-    const result = await workflowHandle.query<WorkflowSnapshot>(
-      getSnapshotQueryName
-    )
-    if (condition(result as any)) {
-      console.log('condition met')
-      clearInterval(int)
-      t.resolve(result)
-      return
-    }
-    console.log('condition not met')
-  }, pollingIntervalMs)
-  return (await t) as WorkflowSnapshot
-}
-
-const untilTrue = async (
-  pred: () => Promise<any>,
-  interval: number = 500,
-  maxAttempts: number = Infinity
-) => {
-  const t = new Trigger()
-  const int = setInterval(async () => {
-    const result = await pred()
-    if (result) {
-      clearInterval(int)
-      t.resolve(result)
-      return
-    }
-    if (maxAttempts-- <= 0) {
-      clearInterval(int)
-      t.reject('max attempts reached')
-    }
-  }, interval)
-  return await t
-}
 
 beforeAll(async () => {
   Runtime.install({
