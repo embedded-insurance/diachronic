@@ -8,6 +8,41 @@
 > -- _ChatGPT, personal communication, February 2024._
 
 ## Overview
+Diachronic provides a way to make Temporal nondeterminism errors a thing of the past.
+
+### How it works
+Workflows take their current state and pass it to the next version of the program. The new program receives it and continues where the old program left off, subject to a user-defined transformation.
+
+Say, for some reason, you have a program that models a toaster. The toaster can be in one of two states, “on” or “off” — on when the timer is running and it’s plugged in, off otherwise. It also has a counter for number of toasts.
+
+We can model this with the following state transition diagram:
+off -> plugged-in -> on
+off -> timer on -> on
+on -> timer off? -> off
+on -> unplug-it -> off
+
+You deploy to prod. Toaster run around the world. And there was much rejoicing.
+
+Naturally, there’s a bug. Simply because the toaster is plugged in doesn’t mean there’s power. You now need to change a durable program that models the live state of thousands of devices.
+
+You receive a new source of information for whether the toaster is receiving power. The units require at least 100v of current to warm bread. You revise the program accordingly:
+off -> ~~plugged-in~~  power on (timer on?) -> on
+off -> timer on (~~plugged-in?~~ power on?) -> on
+on -> timer off -> off
+on -> ~~unplug-it~~ power off -> off
+
+This program introduces changes that break with the past, violating Termporal’s determinism. Simply put, for the same sequence of events, the new program will not produce the same outcome as the original.
+
+Diachronic workflows transition arbitrary app logic and state without breaking the program’s  durability.
+
+Observe.
+
+The new program dictates a “power” event sets variable “powered: true” when volts >= 100. Prior, an event of “plugged” set plugged in to true. We decide “plugged” -> “powered” is reasonable under the circumstances.
+
+For all toasters that are plugged in, we map the prior plugged value to the new powered value via a migration function. After, new toastings will be subject to the new logic only, based on power only. All the while we honor the (powerless) toast count, as product has advised. If a timer is in progress in the old program, it will be transferred to the new program automatically.
+
+
+## Background
 
 Durable programs play through a recording of what's happened to determine what happens next.
 
@@ -16,9 +51,9 @@ This provides solutions to core issues in distributed computing while also givin
 Durable programs can continue from where they left off on another machine, model a long-lived process while consuming
 minimal compute resources, or reset back to a previous step.
 
-The catch is this only works for one version of a program. 
+The catch is this only works for one version of a program.
 
-Diachronic solves this. 
+Diachronic solves this.
 
 
 ## Status
