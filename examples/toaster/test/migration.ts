@@ -14,6 +14,7 @@ import {
 } from '@diachronic/migrate/test'
 
 jest.setTimeout(120_000)
+
 beforeAll(async () => {
   Runtime.install({
     logger: new DefaultLogger('WARN'),
@@ -76,22 +77,21 @@ test('toaster migration', async () => {
   const nextWorker = await Worker.create(nextWorkflowWorkerConfig)
   const nextWorkerTrigger = new Trigger()
   // @ts-ignore
-  const worker2Run = nextWorker.runUntil(nextWorkerTrigger)
+  const nextWorkerRun = nextWorker.runUntil(nextWorkerTrigger)
 
-  // Signal migrate to new code
+  // Migrate to new code
   await prevWorkflowRun.signal(migrateSignalName, {
     taskQueue: nextWorkflowWorkerConfig.taskQueue,
   })
 
   await awaitMigrated(prevRunId, prevWorkflowRun)
 
-  // await sleep(5000)
   const snapshot = await waitForWorkflowCondition(
     prevWorkflowRun,
     (snapshot) => {
       return (
         snapshot.state === 'ON' &&
-        Object.keys(snapshot.timers || {}).length > 0 &&
+        Object.keys(snapshot.timers || {}).length === 1 &&
         // @ts-ignore
         snapshot.context.powered
       )
@@ -102,6 +102,6 @@ test('toaster migration', async () => {
 
   prevWorkerTrigger.resolve()
   nextWorkerTrigger.resolve()
-  await Promise.all([prevWorkerRun, worker2Run])
+  await Promise.all([prevWorkerRun, nextWorkerRun])
   await testEnv!.teardown()
 })

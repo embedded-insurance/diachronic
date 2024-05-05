@@ -16,30 +16,6 @@ export const ToasterContext = S.partial(
 
 export type ToasterContext = S.Schema.To<typeof ToasterContext>
 
-export const ToasterActivitiesSchema = {}
-const activities = mapGroupToScheduleActivities(ToasterActivitiesSchema)
-
-export type WorkflowActivities = CallableGroup<typeof ToasterActivitiesSchema>
-export const WorkflowActivities = Context.Tag<WorkflowActivities>()
-
-export const makeWorkflowRuntime = (args: {
-  clock: Clock.Clock
-  activities: WorkflowActivities
-  logLevel?: LogLevel.Literal
-}) =>
-  pipe(
-    Layer.mergeAll(
-      Layer.succeed(WorkflowActivities, args.activities),
-      Layer.succeed(Clock.Clock, args.clock)
-    ),
-    Layer.toRuntime,
-    Logger.withMinimumLogLevel(LogLevel.fromLiteral(args.logLevel || 'Debug')),
-    Effect.scoped,
-    Effect.runSync
-  )
-
-export type WorkflowRuntime = ReturnType<typeof makeWorkflowRuntime>
-
 const Signals = {
   'set-toast-time': S.struct({ duration: S.number }),
   'plug-it-in': S.undefined,
@@ -67,12 +43,6 @@ type ToasterEvents = {
     payload: S.Schema.To<(typeof Signals)[K]>
   }
 }[keyof typeof Signals]
-
-type ActionArgs = {
-  context: ToasterContext
-  event: ToasterEvents
-  self: ActorRef<ToasterEvents, ToasterContext>
-}
 
 export const makeDelays = () => ({
   'toast-time': ({ context }: { context: ToasterContext }) => {
@@ -158,20 +128,7 @@ export const makeToasterMachine = ({ delays }: { delays: ToasterDelays }) =>
 
 export type ToasterMachine = ReturnType<typeof makeToasterMachine>
 
-const runtime = makeWorkflowRuntime({
-  activities,
-  clock: Clock.make(),
-  logLevel: 'Info',
-})
 const delays = makeDelays()
-
-type Prev = {
-  context: ToasterContext
-  machine: ToasterMachine
-  delays: ToasterDelays
-  migrationStates: any
-}
-type Next = Prev
 
 export const toaster = makeWorkflow({
   name: 'toaster',

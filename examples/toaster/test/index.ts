@@ -1,24 +1,14 @@
 import { UUID } from '@diachronic/util/uuid'
 import { TestClock } from '@diachronic/migrate/clock'
 import { Trigger } from '@diachronic/util/trigger'
-import { makeDelays, makeToasterMachine, makeWorkflowRuntime } from '../src'
+import { makeDelays, makeToasterMachine } from '../src'
 import { interpret } from '@diachronic/migrate/interpreter'
-import { createFakeWorkflowActivities } from '@diachronic/workflow/testing'
 import { waitFor } from 'xstate'
 
 export const makeTestMachine = (args?: { workflowId?: string }) => {
   const workflowId = args?.workflowId || UUID()
-  const a = createFakeWorkflowActivities({} as const)
-  const getInFlightActivities = a.getInFlightActivities
-
   const clock = new TestClock()
   const blocker = new Trigger() as any
-  const runtime = makeWorkflowRuntime({
-    activities: {},
-    clock,
-    logLevel: 'Debug',
-  })
-
   const machine = makeToasterMachine({
     delays: makeDelays(),
   })
@@ -32,7 +22,6 @@ export const makeTestMachine = (args?: { workflowId?: string }) => {
     machine,
     interpreter,
     clock,
-    getInFlightActivities,
     workflowId,
     blocker,
   }

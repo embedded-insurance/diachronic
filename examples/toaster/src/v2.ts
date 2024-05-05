@@ -1,9 +1,7 @@
 import '@diachronic/workflow/workflow-runtime'
-import { ActorRef, assign, createMachine } from 'xstate'
-import { Clock, Context, Effect, Layer, Logger, LogLevel, pipe } from 'effect'
+import { assign, createMachine } from 'xstate'
+import { Effect, pipe } from 'effect'
 import * as S from '@effect/schema/Schema'
-import { CallableGroup } from '@diachronic/activity/effect'
-import { mapGroupToScheduleActivities } from '@diachronic/workflow/activities'
 import { makeWorkflow, MigrationFnV1 } from '@diachronic/migrate'
 import * as V1 from '.'
 
@@ -18,30 +16,6 @@ export const ToasterContext = S.partial(
 )
 
 export type ToasterContext = S.Schema.To<typeof ToasterContext>
-
-export const ToasterActivitiesSchema = {}
-const activities = mapGroupToScheduleActivities(ToasterActivitiesSchema)
-
-export type WorkflowActivities = CallableGroup<typeof ToasterActivitiesSchema>
-export const WorkflowActivities = Context.Tag<WorkflowActivities>()
-
-export const makeWorkflowRuntime = (args: {
-  clock: Clock.Clock
-  activities: WorkflowActivities
-  logLevel?: LogLevel.Literal
-}) =>
-  pipe(
-    Layer.mergeAll(
-      Layer.succeed(WorkflowActivities, args.activities),
-      Layer.succeed(Clock.Clock, args.clock)
-    ),
-    Layer.toRuntime,
-    Logger.withMinimumLogLevel(LogLevel.fromLiteral(args.logLevel || 'Debug')),
-    Effect.scoped,
-    Effect.runSync
-  )
-
-export type WorkflowRuntime = ReturnType<typeof makeWorkflowRuntime>
 
 const Signals = {
   'set-toast-time': S.struct({ duration: S.number }),
@@ -69,12 +43,6 @@ type ToasterEvents = {
     payload: S.Schema.To<(typeof Signals)[K]>
   }
 }[keyof typeof Signals]
-
-type ActionArgs = {
-  context: ToasterContext
-  event: ToasterEvents
-  self: ActorRef<ToasterEvents, ToasterContext>
-}
 
 export const makeDelays = () => ({
   'toast-time': ({ context }: { context: ToasterContext }) => {
@@ -163,11 +131,6 @@ export const makeToasterMachine = ({ delays }: { delays: ToasterDelays }) =>
 
 export type ToasterMachine = ReturnType<typeof makeToasterMachine>
 
-const runtime = makeWorkflowRuntime({
-  activities,
-  clock: Clock.make(),
-  logLevel: 'Info',
-})
 const delays = makeDelays()
 
 type Prev = {
