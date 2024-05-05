@@ -6,9 +6,9 @@ import { Effect } from 'effect'
  */
 export type EffectDef = {
   name: string
-  input: S.Schema<any, any>
-  output: S.Schema<any, any>
-  error: S.Schema<any, any>
+  input: S.Schema<never, any>
+  output: S.Schema<never, any>
+  error: S.Schema<never, any>
 }
 
 export type InputType<A extends EffectDef> = S.Schema.To<A['input']>
