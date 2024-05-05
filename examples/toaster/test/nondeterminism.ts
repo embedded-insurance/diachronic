@@ -4,14 +4,11 @@ import {
   Worker,
   WorkerOptions,
 } from '@temporalio/worker'
+import { DeterminismViolationError } from '@temporalio/workflow'
 import { TestWorkflowEnvironment } from '@temporalio/testing'
 import { Trigger } from '@diachronic/util/trigger'
 import { getTimeLeft } from '@diachronic/migrate/interpreter'
-import { migrateSignalName } from '@diachronic/migrate/can-migrate'
-import {
-  awaitMigrated,
-  waitForWorkflowCondition,
-} from '@diachronic/migrate/test'
+import { waitForWorkflowCondition } from '@diachronic/migrate/test'
 
 jest.setTimeout(120_000)
 beforeAll(async () => {
@@ -19,10 +16,8 @@ beforeAll(async () => {
     logger: new DefaultLogger('WARN'),
   })
 })
-test('toaster migration', async () => {
+test('toaster nondeterminism', async () => {
   const testEnv = await TestWorkflowEnvironment.createLocal()
-  let prevRunId: string
-
   const prevWorkflowConfig: WorkerOptions = {
     connection: testEnv.nativeConnection,
     taskQueue: 'initial',
@@ -38,9 +33,11 @@ test('toaster migration', async () => {
       signal: 'plug-it-in',
       signalArgs: [undefined],
       followRuns: true,
+      retry: {
+        maximumAttempts: 1,
+      },
     }
   )
-  prevRunId = prevWorkflowRun.signaledRunId
   const prevWorkerTrigger = new Trigger()
   // @ts-expect-error
   const prevWorkerRun = prevWorker.runUntil(prevWorkerTrigger)
@@ -67,41 +64,25 @@ test('toaster migration', async () => {
   expect(timeLeft).toBeGreaterThan(0)
   expect(timeLeft).toBeLessThan(timerDuration)
 
+  prevWorkerTrigger.resolve()
+
+  // roll out new code
   const nextWorkflowWorkerConfig: WorkerOptions = {
     connection: testEnv.nativeConnection,
-    taskQueue: prevWorkflowConfig.taskQueue + '-next',
+    taskQueue: prevWorkflowConfig.taskQueue,
     workflowsPath: require.resolve('./../src/v2'),
   }
-
-  const nextWorker = await Worker.create(nextWorkflowWorkerConfig)
-  const nextWorkerTrigger = new Trigger()
-  // @ts-ignore
-  const worker2Run = nextWorker.runUntil(nextWorkerTrigger)
-
-  // Signal migrate to new code
-  await prevWorkflowRun.signal(migrateSignalName, {
-    taskQueue: nextWorkflowWorkerConfig.taskQueue,
-  })
-
-  await awaitMigrated(prevRunId, prevWorkflowRun)
-
-  // await sleep(5000)
-  const snapshot = await waitForWorkflowCondition(
-    prevWorkflowRun,
-    (snapshot) => {
-      return (
-        snapshot.state === 'ON' &&
-        Object.keys(snapshot.timers || {}).length > 0 &&
-        // @ts-ignore
-        snapshot.context.powered
-      )
-    }
-  )
-
-  expect(Object.values(snapshot.timers).length).toEqual(1)
-
-  prevWorkerTrigger.resolve()
-  nextWorkerTrigger.resolve()
-  await Promise.all([prevWorkerRun, worker2Run])
-  await testEnv!.teardown()
+  const history = await prevWorkflowRun.fetchHistory()
+  try {
+    await Worker.runReplayHistory(nextWorkflowWorkerConfig, history)
+      .then(() => {
+        throw new Error('Expected Worker.runReplayHistory to throw')
+      })
+      .catch((err) => {
+        expect(err instanceof DeterminismViolationError).toEqual(true)
+      })
+  } finally {
+    await Promise.all([prevWorkerRun])
+    await testEnv!.teardown()
+  }
 })
