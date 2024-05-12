@@ -1,19 +1,24 @@
 {
   "name": "@diachronic/migrate",
   "version": "0.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Migrate workflows",
   "scripts": {
     "start": "ts-node src/index.ts",
     "clean": "rimraf node_modules & rimraf dist & rimraf .turbo",
     "test": "jest --forceExit",
     "format": "prettier --write .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build": "tsc"
   },
   "exports": {
     ".": "./src/index.ts",
     "./*": "./src/*.ts"
   },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "keywords": [],
   "author": {
     "name": "Embedded Insurance",
@@ -36,16 +41,16 @@
   },
   "dependencies": {
     "@diachronic/workflow": "workspace:^",
-    "@effect/schema": "0.55.0",
-    "effect": "2.0.0-next.62",
+    "@effect/schema": "0.61.5",
+    "effect": "2.2.3",
     "ramda": "0.29.0",
     "xstate": "beta.27"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "publishConfig": {
-    "access": "restricted"
+    "access": "public"
   },
   "repository": {
     "directory": "packages/migrate",

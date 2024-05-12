@@ -79,16 +79,15 @@ const signals = {
 }
 
 log('hey')
-export const theWorkflow = makeWorkflow(
-  'theWorkflow',
+export const theWorkflow = makeWorkflow({
+  name: 'theWorkflow',
   machine,
   signals,
-  ({ state, context, timers }) =>
+  receive: ({ state, context, timers }) =>
     Effect.succeed({
       state: 'second',
       context,
       timers,
     }),
-  undefined,
-  { error: log, info: log, debug: log }
-)
+  logger: { error: log, info: log, debug: log },
+})

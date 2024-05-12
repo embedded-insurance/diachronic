@@ -5,11 +5,11 @@ import { machine } from './workflowv3info'
 import * as Effect from 'effect/Effect'
 
 console.log('I am the workflow v3 (with some other state to start in)')
-export const theWorkflow = makeWorkflow(
-  'theWorkflow',
+export const theWorkflow = makeWorkflow({
+  name: 'theWorkflow',
   machine,
   signals,
-  (a) => {
+  receive: (a) => {
     console.log('workflow v3 deciding what to do next')
     return Effect.succeed({
       state: '#test.completely-different-state',
@@ -17,5 +17,5 @@ export const theWorkflow = makeWorkflow(
       // not valid but just to show we guard against it
       timers: a.timers as never, // todo. type checking,
     })
-  }
-)
+  },
+})

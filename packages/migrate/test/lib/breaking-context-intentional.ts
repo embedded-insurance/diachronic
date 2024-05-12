@@ -9,15 +9,15 @@ export const theWorkflow = makeWorkflow<
   // @ts-expect-error
   typeof prevMachine,
   typeof nextMachineBreakingContextIntentional
->(
-  'theWorkflow',
-  nextMachineBreakingContextIntentional,
+>({
+  name: 'theWorkflow',
+  machine: nextMachineBreakingContextIntentional,
   signals,
-  ({ state, context, timers }) =>
+  receive: ({ state, context, timers }) =>
     Effect.succeed({
       state,
       // @ts-expect-error
       context: { yo: context.hey?.hey || 'a string' },
       timers,
-    })
-)
+    }),
+})

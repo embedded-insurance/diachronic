@@ -14,7 +14,7 @@
   },
   "license": "MIT",
   "publishConfig": {
-    "access": "restricted"
+    "access": "public"
   },
   "repository": {
     "directory": "packages/util",

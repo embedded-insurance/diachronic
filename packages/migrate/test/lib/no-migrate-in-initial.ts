@@ -13,8 +13,8 @@ export const noMigrateInInitialMachine = createMachine(
   machine.implementations
 )
 
-export const theWorkflow = makeWorkflow(
-  'theWorkflow',
-  noMigrateInInitialMachine,
-  signals
-)
+export const theWorkflow = makeWorkflow({
+  name: 'theWorkflow',
+  machine: noMigrateInInitialMachine,
+  signals,
+})

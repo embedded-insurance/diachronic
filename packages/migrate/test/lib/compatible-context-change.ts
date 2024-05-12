@@ -8,11 +8,11 @@ export const theWorkflow = makeWorkflow<
   // @ts-expect-error
   typeof prevMachine,
   typeof nextMachineCompatibleContext
->(
-  'theWorkflow',
-  nextMachineCompatibleContext,
+>({
+  name: 'theWorkflow',
+  machine: nextMachineCompatibleContext,
   signals,
-  ({ state, context, timers }) =>
+  receive: ({ state, context, timers }) =>
     Effect.succeed({
       state,
       context: {
@@ -22,5 +22,5 @@ export const theWorkflow = makeWorkflow<
         yo: context.hey?.hey || 'a string',
       },
       timers,
-    })
-)
+    }),
+})
