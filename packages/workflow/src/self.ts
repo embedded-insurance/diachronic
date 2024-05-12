@@ -18,7 +18,7 @@ import { toApplicationFailure } from './errors'
 
 export type Self<Db, Signals = any> = {
   id: string
-  close: (exit: Exit.Exit<any, any>) => Effect.Effect<any, any, any>
+  close: (exit: Exit.Exit<any, any>) => Effect.Effect<any, never, any>
   isContinueAsNewSuggested: () => Effect.Effect<never, never, boolean>
   continueAsNew: (state: Db) => Effect.Effect<never, never, never>
   signalWorkflow: <K extends keyof Signals>(
