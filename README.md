@@ -8,44 +8,44 @@
 > -- _ChatGPT, personal communication, February 2024._
 
 ## Overview
-Diachronic makes workflow nondeterminism a thing of the past.
+Diachronic lets you change your workflow's behavior without losing context or current state.
 
 ### How it works
-Workflows take their current state and pass it to the next version of the program. The new program receives it and continues where the old program left off, subject to a user-defined transformation.
+Diachronic workflows accumulate data in a simple in-memory variable, called "context". They track the current logical step, or "state", that the workflow is in, as well as all running timers.
 
-Say, for some reason, you have a program that models a toaster. The toaster can be in one of two states, “on” or “off” — on when the timer is running and it’s plugged in, off otherwise. It also has a counter for number of toasts.
+When a new workflow is deployed, old workflows are told to continue on the new version. The new workflow starts and runs a user-supplied migration function that can ma the old workflow data to the new version if needed. The new workflow then resumes the application logic. 
 
-We can model this with the following state transition diagram:
+### Example
+
+Say you have a simple workflow that models a toaster. The toaster can be in one of two states-- "on" when the timer is running and it’s plugged in, "off" otherwise. It also has a counter that accumulates the number of toasts it's made. 
+
+You model this with the following state transition diagram:
 off -> plugged-in -> on
 off -> timer on -> on
 on -> timer off? -> off
 on -> unplug-it -> off
 
-You deploy to prod. Toasters run around the world. And there was much rejoicing.
+You write the workflow and deploy to prod. 
 
-But there’s a bug. Simply because the toaster is plugged in doesn’t mean there’s power. This means need to change a workflow that has been modeling the live state of thousands of devices in a way that could break their history. 
+But there’s a bug: Just because the toaster is plugged in doesn’t mean there’s power. You need to fix the workflow to reflect this, requiring you depart from its history. 
 
-You receive a new source of information for whether the toaster is receiving power. The units require at least 100v of current to warm bread. You revise the program accordingly:
+You receive a new event for when the toaster is receiving power and are informed it takes at least 100v for it to function properly. You revise the state diagram:
 off -> ~~plugged-in~~  power on (timer on?) -> on
 off -> timer on (~~plugged-in?~~ power on?) -> on
 on -> timer off -> off
 on -> ~~unplug-it~~ power off -> off
 
-These changes break with the past. Simply put, for the same sequence of events, the new program will not produce the same outcomes as the original.
+These changes break with the past: For the same sequence of events, the new program will not produce the same outcomes as the original.
 
-We need something to help us manage this. 
+We need to solve this. 
 
-Diachronic lets you transition the workflow’s behavior  and context to the next version of the workflow without stopping it, losing context, or running it over from the beginning.
+We decide changing the context variable from “plugged-in” -> “powered” is a reasonable translation. We want our new workflow to receive a “power” event that sets “powered: true” when volts >= 100. Previously, the “plugged-in” event set "plugged-in" to true. 
 
-Observe.
+We can evolve our context this way with a workflow migration function. In this case we simply map the old “plugged-in” value to the new ”powered” value. 
 
-We want our new workflow to receive a “power” event that sets the context variable “powered: true” when volts >= 100. 
+The migration function runs inside the new workflow when it takes over for the old workflow. Along with our context transformation, we specify all active timers should transition from the old workflow to the new one, and that the workflow should resume in the same place it left off.
 
-Previously, we received a “plugged-in” event and set plugged in to true. We decide changing the context variable from “plugged” -> “powered” is a reasonable translation.
-
-We can specify this with a workflow migration function. For all our workflows, we map the old “plugged-in” value to the new ”powered” value. 
-
-The migration function runs inside the new workflow when it takes over for the old one. Along with the context transformation we specify all active timers should pass from the old workflow to the new one, and that the workflow should resume in the same spot it left off.
+You deploy to prod. Everything works. And there was much rejocing. 
 
 
 ## Background
