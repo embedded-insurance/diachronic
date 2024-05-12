@@ -13,7 +13,7 @@ import {
   waitForWorkflowCondition,
 } from '@diachronic/migrate/test'
 
-jest.setTimeout(120_000)
+jest.setTimeout(200_000)
 
 beforeAll(async () => {
   Runtime.install({

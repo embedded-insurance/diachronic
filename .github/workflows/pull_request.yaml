@@ -41,4 +41,4 @@ jobs:
 
       - name: Test 🧪
         timeout-minutes: 10
-        run: yarn turbo test --continue --concurrency=8
+        run: yarn turbo test --continue --concurrency=4
