@@ -498,7 +498,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@diachronic/k8s-health-check@workspace:packages/k8s-health-check"
   dependencies:
-    "@effect/schema": 0.55.0
+    "@effect/schema": 0.61.5
     "@types/jest": ^29.5.5
     effect: 2.2.3
     fastify: ^4.23.2
@@ -512,11 +512,11 @@ __metadata:
   resolution: "@diachronic/migrate@workspace:packages/migrate"
   dependencies:
     "@diachronic/workflow": "workspace:^"
-    "@effect/schema": 0.55.0
+    "@effect/schema": 0.61.5
     "@types/jest": ^29.5.2
     "@types/node": 18
     "@types/ramda": ^0.29.4
-    effect: 2.0.0-next.62
+    effect: 2.2.3
     fast-check: ^3.8.1
     jest: 29.5.0
     prettier: 2.8.8
@@ -593,16 +593,16 @@ __metadata:
   resolution: "@diachronic/workflow-request-response@workspace:packages/workflow-request-response"
   dependencies:
     "@effect-use/gcp-gcs": ^1.1.4
-    "@effect-use/gcp-logging": 3.0.0
+    "@effect-use/gcp-logging": 4.0.0
     "@effect-use/http-client": 2.0.0
-    "@effect-use/temporal-client": 2.0.0
-    "@effect-use/temporal-config": 2.0.0
+    "@effect-use/temporal-client": 3.0.0
+    "@effect-use/temporal-config": 3.0.0
     "@temporalio/testing": ^1.8.6
     "@temporalio/worker": ^1.8.5
     "@temporalio/workflow": ^1.8.6
     "@types/jest": ^29.5.3
     "@types/node": 20
-    effect: 2.0.0-next.62
+    effect: 2.2.3
     jest: 29.5.0
     mqtt: 5.0.5
     prettier: 2.8.8
@@ -2759,6 +2759,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"changeset@npm:^0.2.6":
+  version: 0.2.6
+  resolution: "changeset@npm:0.2.6"
+  dependencies:
+    udc: ^1.0.0
+    underscore: ^1.8.3
+  checksum: bb916eff7dc8d281f91762a4e0d324cc3a527535263fd4d0345be9def20e1b112184c29e4312bec4de34814574b33c271ca5d759c4466acd5dc9b9f1733b434f
+  languageName: node
+  linkType: hard
+
 "char-regex@npm:^1.0.2":
   version: 1.0.2
   resolution: "char-regex@npm:1.0.2"
@@ -3041,6 +3051,7 @@ __metadata:
   resolution: "diachronic@workspace:."
   dependencies:
     "@types/node": 20
+    changeset: ^0.2.6
     rimraf: ^5.0.1
     ts-node: 10.9.1
     turbo: 1.10.13
@@ -6612,6 +6623,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"toaster@workspace:examples/toaster":
+  version: 0.0.0-use.local
+  resolution: "toaster@workspace:examples/toaster"
+  dependencies:
+    "@effect/schema": 0.55.0
+    "@temporalio/testing": 1.8.6
+    "@temporalio/worker": 1.8.6
+    "@types/jest": ^29.5.2
+    "@types/node": 20
+    "@types/ramda": ^0.29.4
+    effect: 2.0.0-next.48
+    fast-check: ^3.8.1
+    jest: 29.5.0
+    prettier: 2.8.8
+    ramda: 0.29.0
+    ts-jest: 29.1.0
+    ts-node: ^10.9.1
+    turbo: ^1.10.6
+    typescript: 5.2.2
+    webpack: ^5.88.2
+    xstate: beta.27
+  languageName: unknown
+  linkType: soft
+
 "tr46@npm:^1.0.1":
   version: 1.0.1
   resolution: "tr46@npm:1.0.1"
@@ -6996,6 +7031,20 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 0f4da2f15e6f1245e49db15801dbee52f2bbfb267e1c39225afdab5afee1a72839cd86000e65ee9d7e4dfaff12239d28beaf5ee431357fcced15fb08583d72ca
+  languageName: node
+  linkType: hard
+
+"udc@npm:^1.0.0":
+  version: 1.0.1
+  resolution: "udc@npm:1.0.1"
+  checksum: 302b4bd08feab3f75683bcebfe0dde9eabdb2579400ef3feef09132169842ea83e64441e075b0523c91be3ba1f4668fbb8c7d6918e3032be56a967629c4e7db2
+  languageName: node
+  linkType: hard
+
+"underscore@npm:^1.8.3":
+  version: 1.13.6
+  resolution: "underscore@npm:1.13.6"
+  checksum: d5cedd14a9d0d91dd38c1ce6169e4455bb931f0aaf354108e47bd46d3f2da7464d49b2171a5cf786d61963204a42d01ea1332a903b7342ad428deaafaf70ec36
   languageName: node
   linkType: hard
 
