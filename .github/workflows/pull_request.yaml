@@ -40,4 +40,5 @@ jobs:
         run: yarn build
 
       - name: Test 🧪
+        timeout-minutes: 10
         run: yarn test
