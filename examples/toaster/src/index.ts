@@ -1,9 +1,6 @@
 import '@diachronic/workflow/workflow-runtime'
-import { ActorRef, assign, createMachine } from 'xstate'
-import { Clock, Context, Effect, Layer, Logger, LogLevel, pipe } from 'effect'
+import { assign, createMachine } from 'xstate'
 import * as S from '@effect/schema/Schema'
-import { CallableGroup } from '@diachronic/activity/effect'
-import { mapGroupToScheduleActivities } from '@diachronic/workflow/activities'
 import { makeWorkflow } from '@diachronic/migrate'
 
 export const ToasterContext = S.partial(
@@ -17,12 +14,6 @@ export const ToasterContext = S.partial(
 export type ToasterContext = S.Schema.To<typeof ToasterContext>
 
 const Signals = {
-  'set-toast-time': S.struct({ duration: S.number }),
-  'plug-it-in': S.undefined,
-  'unplug-it': S.undefined,
-}
-// needs standardized on something
-const Signals2 = {
   'set-toast-time': S.struct({
     type: S.literal('set-toast-time'),
     payload: S.struct({ duration: S.number }),
@@ -32,7 +23,7 @@ const Signals2 = {
     payload: S.undefined,
   }),
   'unplug-it': S.struct({
-    type: S.literal('plug-it-in'),
+    type: S.literal('unplug-it'),
     payload: S.undefined,
   }),
 }
@@ -40,7 +31,7 @@ const Signals2 = {
 type ToasterEvents = {
   [K in keyof typeof Signals]: {
     type: K
-    payload: S.Schema.To<(typeof Signals)[K]>
+    payload: S.Schema.To<(typeof Signals)[K]>['payload']
   }
 }[keyof typeof Signals]
 
@@ -133,5 +124,5 @@ const delays = makeDelays()
 export const toaster = makeWorkflow({
   name: 'toaster',
   machine: makeToasterMachine({ delays }),
-  signals: Signals2,
+  signals: Signals,
 })

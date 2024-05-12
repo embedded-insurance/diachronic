@@ -18,11 +18,6 @@ export const ToasterContext = S.partial(
 export type ToasterContext = S.Schema.To<typeof ToasterContext>
 
 const Signals = {
-  'set-toast-time': S.struct({ duration: S.number }),
-  'power-on': S.struct({ volts: PosInt }),
-  'power-off': S.undefined,
-}
-const Signals2 = {
   'set-toast-time': S.struct({
     type: S.literal('set-toast-time'),
     payload: S.struct({ duration: S.number }),
@@ -40,7 +35,7 @@ const Signals2 = {
 type ToasterEvents = {
   [K in keyof typeof Signals]: {
     type: K
-    payload: S.Schema.To<(typeof Signals)[K]>
+    payload: S.Schema.To<(typeof Signals)[K]>['payload']
   }
 }[keyof typeof Signals]
 
@@ -168,7 +163,7 @@ const powerMigration: MigrationFnV1<Prev, Next> = (args) =>
 export const toaster = makeWorkflow({
   name: 'toaster',
   machine: makeToasterMachine({ delays }),
-  signals: Signals2,
+  signals: Signals,
   receive: powerMigration,
   logger: {
     error: console.error,
