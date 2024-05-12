@@ -6627,13 +6627,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "toaster@workspace:examples/toaster"
   dependencies:
-    "@effect/schema": 0.55.0
+    "@effect/schema": 0.61.5
     "@temporalio/testing": 1.8.6
     "@temporalio/worker": 1.8.6
     "@types/jest": ^29.5.2
     "@types/node": 20
     "@types/ramda": ^0.29.4
-    effect: 2.0.0-next.48
+    effect: 2.2.3
     fast-check: ^3.8.1
     jest: 29.5.0
     prettier: 2.8.8
