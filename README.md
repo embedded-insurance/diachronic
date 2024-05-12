@@ -8,7 +8,7 @@
 > -- _ChatGPT, personal communication, February 2024._
 
 ## Overview
-Diachronic provides a way to make Temporal nondeterminism errors a thing of the past.
+Diachronic makes workflow nondeterminism a thing of the past.
 
 ### How it works
 Workflows take their current state and pass it to the next version of the program. The new program receives it and continues where the old program left off, subject to a user-defined transformation.
@@ -21,9 +21,9 @@ off -> timer on -> on
 on -> timer off? -> off
 on -> unplug-it -> off
 
-You deploy to prod. Toaster run around the world. And there was much rejoicing.
+You deploy to prod. Toasters run around the world. And there was much rejoicing.
 
-Naturally, there’s a bug. Simply because the toaster is plugged in doesn’t mean there’s power. You now need to change a durable program that models the live state of thousands of devices.
+But there’s a bug. Simply because the toaster is plugged in doesn’t mean there’s power. This means need to change a workflow that has been modeling the live state of thousands of devices in a way that could break their history. 
 
 You receive a new source of information for whether the toaster is receiving power. The units require at least 100v of current to warm bread. You revise the program accordingly:
 off -> ~~plugged-in~~  power on (timer on?) -> on
@@ -31,9 +31,11 @@ off -> timer on (~~plugged-in?~~ power on?) -> on
 on -> timer off -> off
 on -> ~~unplug-it~~ power off -> off
 
-This program introduces changes that break with the past, violating Termporal’s determinism. Simply put, for the same sequence of events, the new program will not produce the same outcome as the original.
+These changes break with the past. Simply put, for the same sequence of events, the new program will not produce the same outcomes as the original.
 
-Diachronic workflows transition arbitrary app logic and state without breaking the program’s  durability.
+We need something to help us manage this. 
+
+Diachronic lets you transition the workflow’s behavior  and context to the next version of the workflow without stopping it, losing context, or running it over from the beginning.
 
 Observe.
 
