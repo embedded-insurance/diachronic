@@ -39,9 +39,13 @@ Diachronic lets you transition the workflow’s behavior  and context to the nex
 
 Observe.
 
-The new program dictates a “power” event sets variable “powered: true” when volts >= 100. Prior, an event of “plugged” set plugged in to true. We decide “plugged” -> “powered” is reasonable under the circumstances.
+We want our new workflow to receive a “power” event that sets the context variable “powered: true” when volts >= 100. 
 
-For all toasters that are plugged in, we map the prior plugged value to the new powered value via a migration function. After, new toastings will be subject to the new logic only, based on power only. All the while we honor the (powerless) toast count, as product has advised. If a timer is in progress in the old program, it will be transferred to the new program automatically.
+Previously, we received a “plugged-in” event and set plugged in to true. We decide changing the context variable from “plugged” -> “powered” is a reasonable translation.
+
+We can specify this with a workflow migration function. For all our workflows, we map the old “plugged-in” value to the new ”powered” value. 
+
+The migration function runs inside the new workflow when it takes over for the old one. Along with the context transformation we specify all active timers should pass from the old workflow to the new one, and that the workflow should resume in the same spot it left off.
 
 
 ## Background
