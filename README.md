@@ -47,6 +47,15 @@ The migration function runs inside the new workflow when it takes over for the o
 
 You deploy to prod. Everything works. And there was much rejocing. 
 
+## Technical Implementation
+Diachronic was written for use with several assumptions: namely, TypeScript, Effect, and XState. 
+
+None are needed to implement a diachronic workflow. 
+
+If you are interested in an alternative implementation, don't hesitate to reach out to the authors. 
+
+Additional implementation details are available in the (@diachronic/migrate)[https://github.com/embedded-insurance/diachronic/tree/main/packages/migrate] package. 
+
 
 ## Background
 
