@@ -13,7 +13,7 @@ Diachronic lets you change your workflow's behavior without losing context or cu
 ### How it works
 Diachronic workflows accumulate data in a simple in-memory variable, called "context". They track the current logical step, or "state", that the workflow is in, as well as all running timers.
 
-When a new workflow is deployed, old workflows are told to continue on the new version. The new workflow starts and runs a user-supplied migration function that can ma the old workflow data to the new version if needed. The new workflow then resumes the application logic. 
+When a new workflow is deployed, old workflows are told to continue on the new version. The new workflow starts and runs a user-supplied migration function that can map the old workflow's data to the new version if needed. The new workflow then resumes the application logic. 
 
 ### Example
 
