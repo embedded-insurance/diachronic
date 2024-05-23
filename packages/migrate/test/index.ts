@@ -1013,7 +1013,7 @@ test.concurrent('getDelayFunctionName', () => {
     fc.property(getArbitrary(XStateTimerId), (id) => {
       expect(id.startsWith('xstate.after(')).toEqual(true)
       const fn = id.slice('xstate.after('.length, id.lastIndexOf('#') - 1)
-      console.log({ id, fn })
+      // console.log({ id, fn })
     })
   )
 })

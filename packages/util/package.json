@@ -30,10 +30,12 @@
   "dependencies": {
     "@effect/schema": "0.61.5",
     "effect": "2.2.3",
+    "js-yaml": "4.1.0",
     "uuid": "9.0.1"
   },
   "devDependencies": {
     "@types/jest": "^29.5.5",
+    "@types/js-yaml": "4.0.9",
     "@types/uuid": "^9.0.8",
     "jest": "^29.7.0",
     "ts-jest": "^29.1.1"

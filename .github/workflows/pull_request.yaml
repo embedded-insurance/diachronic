@@ -38,9 +38,12 @@ jobs:
       - name: Install 📦
         run: yarn --immutable
 
+      - name: Typecheck 🧪
+        run: yarn typecheck
+
       - name: Build 🏗
         run: yarn build
 
       - name: Test 🧪
         timeout-minutes: 10
-        run: yarn turbo test --continue --concurrency=1
+        run: yarn test

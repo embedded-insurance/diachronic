@@ -1,7 +1,7 @@
 import { Effect, pipe } from 'effect'
 import { getGitRepoRoot } from './git'
 import path from 'path'
-import { listWorkspaceDependents } from '@diachronic/toolbox/workspace'
+import { listWorkspaceDependents } from '../workspace'
 
 /**
  * Returns absolute filepaths to the local monorepo modules that
