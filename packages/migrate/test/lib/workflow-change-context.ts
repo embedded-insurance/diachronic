@@ -94,18 +94,18 @@ export const nextMachineCompatibleContext = createMachine(
 // Test: a type error when returning the wrong context type for the machine we're entering
 // TODO. retrofit with stateids
 // @ts-expect-error
-makeWorkflow<typeof prevMachine, typeof nextMachineCompatibleContext>(
-  'theWorkflow',
-  nextMachineCompatibleContext,
+makeWorkflow<typeof prevMachine, typeof nextMachineCompatibleContext>({
+  name: 'theWorkflow',
+  machine: nextMachineCompatibleContext,
   signals,
-  ({ state, context, timers }) => {
+  receive: ({ state, context, timers }) => {
     return Effect.succeed({
       state,
       context: { yo: 42 }, // expected a string
       timers,
     })
-  }
-)
+  },
+})
 
 const mfn: MigrationFnV1<
   // TODO. retrofit with stateids
@@ -124,11 +124,11 @@ const mfn: MigrationFnV1<
 // Test: type of previous workflow context is inferred
 // TODO. retrofit with stateids
 // @ts-expect-error
-makeWorkflow<typeof prevMachine, typeof nextMachineCompatibleContext>(
-  'theWorkflow',
-  nextMachineCompatibleContext,
+makeWorkflow<typeof prevMachine, typeof nextMachineCompatibleContext>({
+  name: 'theWorkflow',
+  machine: nextMachineCompatibleContext,
   signals,
-  ({ state, context, timers }) => {
+  receive: ({ state, context, timers }) => {
     return Effect.succeed({
       state,
       context: {
@@ -140,8 +140,8 @@ makeWorkflow<typeof prevMachine, typeof nextMachineCompatibleContext>(
       },
       timers,
     })
-  }
-)
+  },
+})
 
 // Test: type of previous workflow context is inferred
 makeWorkflow<
@@ -149,16 +149,16 @@ makeWorkflow<
   // @ts-expect-error
   typeof prevMachine,
   typeof nextMachineBreakingContextIntentional
->(
-  'theWorkflow',
-  nextMachineBreakingContextIntentional,
+>({
+  name: 'theWorkflow',
+  machine: nextMachineBreakingContextIntentional,
   signals,
-  ({ state, context, timers }) =>
+  receive: ({ state, context, timers }) =>
     Effect.succeed({
       state,
       // TODO. retrofit with stateids
       // @ts-expect-error
       context: { yo: context.hey?.hey || 'a string' },
       timers,
-    })
-)
+    }),
+})

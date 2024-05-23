@@ -4,9 +4,9 @@ import { machine, signals } from './workflow1info'
 import { createMachine } from 'xstate'
 
 console.log('I am the workflow v2')
-export const theWorkflow = makeWorkflow(
-  'theWorkflow',
-  createMachine(machine.config, {
+export const theWorkflow = makeWorkflow({
+  name: 'theWorkflow',
+  machine: createMachine(machine.config, {
     ...machine.implementations,
     delays: {
       time: () => {
@@ -15,5 +15,5 @@ export const theWorkflow = makeWorkflow(
       },
     },
   }),
-  signals
-)
+  signals,
+})

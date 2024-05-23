@@ -33,6 +33,9 @@ export type CleanupDb = {
   config: CleanupWorkflowConfig
   removableDeployments: Deployment[]
   numberOfWorkflows: number
+  summary?: {
+    numberOfIterations: number
+  }
 }
 
 export const CleanupCtx = Context.Tag<{

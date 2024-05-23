@@ -36,10 +36,10 @@
     "typescript": "5.2.2"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "publishConfig": {
-    "access": "restricted"
+    "access": "public"
   },
   "repository": {
     "directory": "packages/http",

@@ -14,11 +14,9 @@
     "email": "opensource@embeddedinsurance.com",
     "url": "https://embeddedinsurance.com"
   },
-  "main": "./dist/index.js",
+  "main": "index.js",
   "exports": {
-    "./*": "./src/*.ts",
-    "./infra/*": "./src/infra/*.ts",
-    ".": "./src/index.ts"
+    "./*": "./src/*.ts"
   },
   "license": "MIT",
   "dependencies": {
@@ -40,11 +38,10 @@
     "@types/ramda": "^0.29.2",
     "fast-check": "^3.8.1",
     "prettier": "2.8.8",
-    "ts-node": "^10.9.1",
-    "typescript": "5.2.2"
+    "ts-node": "^10.9.1"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "publishConfig": {
     "access": "restricted"

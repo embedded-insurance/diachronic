@@ -101,7 +101,8 @@ export class CustomInterpreter<
     delay: number
     to?: AnyActorRef
   }) {
-    console.log('delaySend', sendAction)
+    // TODO. custom logger
+    // console.log('delaySend', sendAction)
     super.delaySend(sendAction)
     const now = this.clock.now()
     if (S.is(XStateTimerId)(sendAction.id)) {
@@ -274,7 +275,7 @@ export const restoreTimersOnStart = <
       const context = interpreter.getSnapshot().context
       const newlyComputedDelay = machine.implementations.delays[
         delayFunctionName
-      ](context, timer.event)
+      ]({ context, event: timer.event })
 
       let delayValueToSet = timeLeft <= 0 ? 1 : timeLeft
       if (newlyComputedDelay !== timer.delay) {

@@ -286,6 +286,11 @@ export type DbFns<DbSnapshot, WorkflowContext> = {
    */
   onNewDbSnapshot: (dbSnapshotValue: DbSnapshot) => Promise<any>
 }
+const defaultLogImpl = {
+  debug: () => {},
+  info: () => {},
+  error: () => {},
+}
 
 /**
  * Defines a workflow that can continue
@@ -299,22 +304,26 @@ export type DbFns<DbSnapshot, WorkflowContext> = {
 export const makeWorkflow = <
   Prev extends MetaMachine<any, any> | never,
   Next extends MetaMachine<any, any>
->(
-  name: string,
-  machine: Next['machine'],
-  signals: Record<string, S.Schema<never, any, any>>,
-  receive?: Prev extends any ? MigrationFnV1<Prev, Next> : never,
-  db?: DbFns<any, Next['context']>,
-  log: {
+>({
+  name,
+  machine,
+  signals,
+  receive,
+  db,
+  logger,
+}: {
+  name: string
+  machine: Next['machine']
+  signals: Record<string, S.Schema<never, any, any>>
+  receive?: Prev extends any ? MigrationFnV1<Prev, Next> : never
+  db?: DbFns<any, Next['context']>
+  logger?: {
     debug: (msg: string, args?: Record<string, any>, span?: string) => void
     info: (msg: string, args?: Record<string, any>, span?: string) => void
     error: (msg: string, args?: Record<string, any>, span?: string) => void
-  } = {
-    debug: () => {},
-    info: () => {},
-    error: () => {},
   }
-) => {
+}) => {
+  const log = logger || defaultLogImpl
   const workflow = async (args?: { [K in ContinuationKey]?: Continuation }) => {
     const blocker = new Trigger()
 
@@ -697,7 +706,7 @@ export const makeWorkflow = <
       // }
 
       // Await machine done
-      await blocker
+      return await blocker
     } catch (e) {
       log.error('Workflow error', { error: e })
       throw e

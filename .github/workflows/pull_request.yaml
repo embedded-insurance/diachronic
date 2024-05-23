@@ -1,0 +1,49 @@
+name: Pull Request
+
+on:
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Cache 🏎
+        uses: actions/cache@v4
+        with:
+          save-always: true
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-
+
+      - name: Setup nodejs
+        uses: actions/setup-node@v4
+        with:
+          cache: yarn
+          cache-dependency-path: yarn.lock
+          node-version: 20
+
+      - name: Install 📦
+        run: yarn --immutable
+
+      - name: Typecheck 🧪
+        run: yarn typecheck
+
+      - name: Build 🏗
+        run: yarn build
+
+      - name: Test 🧪
+        timeout-minutes: 10
+        run: yarn test

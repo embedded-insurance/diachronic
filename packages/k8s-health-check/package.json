@@ -14,7 +14,7 @@
   },
   "license": "MIT",
   "publishConfig": {
-    "access": "restricted"
+    "access": "public"
   },
   "repository": {
     "directory": "packages/k8s-health-check",
@@ -28,7 +28,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@effect/schema": "0.55.0",
+    "@effect/schema": "0.61.5",
     "effect": "2.2.3",
     "fastify": "^4.23.2"
   },

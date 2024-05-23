@@ -17,10 +17,13 @@
     "build": "turbo build",
     "test": "turbo test --continue",
     "typecheck": "turbo typecheck --continue",
-    "clean": "turbo clean && rimraf node_modules"
+    "clean": "turbo clean && rimraf node_modules",
+    "version": "yarn changeset version",
+    "release": "yarn workspaces foreach --from '@diachronic/*' --no-private npm publish --tolerate-republish && yarn changeset tag"
   },
   "devDependencies": {
     "@types/node": "20",
+    "changeset": "^0.2.6",
     "rimraf": "^5.0.1",
     "ts-node": "10.9.1",
     "turbo": "1.10.13",

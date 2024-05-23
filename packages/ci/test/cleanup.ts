@@ -151,7 +151,7 @@ test('workflow cleanup workflow', async () => {
   await result
 
   const dbValue = pipe(dbFx.deref(), Effect.runSync)
-  // expect(typeof dbValue.summary?.numberOfIterations === 'number').toEqual(true)
+
   expect(R.omit(['summary'], dbValue)).toEqual({
     config: {
       iterMs: 60000,

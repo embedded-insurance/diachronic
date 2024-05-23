@@ -7,7 +7,7 @@ import * as Logging from '@effect-use/gcp-logging'
 import { InjectedSinks } from '@temporalio/worker'
 import { inWorkflowContext } from '@temporalio/workflow'
 
-export const loggerSink: InjectedSinks<EISinks> = {
+export const loggerSink: InjectedSinks<DiachronicSinks> = {
   logger: {
     info: {
       fn(workflowInfo, logEntryInJsonFormat) {
@@ -32,9 +32,9 @@ export interface LoggerSink extends Sinks {
     error(logEntry: string): void
   }
 }
-export type EISinks = LoggerSink
+export type DiachronicSinks = LoggerSink
 
-const { logger } = wf.proxySinks<EISinks>()
+const { logger } = wf.proxySinks<DiachronicSinks>()
 
 export const defaultLogFunction = (logEntry: LogEntry) => {
   if (!inWorkflowContext()) {

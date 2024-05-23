@@ -10,7 +10,8 @@
     "clean": "rimraf node_modules & rimraf dist & rimraf .turbo",
     "test": "jest",
     "format": "prettier --write .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build": "tsc"
   },
   "keywords": [],
   "author": {
@@ -45,7 +46,7 @@
     "node": ">=20"
   },
   "publishConfig": {
-    "access": "restricted"
+    "access": "public"
   },
   "repository": {
     "directory": "packages/workflow",
