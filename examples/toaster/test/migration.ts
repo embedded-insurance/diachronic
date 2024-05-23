@@ -21,7 +21,7 @@ beforeAll(async () => {
   })
 })
 test('toaster migration', async () => {
-  const testEnv = await TestWorkflowEnvironment.createLocal()
+  const testEnv = await TestWorkflowEnvironment.createTimeSkipping()
   let prevRunId: string
 
   const prevWorkflowConfig: WorkerOptions = {
