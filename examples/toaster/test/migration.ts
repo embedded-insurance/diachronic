@@ -21,7 +21,7 @@ beforeAll(async () => {
   })
 })
 test('toaster migration', async () => {
-  const testEnv = await TestWorkflowEnvironment.createTimeSkipping()
+  const testEnv = await TestWorkflowEnvironment.createLocal()
   let prevRunId: string
 
   const prevWorkflowConfig: WorkerOptions = {
@@ -50,7 +50,7 @@ test('toaster migration', async () => {
     prevWorkflowRun,
     (snapshot) => snapshot.state === 'OFF'
   )
-  const timerDuration = 5000
+  const timerDuration = 500_000
   await prevWorkflowRun.signal('set-toast-time', {
     duration: timerDuration,
   })
