@@ -238,11 +238,6 @@ test('getAllStateValues - should return all state values a machine can occupy', 
     // `value` returned is in object form,
     // input is allowed to be dot-separated strings when possible
     const { value } = machine.resolveStateValue(id, {})
-    console.log({
-      id: JSON.stringify(id, null, 2),
-      value: JSON.stringify(value, null, 2),
-    })
-
     expect(value).toEqual(objectifyStateId(id))
   })
 })
