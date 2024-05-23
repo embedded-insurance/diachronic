@@ -15,23 +15,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Cache 🏎
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
+          save-always: true
           path: .turbo
           key: ${{ runner.os }}-turbo-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-turbo-
 
-      - name: Setup Node.js 20.x
-        uses: actions/setup-node@v3
+      - name: Setup nodejs
+        uses: actions/setup-node@v4
         with:
-          node-version: 20.x
-          cache: 'yarn'
+          cache: yarn
+          cache-dependency-path: yarn.lock
+          node-version: 20
 
       - name: Install 📦
         run: yarn --immutable
@@ -41,4 +43,4 @@ jobs:
 
       - name: Test 🧪
         timeout-minutes: 10
-        run: yarn turbo test --continue --concurrency=4
+        run: yarn turbo test --continue --concurrency=1
