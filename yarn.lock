@@ -640,27 +640,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@effect-use/gcp-gcs@npm:1.1.4, @effect-use/gcp-gcs@npm:^1.1.4":
-  version: 1.1.4
-  resolution: "@effect-use/gcp-gcs@npm:1.1.4"
-  dependencies:
-    "@effect/schema": 0.42.0
-    "@google-cloud/storage": ^6.10.1
-    effect: 2.0.0-next.47
-    tmp: ^0.2.1
-  checksum: af5c4aea1a8f6f711a48caa32534205772d0f3e74bc057df961358f7f7e363c6215c6ea809e696dac0ac42c07470487188a29cef7bd52270350b432292c58678
-  languageName: node
-  linkType: hard
-
-"@effect-use/gcp-gcs@npm:3.0.0":
-  version: 3.0.0
-  resolution: "@effect-use/gcp-gcs@npm:3.0.0"
+"@effect-use/gcp-gcs@npm:4.0.0":
+  version: 4.0.0
+  resolution: "@effect-use/gcp-gcs@npm:4.0.0"
   dependencies:
     "@effect/schema": 0.61.5
     "@google-cloud/storage": ^6.10.1
     effect: 2.2.3
     tmp: ^0.2.1
-  checksum: 605b7143d058e42a4d9e9ab887d84bc82270667d94f3c12633c7baaf6c97d6d6ac57d947a7fa359f7e2ccf9171d67091c8bb8c23373e18a008fb3589e391e4e8
+  checksum: 888d7cc5d7b4df943e9e765d4e644bbd1d5d29da60e59fc6a0033ae33a8922f935b5dbfe3649c4ca0af58ae788db94815c619da6839f5d1bf91704eaf9ab398e
   languageName: node
   linkType: hard
 
@@ -674,36 +662,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@effect-use/http-client@npm:1.0.0":
-  version: 1.0.0
-  resolution: "@effect-use/http-client@npm:1.0.0"
+"@effect-use/http-client@npm:4.0.0":
+  version: 4.0.0
+  resolution: "@effect-use/http-client@npm:4.0.0"
   dependencies:
-    "@effect/schema": 0.42.0
-    "@types/node": 18
-    effect: 2.0.0-next.47
-  checksum: 5c1824434bec507c45166214e7974d4554022cfc70078b274a3dca96b00aa383f430944ce089c8dd2a76603f215daaca63361992bcd217965e69b01c7d1ba792
-  languageName: node
-  linkType: hard
-
-"@effect-use/http-client@npm:2.0.0":
-  version: 2.0.0
-  resolution: "@effect-use/http-client@npm:2.0.0"
-  dependencies:
-    "@effect/schema": 0.42.0
-    "@types/node": 18
-    effect: 2.0.0-next.47
-  checksum: ada100ed13fc9409fb20b49f3cb5b004ee08ed129b641ee05c9cbb3cb0f312a758619bbbc0b0194dad600324dd9e33ce65904547c95eb54bbee5b558e30adaef
-  languageName: node
-  linkType: hard
-
-"@effect-use/http-client@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "@effect-use/http-client@npm:1.0.1"
-  dependencies:
-    "@effect/schema": 0.42.0
-    "@types/node": 18
-    effect: 2.0.0-next.47
-  checksum: 0a73a1d23b26b4c2a62e6e7db35af11ad92978e2969255b9078fec10d07f2670900ec1d19a9d37ff57ec505294e41f22aea732c331571b06aa2401bbb3b973df
+    "@effect/schema": 0.61.5
+    effect: 2.2.3
+  checksum: 2c53c01fca42e5936617c59abebc539bb61b4231091a657c410b81a7261663b883cc4cffd6cd6362cc6461ed62810ef9f036fd0045e8aea817b827a9e781fb0a
   languageName: node
   linkType: hard
 
