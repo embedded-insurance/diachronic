@@ -28,10 +28,10 @@ export type HTTPConfig = {
   method: HTTPMethod
   request: {
     type: 'json'
-    headers?: S.Schema<never, any, any>
-    query?: S.Schema<never, any, any>
-    params?: S.Schema<never, any, any>
-    body?: S.Schema<never, any, any>
+    headers?: S.Schema<any>
+    query?: S.Schema<any>
+    params?: S.Schema<any>
+    body?: S.Schema<any>
   }
   response?: {
     json?: ReadonlyArray<JSONResponseSpec>
@@ -63,8 +63,8 @@ export const fromDef = <A extends EffectDef>(
 export const defGroup = defSchema<Def>()
 
 export type JSONResponseSpec = {
-  status: S.Schema<never, any, any>
-  body: S.Schema<never, any, any>
+  status: S.Schema<any>
+  body: S.Schema<any>
 }
 // I don't know how typescript wants us to express this...
 export type JSONResponseType<A extends Def> =
@@ -81,41 +81,41 @@ export type JSONResponseType<A extends Def> =
         | (T1 extends JSONResponseSpec
             ? {
                 _tag: 'diachronic.http.response'
-                status: S.Schema.To<T1['status']>
+                status: S.Schema.Type<T1['status']>
                 headers?: Record<string, any>
-                body: S.Schema.To<T1['body']>
+                body: S.Schema.Type<T1['body']>
               }
             : never)
         | (T2 extends JSONResponseSpec
             ? {
                 _tag: 'diachronic.http.response'
-                status: S.Schema.To<T2['status']>
+                status: S.Schema.Type<T2['status']>
                 headers?: Record<string, any>
-                body: S.Schema.To<T2['body']>
+                body: S.Schema.Type<T2['body']>
               }
             : never)
         | (T3 extends JSONResponseSpec
             ? {
                 _tag: 'diachronic.http.response'
-                status: S.Schema.To<T3['status']>
+                status: S.Schema.Type<T3['status']>
                 headers?: Record<string, any>
-                body: S.Schema.To<T3['body']>
+                body: S.Schema.Type<T3['body']>
               }
             : never)
         | (T4 extends JSONResponseSpec
             ? {
                 _tag: 'diachronic.http.response'
-                status: S.Schema.To<T4['status']>
+                status: S.Schema.Type<T4['status']>
                 headers?: Record<string, any>
-                body: S.Schema.To<T4['body']>
+                body: S.Schema.Type<T4['body']>
               }
             : never)
         | (T5 extends JSONResponseSpec
             ? {
                 _tag: 'diachronic.http.response'
-                status: S.Schema.To<T5['status']>
+                status: S.Schema.Type<T5['status']>
                 headers?: Record<string, any>
-                body: S.Schema.To<T5['body']>
+                body: S.Schema.Type<T5['body']>
               }
             : never)
     : never
@@ -144,17 +144,19 @@ export type HTTPSuccessResponse = {
   headers?: Record<string, any>
 }
 
-export const ServerConfig = Context.Tag<HTTPServerConfig>()
+export const ServerConfig = Context.GenericTag<HTTPServerConfig>(
+  '@services/ServerConfig'
+)
 
 export type Handler<A extends Def, R> = (
   args: HTTPInput<A['diachronic.http']>,
   req: FastifyRequest,
   res: FastifyReply
-) => Effect.Effect<R, HTTPErrorResponse, JSONResponseType<A>>
+) => Effect.Effect<JSONResponseType<A>, HTTPErrorResponse, R>
 export type HTTPHandler<A extends Def, R> = (
   req: FastifyRequest,
   res: FastifyReply
-) => Effect.Effect<R, HTTPErrorResponse, JSONResponseType<A>>
+) => Effect.Effect<JSONResponseType<A>, HTTPErrorResponse, R>
 
 export type RouteImpl<A extends Def, R> = {
   def: A
@@ -166,31 +168,22 @@ export type RouteImpl<A extends Def, R> = {
 export type HTTPInput<A extends HTTPConfig> =
   A['request']['type'] extends 'json'
     ? {
-        [K in Exclude<keyof A['request'], 'type'>]: S.Schema.To<A['request'][K]>
+        [K in Exclude<keyof A['request'], 'type'>]: S.Schema.Type<
+          A['request'][K]
+        >
       }
     : never
 
 export type HTTPInputSchema<A extends HTTPConfig> =
   A['request']['type'] extends 'json'
-    ? S.Schema<
-        never,
-        S.FromStruct<{
-          [K in Exclude<
-            keyof A['request'],
-            'type'
-          >]: A['request'][K] extends S.Schema<never, any>
-            ? A['request'][K]
-            : never
-        }>,
-        S.ToStruct<{
-          [K in Exclude<
-            keyof A['request'],
-            'type'
-          >]: A['request'][K] extends S.Schema<never, any>
-            ? A['request'][K]
-            : never
-        }>
-      >
+    ? S.Struct<{
+        [K in Exclude<
+          keyof A['request'],
+          'type'
+        >]: A['request'][K] extends S.Schema<any, any, any>
+          ? A['request'][K]
+          : never
+      }>
     : never
 
 export type GroupDef = Record<
@@ -202,13 +195,13 @@ export type GroupDef = Record<
 
 export type GroupImpl<Sch extends GroupDef, R> = {
   [K in keyof Sch]: (
-    args: S.Schema.To<Sch[K]['input']>,
+    args: S.Schema.Type<Sch[K]['input']>,
     req: FastifyRequest,
     res: FastifyReply
   ) => Effect.Effect<
-    R,
-    S.Schema.To<Sch[K]['error']>,
-    S.Schema.To<Sch[K]['output']> | JSONResponseType<Sch[K]>
+    S.Schema.Type<Sch[K]['output']> | JSONResponseType<Sch[K]>,
+    S.Schema.Type<Sch[K]['error']>,
+    R
   >
 }
 /**

@@ -1,6 +1,6 @@
 import * as S from '@effect/schema/Schema'
 import { Effect, Runtime } from 'effect'
-import { map } from 'effect/ReadonlyRecord'
+import { map } from 'effect/Record'
 import * as PR from '@effect/schema/ParseResult'
 import { isTagged } from 'effect/Predicate'
 import { dual, pipe } from 'effect/Function'
@@ -205,11 +205,10 @@ export type Deps<T extends Effects<EffectsDef>> = {
 // wa.notifyDevelopers.activities.notifyDevelopers.name
 
 type Effects<T extends EffectsDef> = {
-  [K in keyof T]: (args: S.Schema.To<T[K]['input']>) => Effect.Effect<
-    any,
-    // unknown,
-    S.Schema.To<T[K]['error']>,
-    S.Schema.To<T[K]['output']>
+  [K in keyof T]: (args: S.Schema.Type<T[K]['input']>) => Effect.Effect<
+    S.Schema.Type<T[K]['output']>, // unknown,
+    S.Schema.Type<T[K]['error']>,
+    any
   >
 }
 
@@ -312,11 +311,11 @@ const schemaMiddleware = <Def extends EffectsDef, Fx extends Effects<Def>>(
     // }) as typeof impl
   }) as {
     [K in keyof typeof impl]: (
-      args: Parameters<(typeof impl)[K]>[0] //S.Schema.To<Def[K]['input']>
+      args: Parameters<(typeof impl)[K]>[0] //S.Schema.Type<Def[K]['input']>
     ) => Effect.Effect<
-      Effect.Effect.Context<ReturnType<(typeof impl)[K]>>,
+      Effect.Effect.Success<ReturnType<(typeof impl)[K]>>,
       Effect.Effect.Error<ReturnType<(typeof impl)[K]>> | PR.ParseError,
-      Effect.Effect.Success<ReturnType<(typeof impl)[K]>>
+      Effect.Effect.Context<ReturnType<(typeof impl)[K]>>
     >
   }
 }
@@ -345,37 +344,37 @@ export const handle: {
   <Schema extends EffectsDef, K extends keyof Schema, R>(
     k: K,
     fn: (
-      input: S.Schema.To<Schema[K]['input']>
+      input: S.Schema.Type<Schema[K]['input']>
     ) => Effect.Effect<
-      R,
-      S.Schema.To<Schema[K]['error']>,
-      S.Schema.To<Schema[K]['output']>
+      S.Schema.Type<Schema[K]['output']>,
+      S.Schema.Type<Schema[K]['error']>,
+      R
     >
   ): (
     self: Schema
   ) => (
-    input: S.Schema.To<Schema[K]['input']>
+    input: S.Schema.Type<Schema[K]['input']>
   ) => Effect.Effect<
-    R,
-    S.Schema.To<Schema[K]['error']>,
-    S.Schema.To<Schema[K]['output']>
+    S.Schema.Type<Schema[K]['output']>,
+    S.Schema.Type<Schema[K]['error']>,
+    R
   >
   <Schema extends EffectsDef, K extends keyof Schema, R>(
     self: Schema,
     k: K,
     fn: (
-      input: S.Schema.To<Schema[K]['input']>
+      input: S.Schema.Type<Schema[K]['input']>
     ) => Effect.Effect<
-      R,
-      S.Schema.To<Schema[K]['error']>,
-      S.Schema.To<Schema[K]['output']>
+      S.Schema.Type<Schema[K]['output']>,
+      S.Schema.Type<Schema[K]['error']>,
+      R
     >
   ): (
-    input: S.Schema.To<Schema[K]['input']>
+    input: S.Schema.Type<Schema[K]['input']>
   ) => Effect.Effect<
-    R,
-    S.Schema.To<Schema[K]['error']>,
-    S.Schema.To<Schema[K]['output']>
+    S.Schema.Type<Schema[K]['output']>,
+    S.Schema.Type<Schema[K]['error']>,
+    R
   >
 } = dual(
   3,
@@ -383,25 +382,25 @@ export const handle: {
     self: Schema,
     k: K,
     fn: (
-      input: S.Schema.To<Schema[K]['input']>
+      input: S.Schema.Type<Schema[K]['input']>
     ) => Effect.Effect<
-      R,
-      S.Schema.To<Schema[K]['error']>,
-      S.Schema.To<Schema[K]['output']>
+      S.Schema.Type<Schema[K]['output']>,
+      S.Schema.Type<Schema[K]['error']>,
+      R
     >
   ): ((
-    input: S.Schema.To<Schema[K]['input']>
+    input: S.Schema.Type<Schema[K]['input']>
   ) => Effect.Effect<
-    R,
-    S.Schema.To<Schema[K]['error']>,
-    S.Schema.To<Schema[K]['output']>
+    S.Schema.Type<Schema[K]['output']>,
+    S.Schema.Type<Schema[K]['error']>,
+    R
   >) => {
     return fn as (
-      input: S.Schema.To<Schema[K]['input']>
+      input: S.Schema.Type<Schema[K]['input']>
     ) => Effect.Effect<
-      R,
-      S.Schema.To<Schema[K]['error']>,
-      S.Schema.To<Schema[K]['output']>
+      S.Schema.Type<Schema[K]['output']>,
+      S.Schema.Type<Schema[K]['error']>,
+      R
     >
   }
 )

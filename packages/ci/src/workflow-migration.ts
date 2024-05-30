@@ -65,11 +65,11 @@ export type MigrateDb = {
   }
 }
 
-export const MigrateCtx = Context.Tag<{
+export const MigrateCtx = Context.GenericTag<{
   db: DbFx<MigrateDb>
   fx: typeof schedule
   self: Self<MigrateDb, any>
-}>()
+}>('@services/MigrateCtx')
 
 export const program = (args: MigrationWorkflowConfig) =>
   Effect.flatMap(MigrateCtx, ({ fx, db, self }) => {
@@ -94,26 +94,27 @@ export const program = (args: MigrationWorkflowConfig) =>
         ),
         Effect.bind('migrationResult', ({ currentBatchToSignal: toSignal }) =>
           Effect.if(toSignal.length > 0, {
-            onTrue: pipe(
-              Effect.logInfo(
-                `Sending migration signal to ${toSignal.length} workflows`
-              ),
-              Effect.flatMap(() =>
-                pipe(
-                  fx.signalMigrationBatch({
-                    workflowIds: toSignal,
-                    taskQueue: args.toTaskQueue,
-                  }),
-                  Effect.flatMap((result) =>
-                    db.updateIn('signaledWorkflows', (xs = []) => [
-                      ...xs,
-                      ...result.successes,
-                    ])
+            onTrue: () =>
+              pipe(
+                Effect.logInfo(
+                  `Sending migration signal to ${toSignal.length} workflows`
+                ),
+                Effect.flatMap(() =>
+                  pipe(
+                    fx.signalMigrationBatch({
+                      workflowIds: toSignal,
+                      taskQueue: args.toTaskQueue,
+                    }),
+                    Effect.flatMap((result) =>
+                      db.updateIn('signaledWorkflows', (xs = []) => [
+                        ...xs,
+                        ...result.successes,
+                      ])
+                    )
                   )
                 )
-              )
-            ),
-            onFalse: Effect.logInfo('Nothing new to signal'),
+              ),
+            onFalse: () => Effect.logInfo('Nothing new to signal'),
           })
         ),
         Effect.bind('unmigratedWorkflowIds', () =>
@@ -168,15 +169,16 @@ export const program = (args: MigrationWorkflowConfig) =>
               self.isContinueAsNewSuggested(),
               Effect.flatMap((shouldContinueAsNew) =>
                 Effect.if(shouldContinueAsNew, {
-                  onTrue: pipe(
-                    db.deref(),
-                    Effect.flatMap((state) => self.continueAsNew(state)),
-                    Effect.matchEffect({
-                      onSuccess: () => Effect.succeed(true),
-                      onFailure: () => Effect.succeed(false),
-                    })
-                  ),
-                  onFalse: Effect.succeed(false),
+                  onTrue: () =>
+                    pipe(
+                      db.deref(),
+                      Effect.flatMap((state) => self.continueAsNew(state)),
+                      Effect.matchEffect({
+                        onSuccess: () => Effect.succeed(true),
+                        onFailure: () => Effect.succeed(false),
+                      })
+                    ),
+                  onFalse: () => Effect.succeed(false),
                 })
               )
             )

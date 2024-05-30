@@ -31,10 +31,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-turbo-
 
-      - name: Setup Node.js 18.x
+      - name: Setup Node.js 20.x
         uses: actions/setup-node@v3
         with:
-          node-version: 18.x
+          node-version: 20.x
           cache: 'yarn'
 
       - name: Auth with npm registry
@@ -43,7 +43,7 @@ jobs:
                   diachronic:
                     npmAlwaysAuth: true
                     npmRegistryServer: "https://registry.npmjs.org"
-                    npmAuthToken: ${{ secrets.NPM_TOKEN }}' >> ~/.yarnrc.yml
+                    npmAuthToken: ${{ secrets.DIACHRONIC_NPM_TOKEN }}' >> ~/.yarnrc.yml
 
       - name: Install 📦
         run: yarn --immutable
@@ -62,5 +62,5 @@ jobs:
           publish: yarn release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.DIACHRONIC_NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.DIACHRONIC_NPM_TOKEN }}

@@ -12,14 +12,14 @@ export const instruction = def({
     },
     response: {
       json: [
-        { status: S.literal(200), body: S.any },
-        { status: S.literal(400), body: S.any },
-        { status: S.literal(500), body: S.any },
+        { status: S.Literal(200), body: S.Any },
+        { status: S.Literal(400), body: S.Any },
+        { status: S.Literal(500), body: S.Any },
       ],
     },
   },
   name: 'instruction',
-  error: S.unknown,
-  input: S.unknown,
-  output: S.any,
+  error: S.Unknown,
+  input: S.Unknown,
+  output: S.Any,
 })

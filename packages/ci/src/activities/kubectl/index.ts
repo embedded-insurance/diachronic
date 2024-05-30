@@ -1,6 +1,6 @@
 import { exec, ExecError } from '@diachronic/toolbox/infra/util'
 import { Context, Effect, pipe } from 'effect'
-import { NonEmptyArray } from 'effect/ReadonlyArray'
+import { NonEmptyArray } from "effect/Array"
 import { UnknownException } from 'effect/Cause'
 import { KubectlOpts, NoDeploymentsFound } from './types'
 // import type { Deployment } from '@ei-tech/k8s-api/v1/Deployment'
@@ -34,7 +34,7 @@ export const makeKubectl = () => ({
   delete: {
     deployment: (
       opts?: KubectlOpts
-    ): Effect.Effect<never, string | ExecError, string> => {
+    ): Effect.Effect<string, string | ExecError> => {
       const {
         namespaceFilter,
         labelsFilter,
@@ -71,11 +71,7 @@ export const makeKubectl = () => ({
   get: {
     deployment: (
       opts?: KubectlOpts
-    ): Effect.Effect<
-      never,
-      NoDeploymentsFound | ExecError | UnknownException,
-      NonEmptyArray<Deployment>
-    > => {
+    ): Effect.Effect<NonEmptyArray<Deployment>, NoDeploymentsFound | ExecError | UnknownException> => {
       const {
         namespaceFilter,
         labelsFilter,
@@ -131,4 +127,4 @@ export const makeKubectl = () => ({
 
 export type Kubectl = ReturnType<typeof makeKubectl>
 
-export const Kubectl = Context.Tag<Kubectl>()
+export const Kubectl = Context.GenericTag<Kubectl>("@services/Kubectl")

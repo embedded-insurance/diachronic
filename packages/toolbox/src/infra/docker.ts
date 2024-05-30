@@ -46,7 +46,7 @@ const getSHA256FromBuildOutput = (s: string) => {
 
 export const doesDockerImageExist = (
   imageIdent: string
-): Effect.Effect<never, never, boolean> => {
+): Effect.Effect<boolean> => {
   const dockerImageExistsCmd = `docker manifest inspect ${imageIdent}`
 
   return pipe(

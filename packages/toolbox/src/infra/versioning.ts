@@ -5,9 +5,9 @@ import { getGitBranchSync, getGitShaShortSync } from './git'
 export const makeTimestampVersionId = () =>
   new Date().toISOString().toLowerCase().replace(/:/g, '-').replace(/\./g, '-')
 
-export const WorkflowTaskQueueParts = S.tuple(
-  S.string.pipe(S.identifier('workflowName')),
-  S.string.pipe(S.identifier('versionId'))
+export const WorkflowTaskQueueParts = S.Tuple(
+  S.String.pipe(S.identifier('workflowName')),
+  S.String.pipe(S.identifier('versionId'))
 )
 
 /**

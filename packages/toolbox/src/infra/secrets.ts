@@ -51,45 +51,47 @@ export const secret = (args: {
 }) =>
   Effect.flatMap(Environment, (a) =>
     Effect.if(a === 'local', {
-      onTrue: Effect.succeed({
-        apiVersion: 'v1',
-        kind: 'Secret',
-        metadata: {
-          name: args.name,
-          namespace: args.namespace,
-        },
-        data: Object.entries(
-          args.localClusterOnlyKeyValuesPreBase64 || {}
-        ).reduce(
-          (a, [k, v]) => ({
-            ...a,
-            [k]: Buffer.from(v).toString('base64'),
-          }),
-          {}
-        ),
-      } as Secret),
-      onFalse: Effect.succeed({
-        apiVersion: 'external-secrets.io/v1beta1' as const,
-        kind: 'ExternalSecret' as const,
-        metadata: {
-          name: args.name,
-          namespace: args.namespace,
-        },
-        spec: {
-          refreshInterval: '1h',
-          secretStoreRef: {
-            name: 'gcp-backend',
-            kind: 'ClusterSecretStore',
+      onTrue: () =>
+        Effect.succeed({
+          apiVersion: 'v1',
+          kind: 'Secret',
+          metadata: {
+            name: args.name,
+            namespace: args.namespace,
           },
-          target: { name: args.name },
-          data: args.mappings.map((x) => ({
-            secretKey: x.kubernetesSecretKey,
-            remoteRef: {
-              key: x.googleSecretManagerSecretName,
-              property: x.googleSecretManagerJSONKey,
+          data: Object.entries(
+            args.localClusterOnlyKeyValuesPreBase64 || {}
+          ).reduce(
+            (a, [k, v]) => ({
+              ...a,
+              [k]: Buffer.from(v).toString('base64'),
+            }),
+            {}
+          ),
+        } as Secret),
+      onFalse: () =>
+        Effect.succeed({
+          apiVersion: 'external-secrets.io/v1beta1' as const,
+          kind: 'ExternalSecret' as const,
+          metadata: {
+            name: args.name,
+            namespace: args.namespace,
+          },
+          spec: {
+            refreshInterval: '1h',
+            secretStoreRef: {
+              name: 'gcp-backend',
+              kind: 'ClusterSecretStore',
             },
-          })),
-        },
-      }),
+            target: { name: args.name },
+            data: args.mappings.map((x) => ({
+              secretKey: x.kubernetesSecretKey,
+              remoteRef: {
+                key: x.googleSecretManagerSecretName,
+                property: x.googleSecretManagerJSONKey,
+              },
+            })),
+          },
+        }),
     })
   )

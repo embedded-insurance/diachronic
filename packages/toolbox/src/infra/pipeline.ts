@@ -57,7 +57,7 @@ export type GetManifestsInput = {
 }
 export type GetManifestsFunction = (
   args: GetManifestsInput
-) => Effect.Effect<Environment, unknown, KubernetesManifest[]>
+) => Effect.Effect<KubernetesManifest[], unknown, Environment>
 
 export type DeployPipelineInput = {
   buildSpec: BuildSpec[]
@@ -201,28 +201,32 @@ export const deployPipeline = (args: DeployPipelineInput) => {
         Effect.tap((exists) => Effect.logInfo('Image exists: ' + exists)),
         Effect.flatMap((exists) =>
           Effect.if(exists, {
-            onTrue: pipe(
-              Effect.logInfo('Image already exists. Skipping build and push.'),
-              Effect.flatMap(() => Effect.succeed(dockerArgs))
-            ),
-            onFalse: pipe(
-              dockerBuild(dockerArgs),
-              Effect.withLogSpan('docker-build'),
-              Effect.flatMap(() => dockerPush(dockerArgs.imageIdent)),
-              Effect.catchIf(
-                (e) =>
-                  e.stderr.includes(
-                    'The repository has enabled tag immutability'
-                  ),
-                (e) =>
-                  pipe(
-                    Effect.logInfo('Ignoring tag exists'),
-                    Effect.tap(() => Effect.succeed(e))
-                  )
+            onTrue: () =>
+              pipe(
+                Effect.logInfo(
+                  'Image already exists. Skipping build and push.'
+                ),
+                Effect.flatMap(() => Effect.succeed(dockerArgs))
               ),
-              Effect.withLogSpan('docker-push'),
-              Effect.flatMap(() => Effect.succeed(dockerArgs))
-            ),
+            onFalse: () =>
+              pipe(
+                dockerBuild(dockerArgs),
+                Effect.withLogSpan('docker-build'),
+                Effect.flatMap(() => dockerPush(dockerArgs.imageIdent)),
+                Effect.catchIf(
+                  (e) =>
+                    e.stderr.includes(
+                      'The repository has enabled tag immutability'
+                    ),
+                  (e) =>
+                    pipe(
+                      Effect.logInfo('Ignoring tag exists'),
+                      Effect.tap(() => Effect.succeed(e))
+                    )
+                ),
+                Effect.withLogSpan('docker-push'),
+                Effect.flatMap(() => Effect.succeed(dockerArgs))
+              ),
           })
         ),
         Effect.withLogSpan('docker')

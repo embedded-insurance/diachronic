@@ -76,7 +76,7 @@ test('workflow run completed with success', async () => {
     migration: {
       startChild: (args) =>
         Effect.succeed({
-          cancel: () => Effect.succeed(Effect.unit),
+          cancel: () => Effect.succeed(Effect.void),
           signal: () => Effect.succeed('OK'),
           result: () =>
             pipe(
@@ -94,7 +94,7 @@ test('workflow run completed with success', async () => {
       executeChild: (args) => Effect.succeed('OK'),
       startChild: (args) =>
         Effect.succeed({
-          cancel: () => Effect.succeed(Effect.unit),
+          cancel: () => Effect.succeed(Effect.void),
           signal: () => Effect.succeed('OK'),
           result: () =>
             pipe(
@@ -111,7 +111,7 @@ test('workflow run completed with success', async () => {
       executeChild: (args) => Effect.succeed('OK'),
       startChild: (args) =>
         Effect.succeed({
-          cancel: () => Effect.succeed(Effect.unit),
+          cancel: () => Effect.succeed(Effect.void),
           signal: () => Effect.succeed('OK'),
           result: () =>
             pipe(
@@ -165,7 +165,7 @@ test('workflow run completed with success', async () => {
   const migrationDone = jest.fn((args) => {
     console.log('it was called with', args)
     expect(Exit.isExit(args)).toEqual(true)
-    return Effect.unit
+    return Effect.void;
   })
 
   signaling.handle('migration.done', migrationDone)
@@ -337,7 +337,7 @@ test('production deployment + unsupported simulation', async () => {
     migration: {
       startChild: (args) =>
         Effect.succeed({
-          cancel: () => Effect.succeed(Effect.unit),
+          cancel: () => Effect.succeed(Effect.void),
           signal: () => Effect.succeed('OK'),
           result: () =>
             pipe(
@@ -355,7 +355,7 @@ test('production deployment + unsupported simulation', async () => {
       executeChild: (args) => Effect.succeed('OK'),
       startChild: (args) =>
         Effect.succeed({
-          cancel: () => Effect.succeed(Effect.unit),
+          cancel: () => Effect.succeed(Effect.void),
           signal: () => Effect.succeed('OK'),
           result: () =>
             pipe(
@@ -372,7 +372,7 @@ test('production deployment + unsupported simulation', async () => {
       executeChild: (args) => Effect.succeed('OK'),
       startChild: (args) =>
         Effect.succeed({
-          cancel: () => Effect.succeed(Effect.unit),
+          cancel: () => Effect.succeed(Effect.void),
           signal: () => Effect.succeed('OK'),
           result: () =>
             pipe(
@@ -426,7 +426,7 @@ test('production deployment + unsupported simulation', async () => {
   const migrationDone = jest.fn((args) => {
     console.log('it was called with', args)
     expect(Exit.isExit(args)).toEqual(true)
-    return Effect.unit
+    return Effect.void;
   })
 
   signaling.handle('migration.done', migrationDone)
@@ -583,7 +583,7 @@ test('dark deploy + migration', async () => {
     migration: {
       startChild: (args) =>
         Effect.succeed({
-          cancel: () => Effect.succeed(Effect.unit),
+          cancel: () => Effect.succeed(Effect.void),
           signal: () => Effect.succeed('OK'),
           result: () =>
             pipe(
@@ -601,7 +601,7 @@ test('dark deploy + migration', async () => {
       executeChild: (args) => Effect.succeed('OK'),
       startChild: (args) =>
         Effect.succeed({
-          cancel: () => Effect.succeed(Effect.unit),
+          cancel: () => Effect.succeed(Effect.void),
           signal: () => Effect.succeed('OK'),
           result: () =>
             pipe(
@@ -618,7 +618,7 @@ test('dark deploy + migration', async () => {
       executeChild: (args) => Effect.succeed('OK'),
       startChild: (args) =>
         Effect.succeed({
-          cancel: () => Effect.succeed(Effect.unit),
+          cancel: () => Effect.succeed(Effect.void),
           signal: () => Effect.succeed('OK'),
           result: () =>
             pipe(
@@ -673,7 +673,7 @@ test('dark deploy + migration', async () => {
 
   const migrationDoneHandler = jest.fn((args) => {
     expect(Exit.isExit(args)).toEqual(true)
-    return Effect.unit
+    return Effect.void;
   })
 
   signaling.handle('migration.done', migrationDoneHandler)
@@ -828,7 +828,7 @@ test('non-migratory', async () => {
     migration: {
       startChild: (args) =>
         Effect.succeed({
-          cancel: () => Effect.succeed(Effect.unit),
+          cancel: () => Effect.succeed(Effect.void),
           signal: () => Effect.succeed('OK'),
           result: () =>
             pipe(
@@ -846,7 +846,7 @@ test('non-migratory', async () => {
       executeChild: (args) => Effect.succeed('OK'),
       startChild: (args) =>
         Effect.succeed({
-          cancel: () => Effect.succeed(Effect.unit),
+          cancel: () => Effect.succeed(Effect.void),
           signal: () => Effect.succeed('OK'),
           result: () =>
             pipe(
@@ -863,7 +863,7 @@ test('non-migratory', async () => {
       executeChild: (args) => Effect.succeed('OK'),
       startChild: (args) =>
         Effect.succeed({
-          cancel: () => Effect.succeed(Effect.unit),
+          cancel: () => Effect.succeed(Effect.void),
           signal: () => Effect.succeed('OK'),
           result: () =>
             pipe(
@@ -918,7 +918,7 @@ test('non-migratory', async () => {
 
   const migrationDoneHandler = jest.fn((args) => {
     expect(Exit.isExit(args)).toEqual(true)
-    return Effect.unit
+    return Effect.void;
   })
 
   signaling.handle('migration.done', migrationDoneHandler)

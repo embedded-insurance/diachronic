@@ -1,16 +1,16 @@
 import * as S from '@effect/schema/Schema'
 import { Context, Layer } from 'effect'
 
-export const EnvironmentName = S.literal('development', 'production', 'local')
-export type Environment = S.Schema.To<typeof EnvironmentName>
-export const Environment = Context.Tag<Environment>(
+export const EnvironmentName = S.Literal('development', 'production', 'local')
+export type Environment = S.Schema.Type<typeof EnvironmentName>
+export const Environment = Context.GenericTag<Environment>(
   'diachronic.infra/Environment'
 )
 export const EnvironmentLayer = (a: Environment) =>
   Layer.succeed(Environment, Environment.of(a))
 
-export const DiachronicCloudEnvironment = S.literal('development', 'production')
-export type DiachronicCloudEnvironment = S.Schema.To<
+export const DiachronicCloudEnvironment = S.Literal('development', 'production')
+export type DiachronicCloudEnvironment = S.Schema.Type<
   typeof DiachronicCloudEnvironment
 >
 

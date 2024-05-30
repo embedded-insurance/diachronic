@@ -48,9 +48,9 @@ type BuildStepSuccess = any
 type BuildFn = (args: {
   versionId: string
 }) => Effect.Effect<
-  Environment,
+  Either.Either<BuildStepSuccess[], BuildStepFailure[]>,
   unknown,
-  Either.Either<BuildStepFailure[], BuildStepSuccess[]>
+  Environment
 >
 
 export const compile = (args: {

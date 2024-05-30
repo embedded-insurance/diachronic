@@ -27,7 +27,7 @@ const fakeFx = (
   getRunningWorkflowIdsCount: function (args: {
     readonly workflowName?: string | undefined
     readonly taskQueue: string
-  }): Effect.Effect<never, unknown, number> {
+  }): Effect.Effect<number, unknown> {
     const idx = fc.sample(
       fc.integer({ min: 0, max: state.oldRunningWorkflowIds.length }),
       1
@@ -44,7 +44,7 @@ const fakeFx = (
   getWorkflowDeployments: function (args: {
     readonly workflowName?: string
     readonly versionId?: string
-  }): Effect.Effect<never, unknown, readonly unknown[]> {
+  }): Effect.Effect<readonly unknown[], unknown> {
     return Effect.succeed([
       {
         apiVersion: 'apps/v1',
@@ -63,14 +63,14 @@ const fakeFx = (
   deleteKubernetesDeployment: function (args: {
     readonly name: string
     readonly namespace: string
-  }): Effect.Effect<never, unknown, string> {
+  }): Effect.Effect<string, unknown> {
     return Effect.succeed('OK')
   },
   deleteWorkflowVersionFlag: function (args: {
     readonly environment?: string | undefined
     readonly workflowName: string
     readonly versionId: string
-  }): Effect.Effect<never, unknown, unknown> {
+  }): Effect.Effect<unknown, unknown> {
     return Effect.succeed('OK')
   },
 })

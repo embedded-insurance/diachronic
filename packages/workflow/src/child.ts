@@ -16,9 +16,9 @@ export const makeChildWorkflows = <
     string,
     {
       name: string
-      input: S.Schema<never, any, any>
-      output: S.Schema<never, any, any>
-      error: S.Schema<never, any, any>
+      input: S.Schema<any>
+      output: S.Schema<any>
+      error: S.Schema<any>
       defaultOptions: ChildWorkflowOptions
     }
   >
@@ -29,7 +29,7 @@ export const makeChildWorkflows = <
     Object.entries(schema).map(([k, v]) => [
       k,
       (
-        args: S.Schema.To<(typeof v)['input']>,
+        args: S.Schema.Type<(typeof v)['input']>,
         options?: ChildWorkflowOptions
       ) =>
         Effect.tryPromise(() =>
@@ -42,12 +42,11 @@ export const makeChildWorkflows = <
     ])
   ) as {
     [K in keyof Schema]: (
-      args: S.Schema.To<Schema[K]['input']>,
+      args: S.Schema.Type<Schema[K]['input']>,
       options?: ChildWorkflowOptions
     ) => Effect.Effect<
-      never,
-      S.Schema.To<Schema[K]['error']>,
-      S.Schema.To<Schema[K]['output']>
+      S.Schema.Type<Schema[K]['output']>,
+      S.Schema.Type<Schema[K]['error']>
     >
   }
 
@@ -56,12 +55,12 @@ export const makeChildWorkflows2 = <
     string,
     {
       name: string
-      input: S.Schema<never, any, any>
-      output: S.Schema<never, any, any>
-      error: S.Schema<never, any, any>
+      input: S.Schema<any>
+      output: S.Schema<any>
+      error: S.Schema<any>
       ['temporal.workflow']: {
         defaultTemporalOptions: ChildWorkflowOptions
-        signals?: Record<string, S.Schema<never, any, any>>
+        signals?: Record<string, S.Schema<any>>
       }
     }
   >
@@ -73,7 +72,7 @@ export const makeChildWorkflows2 = <
       k,
       {
         executeChild: (
-          args: S.Schema.To<(typeof v)['input']>,
+          args: S.Schema.Type<(typeof v)['input']>,
           options?: { temporalOptions?: ChildWorkflowOptions }
         ) =>
           pipe(
@@ -109,7 +108,7 @@ export const makeChildWorkflows2 = <
         //     )
         //   ),
         startChild: (
-          args: S.Schema.To<(typeof v)['input']>,
+          args: S.Schema.Type<(typeof v)['input']>,
           options?: { temporalOptions?: ChildWorkflowOptions }
         ) =>
           pipe(
@@ -129,13 +128,15 @@ export const makeChildWorkflows2 = <
                   signal: K,
                   args: (typeof v)['temporal.workflow']['signals'] extends undefined
                     ? never
-                    : S.Schema.To<(typeof v)['temporal.workflow']['signals'][K]>
+                    : S.Schema.Type<
+                        (typeof v)['temporal.workflow']['signals'][K]
+                      >
                 ) => Effect.tryPromise(() => x.signal(signal, args)),
 
                 result: () =>
                   Effect.tryPromise(
                     () =>
-                      x.result() as Promise<S.Schema.To<(typeof v)['output']>>
+                      x.result() as Promise<S.Schema.Type<(typeof v)['output']>>
                   ),
                 // This binds the function to the execution that was started
                 // vs a generic cancel that would cancel any workflow, not necessarily a child of this one.
@@ -173,76 +174,70 @@ export const makeChildWorkflows2 = <
   ) as {
     [K in keyof Schema]: {
       executeChild: (
-        args: S.Schema.To<Schema[K]['input']>,
+        args: S.Schema.Type<Schema[K]['input']>,
         options?: { temporalOptions?: ChildWorkflowOptions }
       ) => Effect.Effect<
-        never,
-        WorkflowExecutionAlreadyStartedError | S.Schema.To<Schema[K]['error']>,
-        S.Schema.To<Schema[K]['output']>
+        S.Schema.Type<Schema[K]['output']>,
+        WorkflowExecutionAlreadyStartedError | S.Schema.Type<Schema[K]['error']>
       >
       startChild: (
-        args: S.Schema.To<Schema[K]['input']>,
+        args: S.Schema.Type<Schema[K]['input']>,
         options?: { temporalOptions?: ChildWorkflowOptions }
       ) => Effect.Effect<
-        never,
-        WorkflowExecutionAlreadyStartedError | unknown,
         {
           workflowId: string
           firstExecutionRunId?: string
           result: () => Effect.Effect<
-            never,
-            S.Schema.To<Schema[K]['error']>,
-            S.Schema.To<Schema[K]['output']>
+            S.Schema.Type<Schema[K]['output']>,
+            S.Schema.Type<Schema[K]['error']>
           >
           signal: <K2 extends keyof Schema[K]['temporal.workflow']['signals']>(
             signal: K2,
             args: Schema[K]['temporal.workflow']['signals'] extends Record<
               string,
-              S.Schema<never, any, any>
+              S.Schema<any>
             >
-              ? S.Schema.To<Schema[K]['temporal.workflow']['signals'][K2]>
+              ? S.Schema.Type<Schema[K]['temporal.workflow']['signals'][K2]>
               : never
-          ) => Effect.Effect<never, unknown, unknown>
-          cancel: () => Effect.Effect<never, unknown, void>
-        }
+          ) => Effect.Effect<unknown, unknown>
+          cancel: () => Effect.Effect<void, unknown>
+        },
+        WorkflowExecutionAlreadyStartedError | unknown
       >
     }
   }
 // export type ChildWorkflowHandle<T extends WorkflowDef> = {
 export type EffectWorkflowAPI<T extends WorkflowDef> = {
   executeChild: (
-    args: S.Schema.To<T['input']>,
+    args: S.Schema.Type<T['input']>,
     options?: { temporalOptions?: ChildWorkflowOptions }
   ) => Effect.Effect<
-    never,
-    WorkflowExecutionAlreadyStartedError | S.Schema.To<T['error']>,
-    S.Schema.To<T['output']>
+    S.Schema.Type<T['output']>,
+    WorkflowExecutionAlreadyStartedError | S.Schema.Type<T['error']>
   >
   startChild: (
-    args: S.Schema.To<T['input']>,
+    args: S.Schema.Type<T['input']>,
     options?: { temporalOptions?: ChildWorkflowOptions }
   ) => Effect.Effect<
-    never,
-    WorkflowExecutionAlreadyStartedError | unknown,
     {
       workflowId: string
       firstExecutionRunId?: string
       result: () => Effect.Effect<
-        never,
-        S.Schema.To<T['error']>,
-        S.Schema.To<T['output']>
+        S.Schema.Type<T['output']>,
+        S.Schema.Type<T['error']>
       >
       signal: <K2 extends keyof T['temporal.workflow']['signals']>(
         signal: K2,
         args: T['temporal.workflow']['signals'] extends Record<
           string,
-          S.Schema<never, any, any>
+          S.Schema<any>
         >
-          ? S.Schema.To<T['temporal.workflow']['signals'][K2]>
+          ? S.Schema.Type<T['temporal.workflow']['signals'][K2]>
           : never
-      ) => Effect.Effect<never, unknown, unknown>
-      cancel: () => Effect.Effect<never, unknown, void>
-    }
+      ) => Effect.Effect<unknown, unknown>
+      cancel: () => Effect.Effect<void, unknown>
+    },
+    WorkflowExecutionAlreadyStartedError | unknown
   >
 }
 
@@ -253,15 +248,15 @@ export type EffectWorkflowAPIs<T extends Record<string, WorkflowDef>> = {
 export type EffectWorkflowHandle<T extends WorkflowDef> = {
   workflowId: string
   firstExecutionRunId?: string
-  result: () => Effect.Effect<never, unknown, unknown>
+  result: () => Effect.Effect<unknown, unknown>
   signal: <K2 extends keyof T['temporal.workflow']['signals']>(
     signal: K2,
     args: T['temporal.workflow']['signals'] extends Record<
       string,
-      S.Schema<never, any, any>
+      S.Schema<any>
     >
-      ? S.Schema.To<T['temporal.workflow']['signals'][K2]>
+      ? S.Schema.Type<T['temporal.workflow']['signals'][K2]>
       : never
-  ) => Effect.Effect<never, unknown, unknown>
-  cancel: () => Effect.Effect<never, unknown, void>
+  ) => Effect.Effect<unknown, unknown>
+  cancel: () => Effect.Effect<void, unknown>
 }

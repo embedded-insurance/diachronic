@@ -1242,8 +1242,8 @@ test('signals drained when signal storm', async () => {
     (snapshot) => {
       return (
         // @ts-expect-error
-        snapshot?.context.events?.length === signaler.getNumberSent()
-      )
+        (snapshot?.context.events?.length === signaler.getNumberSent())
+      );
     }
   )
 

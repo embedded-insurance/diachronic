@@ -28,13 +28,13 @@ import { activities as simulationActivities } from './simulation'
 import { activityDefinitions } from './definitions'
 import { Kubectl, makeKubectl } from './kubectl'
 
-const ActivitiesEnv = S.struct({
-  FEATURE_FLAG_SERVER_URL: S.string,
-  FEATURE_FLAG_CLIENT_API_KEY: S.string,
-  FEATURE_FLAG_ADMIN_API_KEY: S.string,
-  SIGNALER_BASE_URL: S.string,
-  TEMPORAL_NAMESPACE: S.string,
-  TEMPORAL_ADDRESS: S.string,
+const ActivitiesEnv = S.Struct({
+  FEATURE_FLAG_SERVER_URL: S.String,
+  FEATURE_FLAG_CLIENT_API_KEY: S.String,
+  FEATURE_FLAG_ADMIN_API_KEY: S.String,
+  SIGNALER_BASE_URL: S.String,
+  TEMPORAL_NAMESPACE: S.String,
+  TEMPORAL_ADDRESS: S.String,
 })
 
 const env = S.decodeSync(ActivitiesEnv)(process.env as any, { errors: 'all' })

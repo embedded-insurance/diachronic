@@ -9,20 +9,20 @@ interface MyDep1 {
   mydep1: string
 }
 
-const MyDep1 = Context.Tag<MyDep1>()
+const MyDep1 = Context.GenericTag<MyDep1>("@services/MyDep1")
 
 interface MyDep2 {
   mydep2: string
 }
 
-const MyDep2 = Context.Tag<MyDep2>()
+const MyDep2 = Context.GenericTag<MyDep2>("@services/MyDep2")
 
 test('should work', () => {
   const someFn = def({
     name: 'hi',
-    input: S.struct({ a: S.string }),
-    output: S.literal('output'),
-    error: S.literal('error'),
+    input: S.Struct({ a: S.String }),
+    output: S.Literal('output'),
+    error: S.Literal('error'),
   })
 
   const ef = asAnnotatedEffect(someFn, (a) =>
@@ -54,9 +54,9 @@ test('should work', () => {
 test('implement / dual', () => {
   const schema = def({
     name: 'hi',
-    input: S.struct({ a: S.string }),
-    output: S.literal('output'),
-    error: S.literal('error'),
+    input: S.Struct({ a: S.String }),
+    output: S.Literal('output'),
+    error: S.Literal('error'),
   })
   const myimpl = pipe(
     schema,

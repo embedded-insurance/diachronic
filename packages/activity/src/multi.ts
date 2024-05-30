@@ -63,10 +63,10 @@ export const toMapOfPromiseEither = <
         a: Parameters<Impl[K]>[0]
       ) => Promise<
         Either<
-          Effect.Effect.Error<ReturnType<Impl[K]>>,
-          Effect.Effect.Success<ReturnType<Impl[K]>>
+          Effect.Effect.Success<ReturnType<Impl[K]>>,
+          Effect.Effect.Error<ReturnType<Impl[K]>>
         >
       >
     }
-  )
+  );
 }

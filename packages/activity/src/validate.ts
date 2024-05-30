@@ -68,16 +68,16 @@ export const validate = (options: ValidateOptions = defaults) =>
 // Effect.runSync(wrapped({ b: 'ok' }))
 
 const composeK0 =
-  <B, R2, E2, C>(g: (b: B) => Effect.Effect<R2, E2, C>) =>
+  <B, R2, E2, C>(g: (b: B) => Effect.Effect<C, E2, R2>) =>
   <R1, E1, A>(
-    f: (a: A) => Effect.Effect<R1, E1, B>
-  ): ((a: A) => Effect.Effect<R1 | R2, E1 | E2, C>) =>
+    f: (a: A) => Effect.Effect<B, E1, R1>
+  ): ((a: A) => Effect.Effect<C, E1 | E2, R1 | R2>) =>
   (a) =>
     Effect.flatMap(f(a), g)
 
 ///
 interface Kleisli<A, R, E, B> {
-  (a: A): Effect.Effect<R, E, B>
+  (a: A): Effect.Effect<B, E, R>
 }
 
 const composeK =
@@ -101,7 +101,7 @@ const composerK =
 //   (self) =>
 //     f(self)
 
-const validateInput = S.decode(S.struct({ a: S.string })) // validation
+const validateInput = S.decode(S.Struct({ a: S.String })) // validation
 
 // target
 const makeValidateOutput =
@@ -123,7 +123,7 @@ const businessFn = (_input: { a: string }) =>
 const validation = map(
   (f: any) => (x: any) =>
     Effect.flatMap(f(x), (result) =>
-      S.decode(S.struct({ output: S.string }))(result as any)
+      S.decode(S.Struct({ output: S.String }))(result as any)
     )
 )
 const wrapped = pipe(

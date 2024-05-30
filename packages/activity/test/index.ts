@@ -17,9 +17,9 @@ test('annotateMethods', () => {
     name: 'hello',
     http: { method: 'GET', path: '/hello' },
     'temporal.activity': { defaultOptions: undefined, name: 'hi' },
-    error: S.any,
-    input: S.any,
-    output: S.any,
+    error: S.Any,
+    input: S.Any,
+    output: S.Any,
   })
 
   const defMyDef = defSchema<HTTPActivity>()
@@ -28,12 +28,12 @@ test('annotateMethods', () => {
     hello: one,
     foo: {
       name: 'notifyDevelopers',
-      input: S.struct({ message: S.string }),
-      output: S.struct({
-        sharedProp: S.string,
-        notifyDevelopersOutputGoesHere: S.boolean,
+      input: S.Struct({ message: S.String }),
+      output: S.Struct({
+        sharedProp: S.String,
+        notifyDevelopersOutputGoesHere: S.Boolean,
       }),
-      error: S.literal('i am a type 2'),
+      error: S.Literal('i am a type 2'),
       http: {
         method: 'POST',
         path: '/notifyDevelopers',

@@ -19,17 +19,13 @@ import { toApplicationFailure } from './errors'
 export type Self<Db, Signals = any> = {
   id: string
   close: (exit: Exit.Exit<any, any>) => Effect.Effect<any, never, any>
-  isContinueAsNewSuggested: () => Effect.Effect<never, never, boolean>
-  continueAsNew: (state: Db) => Effect.Effect<never, never, never>
+  isContinueAsNewSuggested: () => Effect.Effect<boolean>
+  continueAsNew: (state: Db) => Effect.Effect<never>
   signalWorkflow: <K extends keyof Signals>(
     workflowId: string,
     signalName: K,
-    data: S.Schema.To<Signals[K]>
-  ) => Effect.Effect<
-    never,
-    SignalExternalWorkflowError,
-    SignalExternalWorkflowOutput
-  >
+    data: S.Schema.Type<Signals[K]>
+  ) => Effect.Effect<SignalExternalWorkflowOutput, SignalExternalWorkflowError>
 }
 
 export const make = <
@@ -46,11 +42,10 @@ export const make = <
     signalWorkflow: <K extends keyof Signals>(
       workflowId: string,
       signalName: K,
-      data: S.Schema.To<Signals[K]>
+      data: S.Schema.Type<Signals[K]>
     ): Effect.Effect<
-      never,
-      SignalExternalWorkflowError,
-      SignalExternalWorkflowOutput
+      SignalExternalWorkflowOutput,
+      SignalExternalWorkflowError
     > =>
       pipe(
         Effect.Do,

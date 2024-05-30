@@ -60,9 +60,9 @@ const environmentToClusterName = {
 export class WrongClusterContextError extends S.TaggedError<WrongClusterContextError>()(
   'WrongClusterContextError',
   {
-    actual: S.string,
+    actual: S.String,
     environment: DiachronicCloudEnvironment,
-    expected: S.optional(S.array(S.string)),
+    expected: S.optional(S.Array(S.String)),
   }
 ) {}
 
@@ -100,15 +100,13 @@ const pfspecs = {
 type Svc = 'mqtt' | 'signaler' | 'temporal'
 const isPortForwarding = (service: Svc) => {
   const spec = pfspecs[service]
-  return Effect.succeed(false)
   return pipe(
     exec(`kubectl get svc/${spec.name} -n ${spec.namespace} -o json`),
     Effect.map((s) => JSON.parse(s.stdout) as Service),
     Effect.map(
       (svc) =>
         !!svc.spec?.ports?.some(
-          // @ts-expect-error add k8s types
-          (x) =>
+          (x: any) =>
             x.port === spec.port &&
             String(x?.targetPort) === String(spec.targetPort)
         )
@@ -122,48 +120,50 @@ const portForward = (environment: DiachronicCloudEnvironment, service: Svc) =>
     Effect.flatMap(() => isPortForwarding(service)),
     Effect.flatMap((alreadyPortforwarding) =>
       Effect.if(alreadyPortforwarding, {
-        onTrue: pipe(
-          Effect.logDebug(`Already port-forwarding to ${service} service`),
-          Effect.tap(() => Effect.succeed(Effect.unit))
-        ),
-        onFalse: pipe(
-          Match.value(service),
-          Match.when('mqtt', () =>
-            pipe(
-              Effect.logInfo(
-                `Starting port forward to ${environment} MQTT service on port 1883`
-              ),
-              Effect.flatMap(() =>
-                exec(`kubectl port-forward svc/broker 1883:1883 -n mqtt`)
-              )
-            )
+        onTrue: () =>
+          pipe(
+            Effect.logDebug(`Already port-forwarding to ${service} service`),
+            Effect.tap(() => Effect.succeed(Effect.void))
           ),
-          Match.when('signaler', () =>
-            pipe(
-              Effect.logInfo(
-                `Starting port forward to ${environment} signaler service on port 8080`
-              ),
-              Effect.flatMap(() =>
-                exec(
-                  `kubectl port-forward svc/workflow-signaler 8080:8080 -n workflow-signaler`
+        onFalse: () =>
+          pipe(
+            Match.value(service),
+            Match.when('mqtt', () =>
+              pipe(
+                Effect.logInfo(
+                  `Starting port forward to ${environment} MQTT service on port 1883`
+                ),
+                Effect.flatMap(() =>
+                  exec(`kubectl port-forward svc/broker 1883:1883 -n mqtt`)
                 )
               )
-            )
-          ),
-          Match.when('temporal', () =>
-            pipe(
-              Effect.logInfo(
-                `Starting port forward to ${environment} temporal service on port 7233`
-              ),
-              Effect.flatMap(() =>
-                exec(
-                  `kubectl port-forward svc/temporal-frontend 7233:7233 -n temporal`
+            ),
+            Match.when('signaler', () =>
+              pipe(
+                Effect.logInfo(
+                  `Starting port forward to ${environment} signaler service on port 8080`
+                ),
+                Effect.flatMap(() =>
+                  exec(
+                    `kubectl port-forward svc/workflow-signaler 8080:8080 -n workflow-signaler`
+                  )
                 )
               )
-            )
+            ),
+            Match.when('temporal', () =>
+              pipe(
+                Effect.logInfo(
+                  `Starting port forward to ${environment} temporal service on port 7233`
+                ),
+                Effect.flatMap(() =>
+                  exec(
+                    `kubectl port-forward svc/temporal-frontend 7233:7233 -n temporal`
+                  )
+                )
+              )
+            ),
+            Match.exhaustive
           ),
-          Match.exhaustive
-        ),
       })
     )
   )
@@ -303,14 +303,14 @@ const build = ({
       getBuildStep({ buildSpec, versionId, buildDirectory, packageRoot }),
       // Fail on one or more errors
       Effect.flatMap((results) => {
-        const errors = results.filter((x) => x._tag === 'Left')
-        const successes = results.filter((x) => x._tag === 'Right')
+        const errors = results.filter((x) => x._tag === 'Right')
+        const successes = results.filter((x) => x._tag === 'Left')
         if (errors.length) {
           return pipe(
             Effect.logError('🛑 Build failed'),
             Effect.tap(() =>
               // @ts-expect-error
-              Effect.forEach(errors, (x) => Effect.logError(x.left))
+              Effect.forEach(errors, (x) => Effect.logError(x.right))
             ),
             Effect.flatMap(() => Effect.fail({ errors, successes }))
           )
@@ -421,23 +421,24 @@ export const createReloadableWorkerPipeline = (args: ReloadPipelineArgs) => {
   )
   const inbox = Effect.runSync(Queue.sliding<InboundMessageType>(2 ** 4))
   const createReceive = (box: Queue.Queue<any>) =>
-    Effect.asyncEffect<never, any, any, MQTTClient, any, any>((resume) =>
-      Effect.flatMap(MQTTClient, (mqtt) => {
-        const handler = (topic: string, message: InboundMessageType) => {
-          if (topic !== selfAddress) {
-            console.warn('Unexpected topic', { topic, message })
-            return
+    Effect.asyncEffect<any, unknown, never, never, unknown, MQTTClient>(
+      (resume) =>
+        Effect.flatMap(MQTTClient, (mqtt) => {
+          const handler = (topic: string, message: InboundMessageType) => {
+            if (topic !== selfAddress) {
+              console.warn('Unexpected topic', { topic, message })
+              return
+            }
+            const msg = JSON.parse(message.toString())
+            // TODO. do something other than print
+            console.log('Received:', { topic, message: msg })
+            box.unsafeOffer(msg)
           }
-          const msg = JSON.parse(message.toString())
-          // TODO. do something other than print
-          console.log('Received:', { topic, message: msg })
-          box.unsafeOffer(msg)
-        }
 
-        mqtt.on('message', handler as any)
-        mqtt.subscribe(selfAddress)
-        return Effect.unit
-      })
+          mqtt.on('message', handler as any)
+          mqtt.subscribe(selfAddress)
+          return Effect.void
+        })
     )
 
   const createSend =
@@ -458,7 +459,7 @@ export const createReloadableWorkerPipeline = (args: ReloadPipelineArgs) => {
 
   const send = createSend<MessageType>(containerAddress)
 
-  let receiver: RuntimeFiber<unknown, void>
+  let receiver: RuntimeFiber<void, unknown>
 
   const applyReceiver = () => {
     if (receiver) return Effect.succeed(receiver)
@@ -510,7 +511,7 @@ export const createReloadableWorkerPipeline = (args: ReloadPipelineArgs) => {
               (x) =>
                 x.kind === 'Deployment' &&
                 x.apiVersion === 'apps/v1' &&
-                !!x.metadata.labels?.['diachronic/workflow-name'],
+                !!x.metadata.labels?.['ei.tech/workflow-name'],
               xs
             )
             const updated = workflowDeployments.map((x) =>
@@ -522,13 +523,10 @@ export const createReloadableWorkerPipeline = (args: ReloadPipelineArgs) => {
                     env: [
                       ...(x.env || []),
                       {
-                        name: 'DIACHRONIC_CI_MQTT_BROKER_URL',
+                        name: 'EI_CI_MQTT_BROKER_URL',
                         value: containerMQTTBrokerURL,
                       },
-                      {
-                        name: 'DIACHRONIC_CI_MQTT_TOPIC',
-                        value: containerAddress,
-                      },
+                      { name: 'EI_CI_MQTT_TOPIC', value: containerAddress },
                     ],
                   })),
                 x as Deployment

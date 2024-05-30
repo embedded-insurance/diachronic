@@ -5,36 +5,36 @@ import { activityDef } from '@diachronic/activity/activity'
 export class UnsupportedSimulation extends S.TaggedError<UnsupportedSimulation>()(
   'UnsupportedSimulation',
   {
-    scenarioName: S.optional(S.string),
-    environment: S.optional(S.string),
-    message: S.string,
+    scenarioName: S.optional(S.String),
+    environment: S.optional(S.String),
+    message: S.String,
   }
 ) {
   public nonRetryable = true as true
 }
 
-const SimulationEnvironment = S.literal('development', 'production')
+const SimulationEnvironment = S.Literal('development', 'production')
 
 export const StartWorkflowSimulationInput = S.extend(
-  S.struct({
-    workflowName: S.string,
-    versionId: S.string,
+  S.Struct({
+    workflowName: S.String,
+    versionId: S.String,
     environment: SimulationEnvironment,
-    taskQueue: S.string,
-    scenarioName: S.string,
+    taskQueue: S.String,
+    scenarioName: S.String,
   }),
-  S.partial(S.struct({ numberOfSimulations: S.number }))
+  S.partial(S.Struct({ numberOfSimulations: S.Number }))
 )
-export type StartWorkflowSimulationInput = S.Schema.To<
+export type StartWorkflowSimulationInput = S.Schema.Type<
   typeof StartWorkflowSimulationInput
 >
-export const StartWorkflowSimulationOutput = S.struct({
-  workflowName: S.string,
-  versionId: S.string,
+export const StartWorkflowSimulationOutput = S.Struct({
+  workflowName: S.String,
+  versionId: S.String,
   environment: SimulationEnvironment,
-  scenarioName: S.string,
-  successes: S.array(S.unknown),
-  failures: S.array(S.unknown),
+  scenarioName: S.String,
+  successes: S.Array(S.Unknown),
+  failures: S.Array(S.Unknown),
   timeStarted: ISODateString,
 })
 
@@ -43,6 +43,6 @@ export const activityDefinitions = {
     name: 'startWorkflowSimulation',
     input: StartWorkflowSimulationInput,
     output: StartWorkflowSimulationOutput,
-    error: UnsupportedSimulation.struct,
+    error: S.Struct(UnsupportedSimulation.fields),
   }),
 }

@@ -135,7 +135,7 @@ export const makeFeatureFlagClient = async (args: {
 export type FeatureFlagClient = Awaited<
   ReturnType<typeof makeFeatureFlagClient>
 >
-export const FeatureFlagClient = Context.Tag<FeatureFlagClient>(
+export const FeatureFlagClient = Context.GenericTag<FeatureFlagClient>(
   'diachronic.feature-flag-client'
 )
 /**

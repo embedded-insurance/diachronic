@@ -12,9 +12,9 @@ export const resolveFilepath = (s: string, cwd: string = '.') => {
 }
 
 export const ensureDir = (dir: string) =>
-  Effect.async<never, NodeJS.ErrnoException, void>((resume) =>
+  Effect.async<void, NodeJS.ErrnoException>((resume) =>
     fs.mkdir(dir, { recursive: true }, (e) =>
-      resume(e ? Effect.fail(e) : Effect.succeed(Effect.unit))
+      resume(e ? Effect.fail(e) : Effect.succeed(Effect.void))
     )
   )
 
@@ -23,11 +23,11 @@ export const writeFile = (
   data: string | NodeJS.ArrayBufferView,
   options?: fs.WriteFileOptions
 ) =>
-  Effect.async<never, NodeJS.ErrnoException, void>((respond) =>
+  Effect.async<void, NodeJS.ErrnoException>((respond) =>
     fs.writeFile(path, data, options || {}, (e) => {
       if (e) {
         return respond(Effect.fail(e))
       }
-      return respond(Effect.succeed(Effect.unit))
+      return respond(Effect.succeed(Effect.void));
     })
   )

@@ -1,4 +1,14 @@
-import { Context, Effect, Exit, Fiber, Layer, pipe, Ref, Runtime } from 'effect'
+import {
+  Context,
+  Effect,
+  Exit,
+  Fiber,
+  Layer,
+  pipe,
+  Ref,
+  Runtime,
+  Unify,
+} from 'effect'
 import * as R from 'ramda'
 import * as wf from '@temporalio/workflow'
 import { WorkflowDeployEventPayload } from './types'
@@ -19,39 +29,39 @@ import { WorkflowVersionInfo } from '@diachronic/toolbox/infra/versioning-types'
 import { WorkflowDef } from '@diachronic/workflow/workflow'
 import { Self } from './lib/self'
 
-type Signaling<SignalMap extends Record<string, S.Schema<never, any, any>>> = {
+type Signaling<SignalMap extends Record<string, S.Schema<any>>> = {
   emitter: EventEmitter
   emit: <SignalName extends keyof SignalMap & string>(
     evt: SignalName,
-    payload: S.Schema.To<SignalMap[SignalName]>['payload']
-  ) => Effect.Effect<never, never, void>
+    payload: S.Schema.Type<SignalMap[SignalName]>['payload']
+  ) => Effect.Effect<void>
   handle: <SignalName extends keyof SignalMap & string>(
     evt: SignalName,
     fn: (
-      e: S.Schema.To<SignalMap[SignalName]>['payload']
+      e: S.Schema.Type<SignalMap[SignalName]>['payload']
     ) => Effect.Effect<any, any, any>
   ) => void
   route: <
     Signal extends {
-      [K in keyof SignalMap]: S.Schema.To<SignalMap[K]>
+      [K in keyof SignalMap]: S.Schema.Type<SignalMap[K]>
     }[keyof SignalMap]
   >(
     signal: Signal
-  ) => Effect.Effect<any, any, void>
+  ) => Effect.Effect<void, any, any>
 }
 
 // const SelfRuntime = Context.Tag<Runtime.Runtime<any>>('self-runtime')
 
 class NoRouteError extends S.TaggedError<NoRouteError>()('NoRoute', {
-  message: S.string,
-  input: S.struct({
-    type: S.string,
-    payload: S.unknown,
+  message: S.String,
+  input: S.Struct({
+    type: S.String,
+    payload: S.Unknown,
   }),
 }) {}
 
 const makeSignalRouter = <
-  SignalMap extends Record<string, S.Schema<never, any, any>>,
+  SignalMap extends Record<string, S.Schema<any>>,
   SignalingTag extends Context.Tag<Signaling<SignalMap>, Signaling<SignalMap>>
 >(
   signalMap: SignalMap,
@@ -62,7 +72,7 @@ const makeSignalRouter = <
 
   const emit = <SignalName extends keyof SignalMap & string>(
     evt: SignalName,
-    payload: S.Schema.To<SignalMap[SignalName]>['payload']
+    payload: S.Schema.Type<SignalMap[SignalName]>['payload']
   ) =>
     pipe(
       Effect.logDebug('Emitting signal'),
@@ -73,7 +83,7 @@ const makeSignalRouter = <
   const handle = <SignalName extends keyof SignalMap & string>(
     evt: SignalName,
     fn: (
-      e: S.Schema.To<SignalMap[SignalName]>['payload']
+      e: S.Schema.Type<SignalMap[SignalName]>['payload']
     ) => Effect.Effect<any, any, any>
   ): void =>
     void emitter.on(evt, (x) =>
@@ -93,7 +103,7 @@ const makeSignalRouter = <
 
   const route = <
     Signal extends {
-      [K in keyof SignalMap]: S.Schema.To<SignalMap[K]>
+      [K in keyof SignalMap]: S.Schema.Type<SignalMap[K]>
     }[keyof SignalMap]
   >(
     signal: Signal
@@ -139,7 +149,7 @@ const makeSignalRouter = <
   }
 }
 
-export const Signaling = Context.Tag<Signaling<SignalMap>>(
+export const Signaling = Context.GenericTag<Signaling<SignalMap>>(
   'diachronic.workflow-ci.signaling'
 )
 
@@ -148,39 +158,33 @@ const Signals = workflowDefinitions.workflowCI['temporal.workflow'].signals
 type ChildWorkflowDefinitions<T extends WorkflowDef> =
   T['temporal.workflow']['childWorkflows']
 
-type MigrationError = S.Schema.To<
+type MigrationError = S.Schema.Type<
   ChildWorkflowDefinitions<
     typeof workflowDefinitions.workflowCI
   >['migration']['error']
 >
-type MigrationSuccess = S.Schema.To<
+type MigrationSuccess = S.Schema.Type<
   ChildWorkflowDefinitions<
     typeof workflowDefinitions.workflowCI
   >['migration']['output']
 >
 
 const InternalSignals = {
-  'migration.done': S.any as S.Schema<
-    never,
-    {
-      type: 'migration.done'
-      payload: Exit.Exit<MigrationError, MigrationSuccess>
-    }
-  >,
-  'rollout.done': S.any as S.Schema<
-    never,
-    {
-      type: 'rollout.done'
-      payload: Exit.Exit<any, any>
-    }
-  >,
+  'migration.done': S.Any as S.Schema<{
+    type: 'migration.done'
+    payload: Exit.Exit<MigrationSuccess, MigrationError>
+  }>,
+  'rollout.done': S.Any as S.Schema<{
+    type: 'rollout.done'
+    payload: Exit.Exit<any, any>
+  }>,
 }
-type InternalSignals = S.Schema.To<
+type InternalSignals = S.Schema.Type<
   (typeof InternalSignals)[keyof typeof InternalSignals]
 >
 type SignalMap = typeof InternalSignals & typeof Signals
 
-type Signals = S.Schema.To<(typeof Signals)[keyof typeof Signals]> &
+type Signals = S.Schema.Type<(typeof Signals)[keyof typeof Signals]> &
   InternalSignals
 
 type Db = {
@@ -214,7 +218,7 @@ type Ctx = {
   fx: typeof activities & typeof workflows
   self: Self<Db, SignalMap>
 }
-export const Ctx = Context.Tag<Ctx>()
+export const Ctx = Context.GenericTag<Ctx>('@services/Ctx')
 
 const getFromVersion = (
   versionId: string,
@@ -329,7 +333,7 @@ export const onWorkflowDeploymentSuccess = ({
                     )
                   )
                 ),
-                Effect.tap(() => Effect.succeed(Effect.unit))
+                Effect.tap(() => Effect.succeed(Effect.void))
               ),
           })
         )
@@ -366,7 +370,7 @@ export const onWorkflowDeploymentSuccess = ({
                   R.assocPath(['simulations', e.scenarioName || '<none>'], e, a)
                 )
               ),
-              Effect.tap(() => Effect.succeed(Effect.unit))
+              Effect.tap(() => Effect.succeed(Effect.void))
             )
           )
         )
@@ -376,17 +380,21 @@ export const onWorkflowDeploymentSuccess = ({
       // Spawn rollout process if not a dark deploy, otherwise wait for the signal
       Effect.bind('rollout', ({ signaling }) =>
         Effect.if(!!isDarkDeploy, {
-          onTrue: pipe(
-            Effect.logInfo('Is dark deploy. Waiting for start rollout signal'),
-            Effect.flatMap(() => Effect.die(Effect.succeed('waiting')))
-          ),
-          onFalse: signaling.route({
-            type: 'diachronic.ci.workflow.rollout.start',
-            payload: {
-              workflowName,
-              environment,
-            },
-          }),
+          onTrue: () =>
+            pipe(
+              Effect.logInfo(
+                'Is dark deploy. Waiting for start rollout signal'
+              ),
+              Effect.flatMap(() => Effect.die(Effect.succeed('waiting')))
+            ),
+          onFalse: () =>
+            signaling.route({
+              type: 'diachronic.ci.workflow.rollout.start',
+              payload: {
+                workflowName,
+                environment,
+              },
+            }),
         })
       )
     )
@@ -398,25 +406,26 @@ const handleCleanup = (args: any) =>
       db.deref(),
       Effect.flatMap(({ fromVersion, config: { isNonMigratory } }) =>
         Effect.if(!!fromVersion && isNonMigratory === true, {
-          onTrue: pipe(
-            Effect.logInfo('Spawning cleanup workflow'),
-            Effect.flatMap(() =>
-              fx.cleanup.startChild(
-                { versionInfo: fromVersion },
-                {
-                  temporalOptions: {
-                    workflowId: `cleanup.${fromVersion.taskQueue}`,
-                    parentClosePolicy:
-                      ParentClosePolicy.PARENT_CLOSE_POLICY_ABANDON,
-                  },
-                }
+          onTrue: () =>
+            pipe(
+              Effect.logInfo('Spawning cleanup workflow'),
+              Effect.flatMap(() =>
+                fx.cleanup.startChild(
+                  { versionInfo: fromVersion },
+                  {
+                    temporalOptions: {
+                      workflowId: `cleanup.${fromVersion.taskQueue}`,
+                      parentClosePolicy:
+                        ParentClosePolicy.PARENT_CLOSE_POLICY_ABANDON,
+                    },
+                  }
+                )
+              ),
+              Effect.tap((handle) =>
+                db.swap(R.assocPath(['workflows', 'cleanup', 'handle'], handle))
               )
             ),
-            Effect.tap((handle) =>
-              db.swap(R.assocPath(['workflows', 'cleanup', 'handle'], handle))
-            )
-          ),
-          onFalse: Effect.succeed(Effect.unit),
+          onFalse: () => Effect.succeed(Effect.void),
         })
       ),
       Effect.withLogSpan('handleCleanup')
@@ -434,86 +443,87 @@ const handleMigration = (_args: any) =>
           config: { workflowName, isNonMigratory },
         }) =>
           Effect.if(!!isNonMigratory, {
-            onTrue: Effect.succeed('Workflow is non-migratory'),
-            onFalse: Effect.if(!fromVersion, {
-              onTrue: Effect.succeed(
-                'No previous version. Nothing to migrate.'
-              ),
-              onFalse: pipe(
-                Effect.log('Queuing migration workflow...'),
-                Effect.flatMap(() =>
+            onTrue: () => Effect.succeed('Workflow is non-migratory'),
+            onFalse: () =>
+              Effect.if(!fromVersion, {
+                onTrue: () =>
+                  Effect.succeed('No previous version. Nothing to migrate.'),
+                onFalse: () =>
                   pipe(
-                    fx.migration.startChild(
-                      {
-                        workflowName,
-                        fromTaskQueue: fromVersion!.taskQueue,
-                        toTaskQueue: toVersion.taskQueue,
-                      },
-                      {
-                        temporalOptions: {
-                          workflowId: `migration.${workflowName}`, //_from_${fromTaskQueue}_to_${toTaskQueue}`,
-                          parentClosePolicy:
-                            ParentClosePolicy.PARENT_CLOSE_POLICY_ABANDON,
-                        },
-                      }
-                    ),
-                    Effect.tap((wf) =>
-                      db.swap((state) =>
-                        R.assocPath(
-                          ['workflows', 'migration', 'handle'],
-                          wf,
-                          state
-                        )
-                      )
-                    ),
-                    Effect.tap(() => Effect.logInfo('Migration started')),
-                    Effect.flatMap((wf) =>
+                    Effect.log('Queuing migration workflow...'),
+                    Effect.flatMap(() =>
                       pipe(
-                        wf.result(),
-                        Effect.matchEffect({
-                          onSuccess: (a) =>
-                            pipe(
-                              Effect.logInfo(
-                                'Migration workflow completed successfully'
-                              ),
-                              Effect.flatMap(() =>
-                                Effect.flatMap(Signaling, (signaling) =>
-                                  signaling.emit('migration.done', a as any)
-                                )
-                              )
-                            ),
-                          onFailure: (e) =>
-                            pipe(
-                              Effect.logInfo('Migration workflow failed'),
-                              Effect.flatMap(() =>
-                                Effect.flatMap(Signaling, (signaling) =>
-                                  signaling.emit('migration.done', e as any)
-                                )
-                              )
-                            ),
-                        }),
-                        Effect.withLogSpan('migration-process')
-                      )
-                    ),
-                    Effect.catchAllCause((e) => {
-                      if (S.is(WorkflowExecutionAlreadyStartedError)(e)) {
-                        return pipe(
-                          Effect.logWarning('Migration already running', e),
-                          Effect.annotateLogs({
+                        fx.migration.startChild(
+                          {
                             workflowName,
-                            fromVersion,
-                            toVersion,
-                          }),
-                          Effect.flatMap(() => Effect.succeed(e))
-                        )
-                      }
-                      return Effect.fail(e)
-                    }),
-                    Effect.withLogSpan('start-migration')
-                  )
-                )
-              ),
-            }),
+                            fromTaskQueue: fromVersion!.taskQueue,
+                            toTaskQueue: toVersion.taskQueue,
+                          },
+                          {
+                            temporalOptions: {
+                              workflowId: `migration.${workflowName}`, //_from_${fromTaskQueue}_to_${toTaskQueue}`,
+                              parentClosePolicy:
+                                ParentClosePolicy.PARENT_CLOSE_POLICY_ABANDON,
+                            },
+                          }
+                        ),
+                        Effect.tap((wf) =>
+                          db.swap((state) =>
+                            R.assocPath(
+                              ['workflows', 'migration', 'handle'],
+                              wf,
+                              state
+                            )
+                          )
+                        ),
+                        Effect.tap(() => Effect.logInfo('Migration started')),
+                        Effect.flatMap((wf) =>
+                          pipe(
+                            wf.result(),
+                            Effect.matchEffect({
+                              onSuccess: (a) =>
+                                pipe(
+                                  Effect.logInfo(
+                                    'Migration workflow completed successfully'
+                                  ),
+                                  Effect.flatMap(() =>
+                                    Effect.flatMap(Signaling, (signaling) =>
+                                      signaling.emit('migration.done', a as any)
+                                    )
+                                  )
+                                ),
+                              onFailure: (e) =>
+                                pipe(
+                                  Effect.logInfo('Migration workflow failed'),
+                                  Effect.flatMap(() =>
+                                    Effect.flatMap(Signaling, (signaling) =>
+                                      signaling.emit('migration.done', e as any)
+                                    )
+                                  )
+                                ),
+                            }),
+                            Effect.withLogSpan('migration-process')
+                          )
+                        ),
+                        Effect.catchAllCause((e) => {
+                          if (S.is(WorkflowExecutionAlreadyStartedError)(e)) {
+                            return pipe(
+                              Effect.logWarning('Migration already running', e),
+                              Effect.annotateLogs({
+                                workflowName,
+                                fromVersion,
+                                toVersion,
+                              }),
+                              Effect.flatMap(() => Effect.succeed(e))
+                            )
+                          }
+                          return Effect.fail(e)
+                        }),
+                        Effect.withLogSpan('start-migration')
+                      )
+                    )
+                  ),
+              }),
           })
       ),
       Effect.withLogSpan('handleMigration')
@@ -527,96 +537,100 @@ const handleRollout = ({ workflowName }: { workflowName: string }) =>
       db.deref(),
       Effect.flatMap(({ fromVersion, toVersion }) =>
         Effect.if(!fromVersion, {
-          onTrue: fx.applyWorkflowTrafficRouting({
-            percent: '100',
-            workflowFlagName: toVersion.flagName,
-          }),
-          onFalse: pipe(
-            Effect.logInfo('Queuing rollout workflow...'),
-            Effect.flatMap(() =>
-              fx.rollout.startChild(
-                {
-                  workflowName,
-                  toVersion,
-                },
-                {
-                  temporalOptions: {
-                    workflowId: `rollout.${workflowName}`,
-                    parentClosePolicy:
-                      ParentClosePolicy.PARENT_CLOSE_POLICY_TERMINATE,
+          onTrue: () =>
+            fx.applyWorkflowTrafficRouting({
+              percent: '100',
+              workflowFlagName: toVersion.flagName,
+            }),
+          onFalse: () =>
+            pipe(
+              Effect.logInfo('Queuing rollout workflow...'),
+              Effect.flatMap(() =>
+                fx.rollout.startChild(
+                  {
+                    workflowName,
+                    toVersion,
                   },
-                }
-              )
-            ),
-            Effect.tap((wf) =>
-              db.swap((state) =>
-                R.assocPath(['workflows', 'rollout', 'handle'], wf, state)
-              )
-            ),
-            Effect.tap(() => Effect.logInfo('Rollout started')),
-            Effect.tap(() =>
-              pipe(
-                db.deref(),
-                Effect.flatMap((state) => {
-                  if (
-                    // state.config.isDarkDeploy &&
-                    !state.config.isNonMigratory
-                  ) {
+                  {
+                    temporalOptions: {
+                      workflowId: `rollout.${workflowName}`,
+                      parentClosePolicy:
+                        ParentClosePolicy.PARENT_CLOSE_POLICY_TERMINATE,
+                    },
+                  }
+                )
+              ),
+              Effect.tap((wf) =>
+                db.swap((state) =>
+                  R.assocPath(['workflows', 'rollout', 'handle'], wf, state)
+                )
+              ),
+              Effect.tap(() => Effect.logInfo('Rollout started')),
+              Effect.tap(() =>
+                pipe(
+                  db.deref(),
+                  Effect.flatMap((state) => {
+                    if (
+                      // state.config.isDarkDeploy &&
+                      !state.config.isNonMigratory
+                    ) {
+                      return pipe(
+                        Effect.logInfo(
+                          'Workflow is migratory. Starting migration process'
+                        ),
+                        Effect.flatMap(() =>
+                          Effect.flatMap(Signaling, (signaling) =>
+                            signaling.route({
+                              type: 'diachronic.ci.workflow.migration.start',
+                              payload: {
+                                workflowName: state.config.workflowName,
+                                environment: state.config.environment,
+                              },
+                            })
+                          )
+                        )
+                      )
+                    }
                     return pipe(
                       Effect.logInfo(
-                        'Workflow is migratory. Starting migration process'
+                        'Workflow is non-migratory. Skipping migration process'
                       ),
-                      Effect.flatMap(() =>
-                        Effect.flatMap(Signaling, (signaling) =>
-                          signaling.route({
-                            type: 'diachronic.ci.workflow.migration.start',
-                            payload: {
-                              workflowName: state.config.workflowName,
-                              environment: state.config.environment,
-                            },
-                          })
-                        )
-                      )
+                      Effect.tap(() => Effect.void)
                     )
-                  }
-                  return pipe(
-                    Effect.logInfo(
-                      'Workflow is non-migratory. Skipping migration process'
-                    ),
-                    Effect.tap(() => Effect.unit)
-                  )
-                })
+                  })
+                )
+              ),
+              Effect.flatMap((wf) =>
+                pipe(
+                  wf.result(),
+                  Effect.matchEffect({
+                    onSuccess: (a) =>
+                      pipe(
+                        Effect.logInfo(
+                          'Rollout workflow completed successfully'
+                        ),
+                        Effect.flatMap(() =>
+                          Effect.flatMap(Signaling, (signaling) =>
+                            signaling.emit('rollout.done', a as any)
+                          )
+                        )
+                      ),
+                    onFailure: (e) =>
+                      pipe(
+                        Effect.logInfo('Rollout workflow failed'),
+                        Effect.flatMap(() =>
+                          Effect.flatMap(Signaling, (signaling) =>
+                            signaling.emit('rollout.done', e as any)
+                          )
+                        )
+                      ),
+                  }),
+                  Effect.withLogSpan('rollout-process')
+                  // Effect.fork,
+                  // Effect.flatMap((x) => x.await)
+                )
               )
             ),
-            Effect.flatMap((wf) =>
-              pipe(
-                wf.result(),
-                Effect.matchEffect({
-                  onSuccess: (a) =>
-                    pipe(
-                      Effect.logInfo('Rollout workflow completed successfully'),
-                      Effect.flatMap(() =>
-                        Effect.flatMap(Signaling, (signaling) =>
-                          signaling.emit('rollout.done', a as any)
-                        )
-                      )
-                    ),
-                  onFailure: (e) =>
-                    pipe(
-                      Effect.logInfo('Rollout workflow failed'),
-                      Effect.flatMap(() =>
-                        Effect.flatMap(Signaling, (signaling) =>
-                          signaling.emit('rollout.done', e as any)
-                        )
-                      )
-                    ),
-                }),
-                Effect.withLogSpan('rollout-process')
-                // Effect.fork,
-                // Effect.flatMap((x) => x.await)
-              )
-            )
-          ),
         })
       )
     )
@@ -651,7 +665,7 @@ export const registerSignalHandlers = (runtime: Runtime.Runtime<Ctx>) => {
           }
           return pipe(
             Effect.logInfo(`No rollout workflow found. Can't cancel.`),
-            Effect.flatMap(() => Effect.succeed(Effect.unit))
+            Effect.flatMap(() => Effect.succeed(Effect.void))
           )
         })
       )
@@ -668,7 +682,7 @@ export const registerSignalHandlers = (runtime: Runtime.Runtime<Ctx>) => {
         db.swap(R.assocPath(['workflows', 'rollout', 'exit'], args)),
         Effect.flatMap(() => db.deref()),
         Effect.flatMap(
-          Effect.unifiedFn((state) => {
+          Unify.unify((state) => {
             if (state.config.isNonMigratory && state.workflows.rollout?.exit) {
               if (state.workflows.rollout?.exit) {
                 return pipe(
@@ -693,7 +707,7 @@ export const registerSignalHandlers = (runtime: Runtime.Runtime<Ctx>) => {
             }
             return pipe(
               Effect.logInfo(`Rollout done, migration still running.`),
-              Effect.flatMap(() => Effect.succeed(Effect.unit))
+              Effect.flatMap(() => Effect.succeed(Effect.void))
             )
           })
         )
@@ -708,7 +722,7 @@ export const registerSignalHandlers = (runtime: Runtime.Runtime<Ctx>) => {
         ),
         Effect.flatMap(() => db.get('workflows')),
         Effect.flatMap(
-          Effect.unifiedFn((workflows) => {
+          Unify.unify((workflows) => {
             if (workflows.rollout?.exit) {
               return pipe(
                 Effect.logInfo(
@@ -721,7 +735,7 @@ export const registerSignalHandlers = (runtime: Runtime.Runtime<Ctx>) => {
               Effect.logInfo(
                 `Migration finished but rollout workflow still pending.`
               ),
-              Effect.flatMap(() => Effect.succeed(Effect.unit))
+              Effect.flatMap(() => Effect.succeed(Effect.void))
             )
           })
         )

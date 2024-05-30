@@ -4,7 +4,7 @@ import * as S from '@effect/schema/Schema'
 import { pipe } from 'effect/Function'
 
 interface Kleisli<A, R, E, B> {
-  (a: A): Effect.Effect<R, E, B>
+  (a: A): Effect.Effect<B, E, R>
 }
 
 const map =
@@ -48,20 +48,20 @@ const businessFn = (_input: { a: string }) =>
 const validation = map(
   (f: any) => (x: any) =>
     Effect.flatMap(f(x), (result) =>
-      S.decode(S.struct({ output: S.string }))(result as any)
+      S.decode(S.Struct({ output: S.String }))(result as any)
     )
 )
 const validation2 = map2(
   (f) => (x: any) =>
     Effect.flatMap(f(x), (result) =>
-      S.decode(S.struct({ output: S.string }))(result as any)
+      S.decode(S.Struct({ output: S.String }))(result as any)
     )
 )
 
 const validation3 = map3(
   (f) => (x) =>
     Effect.flatMap(f(x), (result) =>
-      S.decode(S.struct({ output: S.string }))(result as any)
+      S.decode(S.Struct({ output: S.String }))(result as any)
     )
 )
 const test =
@@ -79,9 +79,9 @@ const testEff =
       f(y) as Effect.Effect<any, any, any>,
       (a) => a as any
     ) as Effect.Effect<
-      D | (B extends Effect.Effect<infer C, any, any> ? C : never),
+      D | (B extends Effect.Effect<infer O, any, any> ? O : never),
       D | (B extends Effect.Effect<any, infer E, any> ? E : never),
-      D | (B extends Effect.Effect<any, any, infer O> ? O : never)
+      D | (B extends Effect.Effect<any, any, infer C> ? C : never)
     >
 
 const tt2 = pipe(
@@ -99,11 +99,7 @@ const createTestEff2 =
     Effect.flatMap(
       f(y) as Effect.Effect<any, any, any>,
       (a) => a as any
-    ) as Effect.Effect<
-      B extends Effect.Effect<infer C, any, any> ? C : never,
-      B extends Effect.Effect<any, infer E, any> ? E : never,
-      (B extends Effect.Effect<any, any, infer O> ? O : never) | true
-    >
+    ) as Effect.Effect<(B extends Effect.Effect<infer O, any, any> ? O : never) | true, B extends Effect.Effect<any, infer E, any> ? E : never, B extends Effect.Effect<any, any, infer C> ? C : never>
 
 const inst = pipe(createTestEff2({ cr: true }), (a) => (b: any) => a(b))
 const tt3 = pipe(

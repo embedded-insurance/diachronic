@@ -15,7 +15,7 @@ export type WorkflowSignalerClient = ReturnType<
   typeof makeWorkflowSignalerClient
 >
 
-export const WorkflowSignalerClient = Context.Tag<WorkflowSignalerClient>()
+export const WorkflowSignalerClient = Context.GenericTag<WorkflowSignalerClient>("@services/WorkflowSignalerClient")
 
 export const WorkflowSignalerClientLayer = (options: { baseURL?: string }) =>
   Layer.succeed(WorkflowSignalerClient, makeWorkflowSignalerClient(options))

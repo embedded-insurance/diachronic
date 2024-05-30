@@ -5,10 +5,10 @@ import { EnvironmentName } from './environment'
 const rfc1123Subdomain = S.pattern(
   /[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/
 )
-export const VERSION_ID = S.string.pipe(rfc1123Subdomain)
+export const VERSION_ID = S.String.pipe(rfc1123Subdomain)
 export const getEnv = () =>
   S.decodeSync(
-    S.struct({
+    S.Struct({
       VERSION_ID,
       DIACHRONIC_CLOUD_ENVIRONMENT: EnvironmentName,
     })

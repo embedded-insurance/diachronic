@@ -17,9 +17,9 @@ const commands = defGroup({
     'diachronic.cli': {
       description: `Simulates a successful example workflow deployment event.`,
     },
-    input: S.undefined,
-    output: S.any,
-    error: S.any,
+    input: S.Undefined,
+    output: S.Any,
+    error: S.Any,
   },
 })
 const signalExampleWorkflowSuccess = implement(

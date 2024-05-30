@@ -16,17 +16,13 @@ import { WorkflowNotFoundError as TemporalWorkflowNotFoundError } from '@tempora
 
 export type Self<Db, Signals = any> = {
   close: (exit: Exit.Exit<any, any>) => Effect.Effect<any, any, any>
-  isContinueAsNewSuggested: () => Effect.Effect<never, never, boolean>
-  continueAsNew: (state: Db) => Effect.Effect<never, never, never>
+  isContinueAsNewSuggested: () => Effect.Effect<boolean>
+  continueAsNew: (state: Db) => Effect.Effect<never>
   signalWorkflow: <K extends keyof Signals>(
     workflowId: string,
     signalName: K,
     data: Signals[K]
-  ) => Effect.Effect<
-    never,
-    SignalExternalWorkflowError,
-    SignalExternalWorkflowOutput
-  >
+  ) => Effect.Effect<SignalExternalWorkflowOutput, SignalExternalWorkflowError>
 }
 
 export const make = <
@@ -41,11 +37,7 @@ export const make = <
       workflowId: string,
       signalName: K,
       data: Signals[K]
-    ): Effect.Effect<
-      never,
-      SignalExternalWorkflowError,
-      SignalExternalWorkflowOutput
-    > =>
+    ): Effect.Effect<SignalExternalWorkflowOutput, SignalExternalWorkflowError> =>
       pipe(
         Effect.Do,
         Effect.bind('handle', () =>
@@ -104,7 +96,7 @@ export const make = <
 
     isContinueAsNewSuggested: () =>
       Effect.succeed(wf.workflowInfo().continueAsNewSuggested),
-  }
+  };
 }
 
 export const of = <Db, Signals>(self: Self<Db, Signals>) => self

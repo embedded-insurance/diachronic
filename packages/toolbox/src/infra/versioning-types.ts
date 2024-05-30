@@ -1,13 +1,13 @@
 import * as S from '@effect/schema/Schema'
 
 export const WorkflowVersionInfo = S.extend(
-  S.struct({
-    workflowName: S.string,
-    versionId: S.string,
-    flagName: S.string,
-    seqId: S.string,
-    taskQueue: S.string,
+  S.Struct({
+    workflowName: S.String,
+    versionId: S.String,
+    flagName: S.String,
+    seqId: S.String,
+    taskQueue: S.String,
   }),
-  S.partial(S.struct({ environment: S.string }))
+  S.partial(S.Struct({ environment: S.String }))
 )
-export type WorkflowVersionInfo = S.Schema.To<typeof WorkflowVersionInfo>
+export type WorkflowVersionInfo = S.Schema.Type<typeof WorkflowVersionInfo>

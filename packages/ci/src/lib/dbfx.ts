@@ -1,16 +1,16 @@
 import { Effect, pipe, Ref } from 'effect'
 
 export type DbFx<Db> = {
-  reset: (v: Db) => Effect.Effect<any, any, void>
-  swap: (f: (a: Db) => Db) => Effect.Effect<never, never, void>
-  assoc: <K extends keyof Db>(k: K, v: Db[K]) => Effect.Effect<any, never, void>
-  dissoc: <K extends keyof Db>(k: K) => Effect.Effect<any, never, void>
+  reset: (v: Db) => Effect.Effect<void, any, any>
+  swap: (f: (a: Db) => Db) => Effect.Effect<void>
+  assoc: <K extends keyof Db>(k: K, v: Db[K]) => Effect.Effect<void, never, any>
+  dissoc: <K extends keyof Db>(k: K) => Effect.Effect<void, never, any>
   updateIn: <K extends keyof Db>(
     k: K,
     f: (x: Db[K]) => Db[K]
-  ) => Effect.Effect<any, any, void>
-  get: <K extends keyof Db>(k: K) => Effect.Effect<any, any, Db[K]>
-  deref: () => Effect.Effect<never, never, Db>
+  ) => Effect.Effect<void, any, any>
+  get: <K extends keyof Db>(k: K) => Effect.Effect<Db[K], any, any>
+  deref: () => Effect.Effect<Db>
 }
 
 export const DbFx = <Db extends Record<string, any>>(a: Ref.Ref<Db>) => ({
@@ -41,7 +41,7 @@ export const DbFx = <Db extends Record<string, any>>(a: Ref.Ref<Db>) => ({
  */
 const withExternalPersistence = <T extends Record<string, any>>(
   a: Ref.Ref<T>,
-  persist: (a: T) => Effect.Effect<any, any, void>,
+  persist: (a: T) => Effect.Effect<void, any, any>,
   config?: { debounceTimeout?: number }
 ) => ({
   swap: (f: (a: T) => T) =>
@@ -60,7 +60,7 @@ const withExternalPersistence = <T extends Record<string, any>>(
  */
 const fromPredicate =
   <T>(f: (x: T) => boolean | [boolean, string]) =>
-  (x: any): Effect.Effect<never, string | undefined, boolean> => {
+  (x: any): Effect.Effect<boolean, string | undefined> => {
     const ret = f(x)
     if (Array.isArray(ret)) {
       const [b, reason] = ret

@@ -14,8 +14,8 @@ import * as fc from 'fast-check'
  *
  * @param type
  */
-export const getArbitrary = <I, A>(type: S.Schema<I, A>): fc.Arbitrary<A> =>
-  Arbitrary.make(type)(fc)
+export const getArbitrary = <A, I>(type: S.Schema<A, I>): fc.Arbitrary<A> =>
+  Arbitrary.makeLazy(type)(fc)
 
 /**
  * Returns a sample value for a type

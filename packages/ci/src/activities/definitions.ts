@@ -14,174 +14,174 @@ import { NoDeploymentsFound, KubectlOpts } from './kubectl/types'
 import { WorkflowDeploymentSuccessEvent } from '../types'
 
 // todo.
-const K8SDeployment = S.unknown
-const FlagStrategy = S.struct({
-  id: S.string,
-  name: S.string,
-  title: S.string,
-  disabled: S.boolean,
+const K8SDeployment = S.Unknown
+const FlagStrategy = S.Struct({
+  id: S.String,
+  name: S.String,
+  title: S.String,
+  disabled: S.Boolean,
   parameters: S.optional(
-    S.struct({
-      rollout: S.string,
-      stickiness: S.string,
-      groupId: S.string,
+    S.Struct({
+      rollout: S.String,
+      stickiness: S.String,
+      groupId: S.String,
     })
   ),
 })
 
-export const SignalMigrationBatchOutput = S.struct({
-  successes: S.array(S.string),
-  failures: S.array(S.string),
+export const SignalMigrationBatchOutput = S.Struct({
+  successes: S.Array(S.String),
+  failures: S.Array(S.String),
 })
 export const activityDefinitions = {
   ...simulationActivityDefinitions,
   getAllWorkflowVersionFlags: activityDef({
     name: 'getAllWorkflowVersionFlags',
-    input: S.struct({
+    input: S.Struct({
       environment: S.optional(FeatureFlagEnvironment),
-      workflowName: S.string,
+      workflowName: S.String,
     }),
-    output: S.array(WorkflowVersionInfo),
-    error: S.unknown,
+    output: S.Array(WorkflowVersionInfo),
+    error: S.Unknown,
   }),
   getAllDeployedWorkflowVersions: activityDef({
     name: 'getAllDeployedWorkflowVersions',
     description:
       'Returns all deployed workflow versions, unique by their version id, using the diachronic/version-id Kubernetes label',
-    input: S.struct({
-      workflowName: S.string,
+    input: S.Struct({
+      workflowName: S.String,
     }),
-    output: S.array(S.string),
-    error: S.unknown,
+    output: S.Array(S.String),
+    error: S.Unknown,
   }),
   getWorkflowIdsToMigrateToTaskQueueByFeatureFlag: activityDef({
     name: 'getWorkflowIdsToMigrateToTaskQueueByFeatureFlag',
-    input: S.struct({
-      workflowName: S.string,
-      fromTaskQueue: S.string,
-      toTaskQueue: S.string,
+    input: S.Struct({
+      workflowName: S.String,
+      fromTaskQueue: S.String,
+      toTaskQueue: S.String,
     }),
-    output: S.struct({
-      toMigrate: S.array(S.string),
-      numberRemaining: S.number,
+    output: S.Struct({
+      toMigrate: S.Array(S.String),
+      numberRemaining: S.Number,
     }),
-    error: S.unknown,
+    error: S.Unknown,
   }),
   applyWorkflowVersionFlag: activityDef({
     name: 'applyWorkflowVersionFlag',
-    input: S.struct({
+    input: S.Struct({
       environment: S.optional(FeatureFlagEnvironment),
-      workflowName: S.string,
-      versionId: S.string,
+      workflowName: S.String,
+      versionId: S.String,
     }),
     output: WorkflowVersionInfo,
-    error: S.unknown,
+    error: S.Unknown,
   }),
   applyWorkflowTrafficRouting: activityDef({
     name: 'applyWorkflowTrafficRouting',
-    input: S.struct({
+    input: S.Struct({
       environment: S.optional(FeatureFlagEnvironment),
-      workflowFlagName: S.string,
-      percent: S.string,
+      workflowFlagName: S.String,
+      percent: S.String,
     }),
-    output: S.struct({ flagName: S.string }),
-    error: S.unknown,
+    output: S.Struct({ flagName: S.String }),
+    error: S.Unknown,
   }),
   getRunningWorkflowIds: activityDef({
     name: 'getRunningWorkflowIds',
-    input: S.struct({
-      workflowName: S.optional(S.string),
-      taskQueue: S.string,
+    input: S.Struct({
+      workflowName: S.optional(S.String),
+      taskQueue: S.String,
     }),
-    output: S.array(
+    output: S.Array(
       // workflowId
-      S.string
+      S.String
     ),
-    error: S.unknown,
+    error: S.Unknown,
   }),
   getRunningWorkflowIdsCount: activityDef({
     name: 'getRunningWorkflowIdsCount',
-    input: S.struct({
-      workflowName: S.optional(S.string),
-      taskQueue: S.string,
+    input: S.Struct({
+      workflowName: S.optional(S.String),
+      taskQueue: S.String,
     }),
-    output: S.number,
-    error: S.unknown,
+    output: S.Number,
+    error: S.Unknown,
   }),
   signalMigration: activityDef({
     name: 'signalMigration',
-    input: S.struct({
-      workflowId: S.string,
-      taskQueue: S.string,
+    input: S.Struct({
+      workflowId: S.String,
+      taskQueue: S.String,
     }),
-    output: S.unknown,
-    error: S.unknown,
+    output: S.Unknown,
+    error: S.Unknown,
   }),
   signalMigrationBatch: activityDef({
     name: 'signalMigrationBatch',
-    input: S.struct({
-      workflowIds: S.array(S.string),
-      taskQueue: S.string,
+    input: S.Struct({
+      workflowIds: S.Array(S.String),
+      taskQueue: S.String,
     }),
     output: SignalMigrationBatchOutput,
-    error: S.unknown,
+    error: S.Unknown,
   }),
   getWorkflowDeployments: activityDef({
     name: 'getWorkflowDeployments',
-    input: S.struct({
-      workflowName: S.string,
-      versionId: S.string,
+    input: S.Struct({
+      workflowName: S.String,
+      versionId: S.String,
     }),
-    output: S.array(
+    output: S.Array(
       // todo. k8s deployment effect schema
-      S.unknown
+      S.Unknown
     ),
-    error: S.union(NoDeploymentsFound, S.any),
+    error: S.Union(NoDeploymentsFound, S.Any),
   }),
   deleteKubernetesDeployment: activityDef({
     name: 'deleteKubernetesDeployment',
     input: S.extend(
-      S.struct({ name: S.string, namespace: S.string }),
+      S.Struct({ name: S.String, namespace: S.String }),
       KubectlOpts.pipe(S.omit('name', 'namespace'))
     ),
-    output: S.string,
-    error: S.any,
+    output: S.String,
+    error: S.Any,
   }),
   findKubernetesDeployments: activityDef({
     name: 'findKubernetesDeployments',
     input: KubectlOpts,
-    output: S.array(K8SDeployment),
-    error: S.unknown,
+    output: S.Array(K8SDeployment),
+    error: S.Unknown,
   }),
   deleteWorkflowVersionFlag: activityDef({
     name: 'deleteWorkflowVersionFlag',
-    input: S.struct({
+    input: S.Struct({
       environment: S.optional(FeatureFlagEnvironment),
-      workflowName: S.string,
-      versionId: S.string,
+      workflowName: S.String,
+      versionId: S.String,
     }),
-    output: S.unknown,
-    error: S.unknown,
+    output: S.Unknown,
+    error: S.Unknown,
   }),
   getFlagStrategies: activityDef({
     name: 'getFlagStrategies',
-    input: S.struct({
-      flagName: S.string,
+    input: S.Struct({
+      flagName: S.String,
       environment: S.optional(FeatureFlagEnvironment),
-      projectId: S.optional(S.string),
+      projectId: S.optional(S.String),
     }),
-    output: S.array(FlagStrategy),
-    error: S.unknown,
+    output: S.Array(FlagStrategy),
+    error: S.Unknown,
   }),
 }
 
-const RolloutWorkflowInput = S.struct({
-  workflowName: S.string,
+const RolloutWorkflowInput = S.Struct({
+  workflowName: S.String,
   toVersion: WorkflowVersionInfo,
-  initialRolloutPercent: S.optional(S.number),
-  stepPercent: S.optional(S.number),
-  stepIntervalSeconds: S.optional(S.number),
-  maxRolloutPercent: S.optional(S.number),
+  initialRolloutPercent: S.optional(S.Number),
+  stepPercent: S.optional(S.Number),
+  stepIntervalSeconds: S.optional(S.Number),
+  maxRolloutPercent: S.optional(S.Number),
 })
 
 const rollout = workflowDef({
@@ -200,17 +200,17 @@ const rollout = workflowDef({
     },
     childWorkflows: {},
   },
-  output: S.unknown,
-  error: S.unknown,
+  output: S.Unknown,
+  error: S.Unknown,
 })
 
 const migration = workflowDef({
   name: 'migration',
   description: '',
-  input: S.struct({
-    workflowName: S.string,
-    fromTaskQueue: S.string,
-    toTaskQueue: S.string,
+  input: S.Struct({
+    workflowName: S.String,
+    fromTaskQueue: S.String,
+    toTaskQueue: S.String,
   }),
   'temporal.workflow': {
     signals: {},
@@ -230,14 +230,14 @@ const migration = workflowDef({
       parentClosePolicy: ParentClosePolicy.PARENT_CLOSE_POLICY_ABANDON,
     },
   },
-  output: S.unknown,
-  error: S.unknown,
+  output: S.Unknown,
+  error: S.Unknown,
 })
 
 const cleanup = workflowDef({
   name: 'cleanup',
   description: '',
-  input: S.struct({
+  input: S.Struct({
     versionInfo: WorkflowVersionInfo,
   }),
   'temporal.workflow': {
@@ -255,14 +255,14 @@ const cleanup = workflowDef({
       parentClosePolicy: ParentClosePolicy.PARENT_CLOSE_POLICY_ABANDON,
     },
   },
-  output: S.unknown,
-  error: S.unknown,
+  output: S.Unknown,
+  error: S.Unknown,
 })
 
 const workflowCI = workflowDef({
   name: 'workflowCI',
   description: '',
-  input: S.unknown,
+  input: S.Unknown,
   'temporal.workflow': {
     signals: {
       'diachronic.ci.workflow.deploy.success': WorkflowDeploymentSuccessEvent,
@@ -284,8 +284,8 @@ const workflowCI = workflowDef({
       cleanup,
     },
   },
-  output: S.unknown,
-  error: S.unknown,
+  output: S.Unknown,
+  error: S.Unknown,
 })
 
 export const workflowDefinitions = {

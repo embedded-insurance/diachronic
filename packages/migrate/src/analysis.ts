@@ -20,7 +20,7 @@ export const normalizeTransitionTarget = (target: string | string[]) =>
 
 export type StateId = `#${string}`
 export const StateId = pipe(
-  S.string,
+  S.String,
   S.startsWith('#'),
   S.identifier('StateId'),
   S.brand('StateId'),
@@ -30,7 +30,7 @@ export const StateId = pipe(
 
 export type ChildStateReference = `${typeof stateHierarchyDelimiter}${string}`
 export const ChildStateReference = pipe(
-  S.string,
+  S.String,
   S.startsWith(stateHierarchyDelimiter),
   S.identifier('ChildStateReference'),
   S.description('Reference to a state below another.'),
@@ -38,7 +38,7 @@ export const ChildStateReference = pipe(
 )
 export type PeerStateReference = string
 export const PeerStateReference = pipe(
-  S.string,
+  S.String,
   S.identifier('PeerStateReference'),
   S.description('Reference to a state in the same level as another.'),
   S.brand('PeerStateReference')
@@ -67,14 +67,14 @@ export const makeStateId = (parentId: StateId, key: string): StateId => {
  * 'xstate.after(quote/expiration-duration)#get-insurance.quoted'
  */
 // export const XStateTimerId = pipe(S.string, S.pattern(/xstate\.after\(.+\)#.+/))
-export const XStateTimerId = S.templateLiteral(
-  S.literal('xstate.after('),
-  S.string,
-  S.literal(')'),
-  S.literal('#'),
-  S.string
+export const XStateTimerId = S.TemplateLiteral(
+  S.Literal('xstate.after('),
+  S.String,
+  S.Literal(')'),
+  S.Literal('#'),
+  S.String
 )
-export type XStateTimerId = S.Schema.To<typeof XStateTimerId>
+export type XStateTimerId = S.Schema.Type<typeof XStateTimerId>
 
 // TODO. test this. it's expected to return a string for all XStateTimerId
 export const getDelayFunctionName = (s: XStateTimerId): string => {
@@ -85,10 +85,10 @@ export const getDelayFunctionName = (s: XStateTimerId): string => {
   return match[1] as string
 }
 
-export const XStateTimerData = S.struct({
-  type: S.literal('xstate.after'),
-  name: S.string,
-  stateId: S.string,
+export const XStateTimerData = S.Struct({
+  type: S.Literal('xstate.after'),
+  name: S.String,
+  stateId: S.String,
   delayId: pipe(
     XStateTimerId,
     S.description(
@@ -97,28 +97,31 @@ export const XStateTimerData = S.struct({
     S.examples(['xstate.after(quote/expiration-duration)#get-insurance.quoted'])
   ),
 })
-export type XStateTimerData = S.Schema.To<typeof XStateTimerData>
+export type XStateTimerData = S.Schema.Type<typeof XStateTimerData>
 
 export const XStateAfterIdDataConverter = S.transform(
   XStateTimerId,
   XStateTimerData,
-  (s) => {
-    const [delayName, statePath] = s
-      .replace('xstate.after(', '')
-      .replace(')', '')
-      .split('#')
-    return {
-      type: 'xstate.after' as const,
-      name: delayName,
-      stateId: '#' + statePath,
-      delayId: s,
-    }
-  },
-  (m) => m.delayId
+  {
+    decode: (s) => {
+      const [delayName, statePath] = s
+        .replace('xstate.after(', '')
+        .replace(')', '')
+        .split('#')
+      return {
+        type: 'xstate.after' as const,
+        name: delayName,
+        stateId: '#' + statePath,
+        delayId: s,
+      }
+    },
+
+    encode: (m) => m.delayId,
+  }
 )
 
-export const XStateStateValue = S.union(S.string, S.record(S.string, S.unknown))
-export type XStateStateValue = S.Schema.To<typeof XStateStateValue>
+export const XStateStateValue = S.Union(S.String, S.Record(S.String, S.Unknown))
+export type XStateStateValue = S.Schema.Type<typeof XStateStateValue>
 
 export const datafyXStateAfterId = (s: string) =>
   S.decodeUnknownSync(XStateAfterIdDataConverter)(s)

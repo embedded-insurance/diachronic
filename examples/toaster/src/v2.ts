@@ -5,37 +5,37 @@ import * as S from '@effect/schema/Schema'
 import { makeWorkflow, MigrationFnV1 } from '@diachronic/migrate'
 import * as V1 from '.'
 
-const PosInt = S.number.pipe(S.int(), S.positive())
+const PosInt = S.Number.pipe(S.int(), S.positive())
 
 export const ToasterContext = S.partial(
-  S.struct({
+  S.Struct({
     numberOfToasts: PosInt,
-    powered: S.boolean,
-    toastTimeDuration: S.number,
+    powered: S.Boolean,
+    toastTimeDuration: S.Number,
   })
 )
 
-export type ToasterContext = S.Schema.To<typeof ToasterContext>
+export type ToasterContext = S.Schema.Type<typeof ToasterContext>
 
 const Signals = {
-  'set-toast-time': S.struct({
-    type: S.literal('set-toast-time'),
-    payload: S.struct({ duration: S.number }),
+  'set-toast-time': S.Struct({
+    type: S.Literal('set-toast-time'),
+    payload: S.Struct({ duration: S.Number }),
   }),
-  'power-on': S.struct({
-    type: S.literal('power-on'),
-    payload: S.struct({ volts: PosInt }),
+  'power-on': S.Struct({
+    type: S.Literal('power-on'),
+    payload: S.Struct({ volts: PosInt }),
   }),
-  'power-off': S.struct({
-    type: S.literal('power-off'),
-    payload: S.undefined,
+  'power-off': S.Struct({
+    type: S.Literal('power-off'),
+    payload: S.Undefined,
   }),
 }
 
 type ToasterEvents = {
   [K in keyof typeof Signals]: {
     type: K
-    payload: S.Schema.To<(typeof Signals)[K]>['payload']
+    payload: S.Schema.Type<(typeof Signals)[K]>['payload']
   }
 }[keyof typeof Signals]
 

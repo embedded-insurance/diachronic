@@ -1,6 +1,6 @@
 import cluster, { Worker as ClusterWorker } from 'cluster'
 import * as Effect from 'effect/Effect'
-import { Layer, Logger, LogLevel, Queue, Scope } from 'effect'
+import { Layer, Logger, LogLevel, Queue, Scope, Unify } from 'effect'
 import { pipe } from 'effect/Function'
 import * as S from '@effect/schema/Schema'
 import {
@@ -94,7 +94,7 @@ const processReload = (a: Reload) => {
     Effect.flatMap(() => resetWorker(paths)),
     Effect.withLogSpan('reset-worker'),
     Effect.flatMap(() =>
-      prevDir ? removeDirectory(prevDir) : Effect.succeed(Effect.unit)
+      prevDir ? removeDirectory(prevDir) : Effect.succeed(Effect.void)
     ),
     Effect.flatMap(() =>
       pipe(
@@ -119,13 +119,13 @@ const program = () =>
       pipe(Effect.logDebug('Received message'), Effect.annotateLogs(a))
     ),
     Effect.flatMap(
-      Effect.unifiedFn((a) => {
+      Unify.unify((a) => {
         switch (a.type) {
           case 'reload': {
             return processReload(a)
           }
           default:
-            return Effect.unit
+            return Effect.void
         }
       })
     ),
@@ -156,21 +156,22 @@ export const main = async () => {
 
   // Receive messages over MQTT`
   pipe(
-    Effect.asyncEffect<never, any, any, MQTTClient, any, any>((resume) =>
-      Effect.flatMap(MQTTClient, (mqtt) => {
-        const cb = (_address: string, message: MessageType) => {
-          try {
-            const data = JSON.parse(message.toString())
-            q.unsafeOffer(data)
-          } catch (e) {
-            console.error(e)
+    Effect.asyncEffect<any, unknown, never, never, unknown, MQTTClient>(
+      (resume) =>
+        Effect.flatMap(MQTTClient, (mqtt) => {
+          const cb = (_address: string, message: MessageType) => {
+            try {
+              const data = JSON.parse(message.toString())
+              q.unsafeOffer(data)
+            } catch (e) {
+              console.error(e)
+            }
           }
-        }
-        mqtt.on('message', cb as any)
-        mqtt.subscribe(address)
+          mqtt.on('message', cb as any)
+          mqtt.subscribe(address)
 
-        return Effect.unit
-      })
+          return Effect.void
+        })
     ),
     Effect.catchAll(Effect.succeed),
     Effect.provide(mqttLayer),

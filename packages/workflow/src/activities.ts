@@ -40,12 +40,11 @@ export const mapGroupToScheduleActivities = <Group extends GroupDef>(
     )
   ) as {
     [Fn in keyof Group]: (
-      args: S.Schema.To<Group[Fn]['input']>,
+      args: S.Schema.Type<Group[Fn]['input']>,
       runtimeOptions?: ActivityOptions
     ) => Effect.Effect<
-      never,
-      S.Schema.To<Group[Fn]['error']>,
-      S.Schema.To<Group[Fn]['output']>
+      S.Schema.Type<Group[Fn]['output']>,
+      S.Schema.Type<Group[Fn]['error']>
     >
   }
 
@@ -82,11 +81,10 @@ export const intoScheduleActivities = <Group extends FnObjectGroup>(
     )
   ) as {
     [Fn in keyof Group]: (
-      args: S.Schema.From<Group[Fn]['diachronic.meta']['input']>
+      args: S.Schema.Encoded<Group[Fn]['diachronic.meta']['input']>
     ) => Effect.Effect<
-      never,
-      S.Schema.To<Group[Fn]['diachronic.meta']['error']>,
-      S.Schema.To<Group[Fn]['diachronic.meta']['output']>
+      S.Schema.Type<Group[Fn]['diachronic.meta']['output']>,
+      S.Schema.Type<Group[Fn]['diachronic.meta']['error']>
     >
   }
 
@@ -114,18 +112,19 @@ export const makeWorkflowActivities = <
     {} as {
       [Namespace in keyof Schemas]: {
         [Fn in keyof Schemas[Namespace]]: (
-          args: S.Schema.From<Schemas[Namespace][Fn]['input']>
+          args: S.Schema.Encoded<Schemas[Namespace][Fn]['input']>
         ) => Effect.Effect<
-          never,
-          S.Schema.To<Schemas[Namespace][Fn]['error']> extends { _tag: string }
+          S.Schema.Type<Schemas[Namespace][Fn]['output']>,
+          S.Schema.Type<Schemas[Namespace][Fn]['error']> extends {
+            _tag: string
+          }
             ?
-                | S.Schema.To<Schemas[Namespace][Fn]['error']>
+                | S.Schema.Type<Schemas[Namespace][Fn]['error']>
                 | PR.ParseError
                 | BadInput
                 | BadOutput
                 | UnknownException
-            : BadInput | BadOutput | PR.ParseError | UnknownException,
-          S.Schema.To<Schemas[Namespace][Fn]['output']>
+            : BadInput | BadOutput | PR.ParseError | UnknownException
         >
       }
     }

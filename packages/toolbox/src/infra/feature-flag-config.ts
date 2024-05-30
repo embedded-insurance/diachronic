@@ -8,8 +8,10 @@ import { WorkflowVersionInfo } from './versioning-types'
 
 // assumes 1 unleash server per cloud env
 // Each instance uses the unleash "production" environment
-export const FeatureFlagEnvironment = S.union(S.literal('production'), S.string)
-export type FeatureFlagEnvironment = S.Schema.To<typeof FeatureFlagEnvironment>
+export const FeatureFlagEnvironment = S.Union(S.Literal('production'), S.String)
+export type FeatureFlagEnvironment = S.Schema.Type<
+  typeof FeatureFlagEnvironment
+>
 
 export const incrementSeqId = (seqId: string) => {
   const nextSeqId = (parseInt(seqId) + 1).toString().padStart(3, '0')
@@ -312,9 +314,8 @@ export const makeFeatureFlagConfigClient = (
 export type FeatureFlagConfigClient = ReturnType<
   typeof makeFeatureFlagConfigClient
 >
-export const FeatureFlagConfigClient = Context.Tag<FeatureFlagConfigClient>(
-  'diachronic.flags.config'
-)
+export const FeatureFlagConfigClient =
+  Context.GenericTag<FeatureFlagConfigClient>('diachronic.flags.config')
 
 export const makeFeatureFlagConfigClientLayer = (
   args: FeatureFlagConfigClientArgs
@@ -508,7 +509,7 @@ export const applyWorkflowVersionFlag = (args: {
         environment: args.environment,
       }),
       Effect.flatMap(
-        (flags): Effect.Effect<any, unknown, WorkflowVersionInfo> => {
+        (flags): Effect.Effect<WorkflowVersionInfo, unknown, any> => {
           const workflowFlagData = flags.map((x) =>
             getWorkflowFlagParts(x.name)
           )
@@ -541,51 +542,53 @@ export const applyWorkflowVersionFlag = (args: {
             ...getWorkflowFlagParts(flagName),
           }
           return Effect.if(!!existingFlagForVersionId, {
-            onTrue: Effect.succeed(versionInfo),
-            onFalse: pipe(
-              client.createFlag({
-                type: 'release',
-                projectId: 'default',
-                environment: args.environment,
-                name: flagName,
-                description:
-                  'Determines whether users get this version of workflow.',
-                impressionData: true,
-              }),
-              Effect.catchTags({
-                ErrorResponse: (e) =>
-                  Effect.if(e.statusCode === 409, {
-                    onFalse: Effect.fail(e),
-                    onTrue: pipe(
-                      Effect.logWarning(`Flag already exists.`),
-                      Effect.tap(() =>
+            onTrue: () => Effect.succeed(versionInfo),
+            onFalse: () =>
+              pipe(
+                client.createFlag({
+                  type: 'release',
+                  projectId: 'default',
+                  environment: args.environment,
+                  name: flagName,
+                  description:
+                    'Determines whether users get this version of workflow.',
+                  impressionData: true,
+                }),
+                Effect.catchTags({
+                  ErrorResponse: (e) =>
+                    Effect.if(e.statusCode === 409, {
+                      onFalse: () => Effect.fail(e),
+                      onTrue: () =>
                         pipe(
-                          Effect.logInfo(`Attempting to unarchive flag.`),
-                          Effect.flatMap(() =>
+                          Effect.logWarning(`Flag already exists.`),
+                          Effect.tap(() =>
                             pipe(
-                              // todo. consider whether all strategies
-                              // should be deleted. if flag was created only
-                              // by this api it shouldn't make a difference since they'll be
-                              // applied below
-                              client.restoreArchivedFlag({ flagName }),
-                              Effect.tap(() =>
-                                Effect.logInfo(`Flag restored.`).pipe(
-                                  Effect.annotateLogs(versionInfo)
+                              Effect.logInfo(`Attempting to unarchive flag.`),
+                              Effect.flatMap(() =>
+                                pipe(
+                                  // todo. consider whether all strategies
+                                  // should be deleted. if flag was created only
+                                  // by this api it shouldn't make a difference since they'll be
+                                  // applied below
+                                  client.restoreArchivedFlag({ flagName }),
+                                  Effect.tap(() =>
+                                    Effect.logInfo(`Flag restored.`).pipe(
+                                      Effect.annotateLogs(versionInfo)
+                                    )
+                                  ),
+                                  Effect.tapErrorCause((e) =>
+                                    Effect.logError('Failed to restore flag', e)
+                                  )
                                 )
-                              ),
-                              Effect.tapErrorCause((e) =>
-                                Effect.logError('Failed to restore flag', e)
                               )
                             )
                           )
-                        )
-                      )
-                    ),
-                  }),
-              }),
-              Effect.map(() => versionInfo),
-              Effect.withLogSpan('createFlag')
-            ),
+                        ),
+                    }),
+                }),
+                Effect.map(() => versionInfo),
+                Effect.withLogSpan('createFlag')
+              ),
           })
         }
       ),

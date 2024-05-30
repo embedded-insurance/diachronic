@@ -14,12 +14,12 @@ import {
   WorkflowExecutionInfo,
 } from '@temporalio/client'
 
-const EnvSchema = S.struct({
-  TEMPORAL_ADDRESS: S.string,
-  TEMPORAL_NAMESPACE: S.string,
+const EnvSchema = S.Struct({
+  TEMPORAL_ADDRESS: S.String,
+  TEMPORAL_NAMESPACE: S.String,
 })
 
-type EnvSchema = S.Schema.To<typeof EnvSchema>
+type EnvSchema = S.Schema.Type<typeof EnvSchema>
 
 const signalMigrate = (workflowId: string, newQueue: string) => {
   const signalArgs = {
