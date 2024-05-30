@@ -6,9 +6,9 @@ import * as S from '@effect/schema/Schema'
 export class TaskQueueNotFound extends S.TaggedError<TaskQueueNotFound>()(
   'TaskQueueNotFound',
   {
-    message: S.string,
-    workflowName: S.string,
-    context: S.any,
+    message: S.String,
+    workflowName: S.String,
+    context: S.Any,
   }
 ) {}
 
@@ -66,24 +66,26 @@ export const getTaskQueue = (
 
 export const taskQueueFromBodyOrFeatureFlag = (body: any) =>
   Effect.if(typeof body.taskQueue === 'string', {
-    onTrue: pipe(
-      Effect.logDebug('Using provided taskQueue'),
-      Effect.annotateLogs({ taskQueue: body.taskQueue }),
-      Effect.flatMap(() => Effect.succeed(body))
-    ),
-    onFalse: pipe(
-      Effect.logDebug('Getting taskQueue from feature flag'),
-      Effect.flatMap(() =>
-        getTaskQueueOrFail(body.workflowType, {
-          userId: body.workflowId,
-          // @ts-expect-error
-          isTest: body.searchAttributes?.isTest,
-        })
+    onTrue: () =>
+      pipe(
+        Effect.logDebug('Using provided taskQueue'),
+        Effect.annotateLogs({ taskQueue: body.taskQueue }),
+        Effect.flatMap(() => Effect.succeed(body))
       ),
-      Effect.map((x) => ({
-        ...body,
-        taskQueue: x,
-      })),
-      Effect.tapError(Effect.logError)
-    ),
+    onFalse: () =>
+      pipe(
+        Effect.logDebug('Getting taskQueue from feature flag'),
+        Effect.flatMap(() =>
+          getTaskQueueOrFail(body.workflowType, {
+            userId: body.workflowId,
+            // @ts-expect-error
+            isTest: body.searchAttributes?.isTest,
+          })
+        ),
+        Effect.map((x) => ({
+          ...body,
+          taskQueue: x,
+        })),
+        Effect.tapError(Effect.logError)
+      ),
   })

@@ -79,8 +79,8 @@ export const addActivityDef = createExtension<ActivityConfig, Key>(key)
 export class ActivityInputSchemaError extends S.TaggedError<ActivityInputSchemaError>()(
   'ActivityInputSchemaError',
   {
-    activityName: S.string,
-    message: S.optional(S.string, {
+    activityName: S.String,
+    message: S.optional(S.String, {
       default: () => `Activity called with wrong arguments`,
     }),
     error: S.instanceOf(ParseResult.ParseError),
@@ -92,8 +92,8 @@ export class ActivityInputSchemaError extends S.TaggedError<ActivityInputSchemaE
 export class ActivityOutputSchemaError extends S.TaggedError<ActivityOutputSchemaError>()(
   'ActivityOutputSchemaError',
   {
-    activityName: S.string,
-    message: S.optional(S.string, {
+    activityName: S.String,
+    message: S.optional(S.String, {
       default: () => `Activity returned unexpected output`,
     }),
     error: S.instanceOf(ParseResult.ParseError),
@@ -117,7 +117,7 @@ export const toInvokeActivity =
   (
     activityInput: InputType<A>,
     runtimeOptions?: ActivityOptions
-  ): Effect.Effect<never, ErrorType<A>, OutputType<A>> =>
+  ): Effect.Effect<OutputType<A>, ErrorType<A>> =>
     pipe(
       Effect.tryPromise(() =>
         scheduleActivityFn(
@@ -148,7 +148,7 @@ export const toInvokeActivity =
           return e // orig
         }
       })
-    ) as Effect.Effect<never, ErrorType<A>, OutputType<A>>
+    ) as Effect.Effect<OutputType<A>, ErrorType<A>>
 
 export const implement = asEffect
 
@@ -165,12 +165,12 @@ export type MakeActivitiesAsync = <
   Schema extends Record<string, ActivityDef>,
   API extends {
     [K in keyof Schema]: (
-      args: S.Schema.To<Schema[K]['input']>
+      args: S.Schema.Type<Schema[K]['input']>
       // should any be unknown or something?
     ) => Effect.Effect<
-      any,
-      S.Schema.To<Schema[K]['error']>,
-      S.Schema.To<Schema[K]['output']>
+      S.Schema.Type<Schema[K]['output']>,
+      S.Schema.Type<Schema[K]['error']>,
+      any
     >
   }
 >(
@@ -180,7 +180,7 @@ export type MakeActivitiesAsync = <
     runtime: Runtime.Runtime<
       Effect.Effect.Context<{ [K in keyof API]: ReturnType<API[K]> }[keyof API]>
     >
-    close: Effect.Effect<never, never, void>
+    close: Effect.Effect<void>
   }>
 ) => Promise<{
   [K in keyof API]: (
@@ -192,11 +192,11 @@ export type MakeActivities = <
   Schema extends Record<string, ActivityDef>,
   API extends {
     [K in keyof Schema]: (
-      args: S.Schema.To<Schema[K]['input']>
+      args: S.Schema.Type<Schema[K]['input']>
     ) => Effect.Effect<
-      any,
-      S.Schema.To<Schema[K]['error']>,
-      S.Schema.To<Schema[K]['output']>
+      S.Schema.Type<Schema[K]['output']>,
+      S.Schema.Type<Schema[K]['error']>,
+      any
     >
   }
 >(
@@ -301,11 +301,11 @@ export const makeActivitiesAsync: MakeActivitiesAsync = async (
 }
 
 export const makeActivitiesRuntime = <E, A>(
-  layer: Layer.Layer<Scope.Scope, E, A> | Layer.Layer<never, E, A>,
-  logLayer: Layer.Layer<never, never, never> = TemporalLogLayer('Info')
+  layer: Layer.Layer<A, E, Scope.Scope> | Layer.Layer<A, E>,
+  logLayer: Layer.Layer<never> = TemporalLogLayer('Info')
 ): Promise<{
   runtime: Runtime.Runtime<A>
-  close: Effect.Effect<never, never, void>
+  close: Effect.Effect<void>
 }> =>
   pipe(
     Effect.Do,
@@ -315,7 +315,7 @@ export const makeActivitiesRuntime = <E, A>(
     ),
     Effect.map(({ runtime, scope }) => ({
       runtime,
-      close: Scope.close(scope, Exit.unit),
+      close: Scope.close(scope, Exit.void),
     })),
     Effect.tapErrorCause(Effect.logError),
     Effect.runPromise

@@ -7,17 +7,13 @@ export type AnyXStateGuard = Guard<any, any, any, any>
 
 export type EffectGuard = (
   args: AnyXStateGuard
-) => Effect.Effect<any, never, boolean>
+) => Effect.Effect<boolean, never, any>
 
 export type CreateEffectGuards = <API extends { [k: string]: EffectGuard }>(
   api: API,
   runtime: Runtime.Runtime<
     {
-      [K in keyof API]: ReturnType<API[K]> extends Effect.Effect<
-        infer R,
-        any,
-        any
-      >
+      [K in keyof API]: ReturnType<API[K]> extends Effect.Effect<any, any, infer R>
         ? R
         : never
     }[keyof API]
@@ -37,7 +33,7 @@ export const createEffectGuards: CreateEffectGuards = (api, runtime) => {
   for (const key in api) {
     const fn = api[key] as (
       ...args: any[]
-    ) => Effect.Effect<any, never, boolean>
+    ) => Effect.Effect<boolean, never, any>
 
     const guard: AnyXStateGuard = (args: GuardArgs<any, any, any>) => {
       // TODO. see if we can access the full state

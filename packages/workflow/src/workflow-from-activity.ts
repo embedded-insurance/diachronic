@@ -5,16 +5,16 @@ import * as Effect from 'effect/Effect'
 
 export const workflowFromActivity = <
   Spec extends {
-    input: S.Schema<never, any, any>
-    output: S.Schema<never, any, any>
-    error: S.Schema<never, any, any>
+    input: S.Schema<any>
+    output: S.Schema<any>
+    error: S.Schema<any>
     activity: { name: string; options?: ActivityOptions }
   }
 >(
   spec: Spec,
   workflowName?: string
 ) => {
-  let wf = (args: S.Schema.To<Spec['input']>) => {
+  let wf = (args: S.Schema.Type<Spec['input']>) => {
     return pipe(
       Effect.tryPromise(() =>
         scheduleActivity(

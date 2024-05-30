@@ -75,7 +75,7 @@ const machine = createMachine(
 )
 
 const signals = {
-  hey: S.struct({ type: S.literal('hey'), payload: S.any }),
+  hey: S.Struct({ type: S.Literal('hey'), payload: S.Any }),
 }
 
 log('hey')

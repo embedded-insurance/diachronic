@@ -2,7 +2,7 @@ import { pipe } from 'effect'
 import * as S from '@effect/schema/Schema'
 
 export const ISODateString = pipe(
-  S.string,
+  S.String,
   S.filter((s) => !Number.isNaN(new Date(s).getTime()) && s.endsWith('Z'), {
     jsonSchema: { format: 'date-time' },
     identifier: 'ISODateString',
@@ -11,4 +11,4 @@ export const ISODateString = pipe(
     arbitrary: () => (fc) => fc.date().map((x) => x.toISOString()),
   })
 )
-export type ISODateString = S.Schema.To<typeof ISODateString>
+export type ISODateString = S.Schema.Type<typeof ISODateString>

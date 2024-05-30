@@ -1,25 +1,26 @@
 import { Effect, Runtime } from 'effect'
 import { EffectDef, EffectImpl, InputType } from './single'
 import * as S from '@effect/schema/Schema'
-import { EffectsDef } from './basics'
 import { pipe } from 'effect/Function'
 import { ArrayFormatter, ParseResult } from '@effect/schema'
 import * as TF from '@effect/schema/TreeFormatter'
 import { ParseOptions } from '@effect/schema/AST'
+import { EffectsDef } from './basics'
 
-const ParseError = S.struct({
-  _tag: S.literal('ParseError'),
-  errors: S.nonEmptyArray(S.any),
+const ParseError = S.Struct({
+  _tag: S.Literal('ParseError'),
+  errors: S.NonEmptyArray(S.Any),
 }) //as S.Schema<never,ParseResult.ParseIssue[], ParseResult.ParseIssue[]>
 
 type SchemaError = {
   _tag: ParseResult.ParseError['_tag']
-  errors: readonly [ParseResult.ParseIssue, ...ParseResult.ParseIssue[]]
+  errors: ParseResult.ParseIssue
 }
 export const isSchemaError = (x: unknown): x is SchemaError =>
   S.is(ParseError)(x)
 
-export const formatSchemaErrors = (a: SchemaError) => TF.formatIssues(a.errors)
+export const formatSchemaErrors = (a: SchemaError) =>
+  TF.formatIssueSync(a.errors)
 
 export const asEffect = <const A extends EffectDef, R>(
   _sch: A,
@@ -59,32 +60,32 @@ export const asEffectGroup = <
  * as a calling interface with no dependencies required
  * Examples: rpc/http clients, scheduleActivity
  */
-export type CallableGroup<T extends EffectsDef> = {
-  [K in keyof T]: (args: S.Schema.To<T[K]['input']>) => Effect.Effect<
-    never,
-    // unknown,
-    S.Schema.To<T[K]['error']>,
-    S.Schema.To<T[K]['output']>
+export type CallableGroup<T extends EffectsDef, ExtraErrors = never> = {
+  [K in keyof T]: (args: S.Schema.Type<T[K]['input']>) => Effect.Effect<
+    S.Schema.Type<T[K]['output']>, // unknown,
+    S.Schema.Type<T[K]['error']> | ExtraErrors
   >
 }
 
-const Issue = S.struct({
-  _tag: S.string,
-  path: S.array(S.union(S.string, S.number, S.symbol)),
-  message: S.string,
+const Issue = S.Struct({
+  _tag: S.String,
+  path: S.Array(S.Union(S.String, S.Number, S.Symbol)),
+  message: S.String,
 })
 
 export class BadInput extends S.TaggedError<BadInput>()('BadInput', {
-  functionName: S.string,
-  errors: S.array(Issue),
+  functionName: S.String,
+  value: S.Any,
+  errors: S.Array(Issue),
 }) {
   public message = 'Bad input'
   public nonRetryable = true
 }
 
 export class BadOutput extends S.TaggedError<BadOutput>()('BadOutput', {
-  functionName: S.string,
-  errors: S.array(Issue),
+  functionName: S.String,
+  value: S.Any,
+  errors: S.Array(Issue),
 }) {
   public message = 'Bad output'
   public nonRetryable = true
@@ -119,7 +120,8 @@ export const addGroupDecoder = <
               Effect.fail(
                 new BadInput({
                   functionName,
-                  errors: ArrayFormatter.formatError(error),
+                  value: a,
+                  errors: ArrayFormatter.formatErrorSync(error),
                 })
               )
             ),
@@ -130,7 +132,7 @@ export const addGroupDecoder = <
                 pipe(
                   S.decode(sch[functionName].output)(output, opts),
                   Effect.catchTag('ParseError', (e) => {
-                    const errors = ArrayFormatter.formatError(e)
+                    const errors = ArrayFormatter.formatErrorSync(e)
                     return pipe(
                       Effect.logWarning(
                         `${functionName} output failed schema validation`
@@ -140,6 +142,7 @@ export const addGroupDecoder = <
                         Effect.fail(
                           new BadOutput({
                             functionName,
+                            value: output,
                             errors,
                           })
                         )

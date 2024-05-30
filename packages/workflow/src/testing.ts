@@ -10,8 +10,8 @@ type WorkflowActivitiesSchemas = Record<string, Record<string, ActivityDef>>
  */
 export type PromiseInterface<API extends Record<string, ActivityDef>> = {
   [K in keyof API & string]: (
-    input: S.Schema.To<API[K]['input']>
-  ) => Promise<S.Schema.To<API[K]['output']>>
+    input: S.Schema.Type<API[K]['input']>
+  ) => Promise<S.Schema.Type<API[K]['output']>>
 }
 
 export type ActivityFn<A extends any[] = any[], B = unknown> = (

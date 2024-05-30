@@ -35,7 +35,7 @@ test('workflow rollout - no interrupt, flag rollout percent always matches what 
       readonly environment?: string | undefined
       readonly workflowFlagName: string
       readonly percent: string
-    }): Effect.Effect<never, unknown, { readonly flagName: string }> {
+    }): Effect.Effect<{ readonly flagName: string }, unknown> {
       return Effect.succeed({ flagName: args.workflowFlagName })
     },
     getFlagStrategies: () => {
@@ -140,7 +140,7 @@ test('workflow rollout - with interrupt', async () => {
       readonly environment?: string | undefined
       readonly workflowFlagName: string
       readonly percent: string
-    }): Effect.Effect<never, unknown, { readonly flagName: string }> {
+    }): Effect.Effect<{ readonly flagName: string }, unknown> {
       return Effect.succeed({ flagName: args.workflowFlagName })
     },
     getFlagStrategies: () => {

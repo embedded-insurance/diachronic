@@ -10,7 +10,7 @@ export type UUIDGenerator = () => string
  * @example
  * Effect.flatMap(UUIDGenerator, (uuid) => Effect.log('hey ' + uuid()))
  */
-export const UUIDGenerator = Context.Tag<UUIDGenerator>('@diachronic.util/uuid')
+export const UUIDGenerator = Context.GenericTag<UUIDGenerator>('@diachronic.util/uuid')
 
 /**
  * Default UUID generator using node-uuid v4

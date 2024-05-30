@@ -1,7 +1,7 @@
 import { AnyStateNode, StateNode, StateValue } from 'xstate'
 import { pipe } from 'effect/Function'
 import * as R from 'ramda'
-import { cartesianWith } from 'effect/ReadonlyArray'
+import { cartesianWith } from "effect/Array"
 // @ts-expect-error
 import type { AnyStateMachine } from 'xstate/dist/declarations/src/types'
 

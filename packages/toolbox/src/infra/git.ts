@@ -21,7 +21,7 @@ export const getGitShaShort = () =>
 export const getGitShaShortSync = () =>
   execSync(`git rev-parse --short HEAD`).toString().trim()
 
-export const getGitRepoRoot = (): Effect.Effect<never, ExecError, string> =>
+export const getGitRepoRoot = (): Effect.Effect<string, ExecError> =>
   pipe(
     exec(`git rev-parse --show-toplevel`),
     Effect.map((x) => x.stdout.trim())

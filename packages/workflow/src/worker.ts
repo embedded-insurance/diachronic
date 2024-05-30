@@ -27,41 +27,41 @@ import {
 } from '@diachronic/k8s-health-check'
 import { loggerSink } from './workflow-logging'
 
-export const ActivityCode = S.union(
-  S.struct({
-    type: S.literal('source:filepath'),
-    path: S.string,
+export const ActivityCode = S.Union(
+  S.Struct({
+    type: S.Literal('source:filepath'),
+    path: S.String,
   }),
-  S.struct({
-    type: S.literal('source:object'),
-    activities: S.object,
+  S.Struct({
+    type: S.Literal('source:object'),
+    activities: S.Object,
   }),
-  S.struct({
-    type: S.literal('compiled:filepath'),
-    path: S.string,
+  S.Struct({
+    type: S.Literal('compiled:filepath'),
+    path: S.String,
   })
 )
-export type ActivityCode = S.Schema.To<typeof ActivityCode>
+export type ActivityCode = S.Schema.Type<typeof ActivityCode>
 
-export const WorkflowCode = S.union(
-  S.struct({
-    type: S.literal('source:filepath'),
-    path: S.string,
+export const WorkflowCode = S.Union(
+  S.Struct({
+    type: S.Literal('source:filepath'),
+    path: S.String,
   }),
-  S.struct({
-    type: S.literal('compiled:string'),
-    code: S.string,
+  S.Struct({
+    type: S.Literal('compiled:string'),
+    code: S.String,
   }),
-  S.struct({
-    type: S.literal('compiled:filepath'),
-    path: S.string,
+  S.Struct({
+    type: S.Literal('compiled:filepath'),
+    path: S.String,
   })
 )
-export type WorkflowCode = S.Schema.To<typeof WorkflowCode>
+export type WorkflowCode = S.Schema.Type<typeof WorkflowCode>
 
 export const resolveFilepathOrFail = (
   path: string
-): Effect.Effect<never, FileNotFound, string> =>
+): Effect.Effect<string, FileNotFound> =>
   pipe(
     Effect.try(() => require.resolve(path)),
     Effect.mapError((e) =>
@@ -74,7 +74,7 @@ export const resolveFilepathOrFail = (
 
 export const resolveActivityCode = (
   code: ActivityCode
-): Effect.Effect<never, unknown, { activities: object }> => {
+): Effect.Effect<{ activities: object }, unknown> => {
   switch (code.type) {
     case 'compiled:filepath':
     case 'source:filepath':
@@ -90,7 +90,7 @@ export const resolveActivityCode = (
   }
 }
 
-export interface FileNotFound extends Data.Case {
+export interface FileNotFound extends Data.Case.Constructor<any> {
   readonly _tag: 'FileNotFound'
   attemptedPath?: string
   error: unknown
@@ -98,7 +98,7 @@ export interface FileNotFound extends Data.Case {
 
 export const FileNotFound = Data.tagged<FileNotFound>('FileNotFound')
 
-export interface WorkflowCodeNotFound extends Data.Case {
+export interface WorkflowCodeNotFound extends Data.Case.Constructor<any> {
   readonly _tag: 'WorkflowCodeNotFound'
   attemptedPath?: string
   error: unknown
@@ -117,9 +117,8 @@ export const WorkflowCodeNotFound = Data.tagged<WorkflowCodeNotFound>(
 export const resolveWorkflowCode = (
   code: WorkflowCode
 ): Effect.Effect<
-  never,
-  WorkflowCodeNotFound,
-  { workflowsPath: string } | { workflowBundle: WorkflowBundleOption }
+  { workflowsPath: string } | { workflowBundle: WorkflowBundleOption },
+  WorkflowCodeNotFound
 > => {
   switch (code.type) {
     case 'source:filepath':
@@ -150,7 +149,7 @@ export const resolveWorkflowCode = (
 }
 
 // TODO. this needs to be in util or something
-const LogLevelSchema = S.literal<
+const LogLevelSchema = S.Literal<
   [
     LogLevel.All['_tag'],
     LogLevel.Fatal['_tag'],
@@ -162,16 +161,16 @@ const LogLevelSchema = S.literal<
     LogLevel.None['_tag']
   ]
 >('All', 'Fatal', 'Error', 'Warning', 'Info', 'Debug', 'Trace', 'None')
-export type LogLevels = S.Schema.To<typeof LogLevelSchema>
+export type LogLevels = S.Schema.Type<typeof LogLevelSchema>
 
-export const TemporalWorkerConfig = S.struct({
-  namespace: S.string,
-  taskQueue: S.string,
+export const TemporalWorkerConfig = S.Struct({
+  namespace: S.String,
+  taskQueue: S.String,
   connection: TemporalConfig.pipe(S.pick('clientCert', 'clientKey', 'address')),
   workflows: S.optional(WorkflowCode),
   activities: S.optional(ActivityCode),
   logLevel: S.optional(LogLevelSchema),
-  k8sHTTPHealthCheckDisabled: S.optional(S.boolean),
+  k8sHTTPHealthCheckDisabled: S.optional(S.Boolean),
   healthCheckConfig: S.optional(HealthCheckServerConfig, {
     default: () => ({
       port: 8080,
@@ -181,14 +180,10 @@ export const TemporalWorkerConfig = S.struct({
     }),
   }),
   workerOptions: S.optional(
-    S.record(S.string, S.unknown) as unknown as S.Schema<
-      never,
-      Partial<WorkerOptions>,
-      Partial<WorkerOptions>
-    >
+    S.Record(S.String, S.Unknown) as unknown as S.Schema<Partial<WorkerOptions>>
   ),
 })
-export type TemporalWorkerConfig = S.Schema.From<
+export type TemporalWorkerConfig = S.Schema.Encoded<
   typeof TemporalWorkerConfig
 > & { workerOptions?: Partial<WorkerOptions> }
 

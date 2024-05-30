@@ -7,7 +7,7 @@ import * as Data from 'effect/Data'
 /**
  * Represents an error in YAML serialization
  */
-export interface YAMLSerializationError extends Data.Case {
+export interface YAMLSerializationError extends Data.Case.Constructor<any> {
   readonly _tag: '@diachronic.util/YAMLSerializationError'
   name: string
   reason: string
@@ -32,7 +32,7 @@ const mapException = (e: YAMLException): YAMLSerializationError =>
  */
 export const yamlPrint = (
   x: any
-): Effect.Effect<never, YAMLSerializationError, string> =>
+): Effect.Effect<string, YAMLSerializationError> =>
   Effect.try({
     try: () => yaml.dump(x, { noRefs: true }),
     catch: (e) => mapException(e as YAMLException),
@@ -44,7 +44,7 @@ export const yamlPrint = (
  */
 export const yamlCat = (
   xs: any[]
-): Effect.Effect<never, YAMLSerializationError, string> =>
+): Effect.Effect<string, YAMLSerializationError> =>
   pipe(
     xs.map((x) => yamlPrint(x)),
     Effect.all,

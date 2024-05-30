@@ -49,14 +49,15 @@ const getWorkflowSimulationEffect = (
   Effect.if(
     args.environment !== 'production' && args.scenarioName === 'default',
     {
-      onTrue: defaultWorkflowSimulationEffect(args),
-      onFalse: Effect.fail(
-        new UnsupportedSimulation({
-          scenarioName: args.scenarioName,
-          environment: args.environment,
-          message: `Only non-production simulations for the 'default' scenario are implemented.`,
-        })
-      ),
+      onTrue: () => defaultWorkflowSimulationEffect(args),
+      onFalse: () =>
+        Effect.fail(
+          new UnsupportedSimulation({
+            scenarioName: args.scenarioName,
+            environment: args.environment,
+            message: `Only non-production simulations for the 'default' scenario are implemented.`,
+          })
+        ),
     }
   )
 

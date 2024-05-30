@@ -11,7 +11,7 @@ export const compileActivities = (args: {
   inputFilePath: string
   outputFilePath: string
 }) =>
-  Effect.async<never, unknown, []>((resume) => {
+  Effect.async<[], unknown>((resume) => {
     let compiledActivityNames: string[] = []
     let filenameWithoutExtension = path.basename(args.outputFilePath)
     const fileExtention = path.extname(args.outputFilePath)

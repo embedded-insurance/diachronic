@@ -23,7 +23,7 @@ const schedule = mapGroupToScheduleActivities(
   workflowDefinitions.cleanup['temporal.workflow'].activities
 )
 
-export type CleanupWorkflowArgs = S.Schema.To<
+export type CleanupWorkflowArgs = S.Schema.Type<
   (typeof workflowDefinitions.cleanup)['input']
 >
 
@@ -38,11 +38,11 @@ export type CleanupDb = {
   }
 }
 
-export const CleanupCtx = Context.Tag<{
+export const CleanupCtx = Context.GenericTag<{
   db: DbFx<CleanupDb>
   fx: typeof schedule
   self: Self<CleanupDb>
-}>()
+}>('@services/CleanupCtx')
 
 export const program = (args: CleanupWorkflowConfig) =>
   Effect.flatMap(CleanupCtx, ({ fx, db, self }) => {
@@ -99,15 +99,16 @@ export const program = (args: CleanupWorkflowConfig) =>
               self.isContinueAsNewSuggested(),
               Effect.flatMap((shouldContinueAsNew) =>
                 Effect.if(shouldContinueAsNew, {
-                  onTrue: pipe(
-                    db.deref(),
-                    Effect.flatMap((state) => self.continueAsNew(state)),
-                    Effect.matchEffect({
-                      onSuccess: () => Effect.succeed(true),
-                      onFailure: () => Effect.succeed(false),
-                    })
-                  ),
-                  onFalse: Effect.succeed(false),
+                  onTrue: () =>
+                    pipe(
+                      db.deref(),
+                      Effect.flatMap((state) => self.continueAsNew(state)),
+                      Effect.matchEffect({
+                        onSuccess: () => Effect.succeed(true),
+                        onFailure: () => Effect.succeed(false),
+                      })
+                    ),
+                  onFalse: () => Effect.succeed(false),
                 })
               )
             )

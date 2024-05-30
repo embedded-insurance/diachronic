@@ -23,7 +23,7 @@ export const withInputValidation = <R, Fn extends AnnotatedFn<EffectDef, R>>(
 export const withOutputValidation = <R, Fn extends AnnotatedFn<EffectDef, R>>(
   fn: Fn
 ) => {
-  let next = (input: S.Schema.To<Fn['diachronic.meta']['input']>) =>
+  let next = (input: S.Schema.Type<Fn['diachronic.meta']['input']>) =>
     pipe(input, fn, Effect.flatMap(S.decode(fn['diachronic.meta'].output)))
   return Object.assign(next, {
     'diachronic.meta': fn['diachronic.meta'],
@@ -39,12 +39,12 @@ export const withh =
   ): ((
     input: Parameters<Base>[0]
   ) => Effect.Effect<
-    | Effect.Effect.Context<ReturnType<Base>>
-    | Effect.Effect.Context<ReturnType<Ret>>,
+    | Effect.Effect.Success<ReturnType<Base>>
+    | Effect.Effect.Success<ReturnType<Ret>>,
     | Effect.Effect.Error<ReturnType<Base>>
     | Effect.Effect.Error<ReturnType<Ret>>,
-    | Effect.Effect.Success<ReturnType<Base>>
-    | Effect.Effect.Success<ReturnType<Ret>>
+    | Effect.Effect.Context<ReturnType<Base>>
+    | Effect.Effect.Context<ReturnType<Ret>>
   >) & { 'diachronic.meta': Base['diachronic.meta'] } =>
     Object.assign(modifier(base), {
       'diachronic.meta': base['diachronic.meta'],
@@ -68,12 +68,12 @@ export const wrap =
   ): ((
     input: Parameters<Base>[0]
   ) => Effect.Effect<
-    | Effect.Effect.Context<ReturnType<Base>>
-    | Effect.Effect.Context<ReturnType<ReturnType<Ret>>>,
+    | Effect.Effect.Success<ReturnType<Base>>
+    | Effect.Effect.Success<ReturnType<ReturnType<Ret>>>,
     | Effect.Effect.Error<ReturnType<Base>>
     | Effect.Effect.Error<ReturnType<ReturnType<Ret>>>,
-    | Effect.Effect.Success<ReturnType<Base>>
-    | Effect.Effect.Success<ReturnType<ReturnType<Ret>>>
+    | Effect.Effect.Context<ReturnType<Base>>
+    | Effect.Effect.Context<ReturnType<ReturnType<Ret>>>
   >) & { 'diachronic.meta': Base['diachronic.meta'] } =>
     Object.assign(modifier(base), {
       'diachronic.meta': base['diachronic.meta'],
@@ -94,7 +94,7 @@ export const makeWrapOther =
       base: Base
     ) => (
       input: Parameters<Base>[0]
-    ) => Effect.Effect<A | Ctx<ReturnType<Base>>, any, any>
+    ) => Effect.Effect<any, any, A | Ctx<ReturnType<Base>>>
   >(
     modifier: Ret
   ) =>
@@ -104,12 +104,12 @@ export const makeWrapOther =
   ): ((
     input: Parameters<Base>[0]
   ) => Effect.Effect<
-    | Effect.Effect.Context<ReturnType<Base>>
-    | Effect.Effect.Context<ReturnType<ReturnType<Ret>>>,
+    | Effect.Effect.Success<ReturnType<Base>>
+    | Effect.Effect.Success<ReturnType<ReturnType<Ret>>>,
     | Effect.Effect.Error<ReturnType<Base>>
     | Effect.Effect.Error<ReturnType<ReturnType<Ret>>>,
-    | Effect.Effect.Success<ReturnType<Base>>
-    | Effect.Effect.Success<ReturnType<ReturnType<Ret>>>
+    | Effect.Effect.Context<ReturnType<Base>>
+    | Effect.Effect.Context<ReturnType<ReturnType<Ret>>>
   >) & { 'diachronic.meta': Base['diachronic.meta'] } =>
     Object.assign(modifier(base), {
       'diachronic.meta': base['diachronic.meta'],
@@ -132,12 +132,12 @@ export const wrapOther =
   <Next extends Base>(
     base: Next //Next extends infer U extends Base ? U : Next
   ): ((input: Parameters<Next>[0]) => Effect.Effect<
-    | Effect.Effect.Context<ReturnType<Next>>
-    | Effect.Effect.Context<ReturnType<ReturnType<Ret>>>,
-    Effect.Effect.Error<ReturnType<Next>>,
     // | Effect.Effect.Error<ReturnType<ReturnType<Ret>>>,
-    Effect.Effect.Success<ReturnType<Next>>
     // | Effect.Effect.Success<ReturnType<ReturnType<Ret>>>
+    Effect.Effect.Success<ReturnType<Next>>,
+    Effect.Effect.Error<ReturnType<Next>>,
+    | Effect.Effect.Context<ReturnType<Next>>
+    | Effect.Effect.Context<ReturnType<ReturnType<Ret>>>
   >) & { 'diachronic.meta': Base['diachronic.meta'] } =>
     Object.assign(modifier(base), {
       'diachronic.meta': base['diachronic.meta'],
@@ -157,12 +157,12 @@ export type MakeWrap<Options> = (args: Options) => <
 ) => ((
   input: Parameters<A>[0]
 ) => Effect.Effect<
-  | Effect.Effect.Context<ReturnType<A>>
-  | Effect.Effect.Context<ReturnType<ReturnType<Ret>>>,
+  | Effect.Effect.Success<ReturnType<A>>
+  | Effect.Effect.Success<ReturnType<ReturnType<Ret>>>,
   | Effect.Effect.Error<ReturnType<A>>
   | Effect.Effect.Error<ReturnType<ReturnType<Ret>>>,
-  | Effect.Effect.Success<ReturnType<A>>
-  | Effect.Effect.Success<ReturnType<ReturnType<Ret>>>
+  | Effect.Effect.Context<ReturnType<A>>
+  | Effect.Effect.Context<ReturnType<ReturnType<Ret>>>
 >) & { 'diachronic.meta': Base['diachronic.meta'] }
 
 type FnObj = {
@@ -205,12 +205,12 @@ const other =
   ): ((
     input: Parameters<Base>[0]
   ) => Effect.Effect<
-    | Effect.Effect.Context<ReturnType<Base>>
-    | Effect.Effect.Context<ReturnType<Ret>>,
+    | Effect.Effect.Success<ReturnType<Base>>
+    | Effect.Effect.Success<ReturnType<Ret>>,
     | Effect.Effect.Error<ReturnType<Base>>
     | Effect.Effect.Error<ReturnType<Ret>>,
-    | Effect.Effect.Success<ReturnType<Base>>
-    | Effect.Effect.Success<ReturnType<Ret>>
+    | Effect.Effect.Context<ReturnType<Base>>
+    | Effect.Effect.Context<ReturnType<Ret>>
   >) & { 'diachronic.meta': Base['diachronic.meta'] } =>
     Object.assign(modifier(base), {
       'diachronic.meta': base['diachronic.meta'],
@@ -222,9 +222,9 @@ const other =
 const ef = asAnnotatedEffect(
   {
     name: 'hi',
-    input: S.struct({ a: S.string }),
-    output: S.literal('output'),
-    error: S.literal('error'),
+    input: S.Struct({ a: S.String }),
+    output: S.Literal('output'),
+    error: S.Literal('error'),
   },
   (a) =>
     Effect.flatMap(MyDep1, (dep) =>
@@ -236,13 +236,13 @@ interface MyDep2 {
   mydep2: string
 }
 
-const MyDep2 = Context.Tag<MyDep2>()
+const MyDep2 = Context.GenericTag<MyDep2>('@services/MyDep2')
 
 interface MyDep1 {
   mydep1: string
 }
 
-const MyDep1 = Context.Tag<MyDep1>()
+const MyDep1 = Context.GenericTag<MyDep1>('@services/MyDep1')
 
 const ok3 = pipe(ef, (a) =>
   withh(a)((f) => {
@@ -331,7 +331,7 @@ const isParseError = (x: unknown): x is PR.ParseError =>
 //     // }) as typeof impl
 //   }) as {
 //     [K in keyof typeof impl]: (
-//       args: Parameters<(typeof impl)[K]>[0] //S.Schema.To<Def[K]['input']>
+//       args: Parameters<(typeof impl)[K]>[0] //S.Schema.Type<Def[K]['input']>
 //     ) => Effect.Effect<
 //       Effect.Effect.Context<ReturnType<(typeof impl)[K]>>,
 //       Effect.Effect.Error<ReturnType<(typeof impl)[K]>> | PR.ParseError,

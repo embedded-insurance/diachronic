@@ -67,7 +67,7 @@ export const saveManifests = (args: {
             filepath: commonFilepath,
             manifests: notVersioned,
           })
-        : Effect.unit
+        : Effect.void
     ),
     Effect.flatMap(() =>
       versionedFilepath
@@ -75,7 +75,7 @@ export const saveManifests = (args: {
             filepath: versionedFilepath,
             manifests: versioned,
           })
-        : Effect.unit
+        : Effect.void
     ),
     Effect.map(() => ({
       filepaths: [
@@ -85,7 +85,7 @@ export const saveManifests = (args: {
           : null,
       ].filter(Boolean) as Array<{ label: string; path: string }>,
     }))
-  )
+  );
 }
 
 /**

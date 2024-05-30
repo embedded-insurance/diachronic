@@ -30,7 +30,7 @@ export const assignEffect = <
 >(
   fn: (
     args: ActionArgs<Context, Event, any>
-  ) => Effect.Effect<any, never, Context>
+  ) => Effect.Effect<Context, never, any>
 ): EffectAction => {
   // @ts-expect-error
   fn[AssignEffectSymbol] = AssignEffectSymbol
@@ -41,11 +41,7 @@ export type CreateEffectActions = <API extends { [k: string]: EffectAction }>(
   api: API,
   runtime: Runtime.Runtime<
     {
-      [K in keyof API]: ReturnType<API[K]> extends Effect.Effect<
-        infer R,
-        any,
-        any
-      >
+      [K in keyof API]: ReturnType<API[K]> extends Effect.Effect<any, any, infer R>
         ? R
         : never
     }[keyof API]

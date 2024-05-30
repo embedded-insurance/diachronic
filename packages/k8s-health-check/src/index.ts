@@ -1,10 +1,10 @@
 import * as S from '@effect/schema/Schema'
 import Fastify, { FastifyInstance } from 'fastify'
 
-export const HTTPProbeConfig = S.struct({ path: S.string })
+export const HTTPProbeConfig = S.Struct({ path: S.String })
 
-export const HealthCheckServerConfig = S.struct({
-  port: S.optional(S.number, { default: () => 8080 }),
+export const HealthCheckServerConfig = S.Struct({
+  port: S.optional(S.Number, { default: () => 8080 }),
   livenessProbe: S.optional(HTTPProbeConfig, {
     default: () => ({
       path: '/liveness',
@@ -22,7 +22,7 @@ export const HealthCheckServerConfig = S.struct({
   }),
 })
 
-export type HealthCheckServerConfig = S.Schema.To<
+export type HealthCheckServerConfig = S.Schema.Type<
   typeof HealthCheckServerConfig
 >
 

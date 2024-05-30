@@ -11,17 +11,17 @@ import { pipe } from 'effect/Function'
 
 export const SignalerConfig = pipe(
   TemporalEnv,
-  S.extend(S.struct({ PORT: S.NumberFromString })),
+  S.extend(S.Struct({ PORT: S.NumberFromString })),
   S.extend(
-    S.struct({
-      FEATURE_FLAG_SERVER_URL: S.string,
-      FEATURE_FLAG_API_KEY: S.string,
-      ENABLE_FEATURE_FLAGS: S.optional(S.literal('true', 'false')),
+    S.Struct({
+      FEATURE_FLAG_SERVER_URL: S.String,
+      FEATURE_FLAG_API_KEY: S.String,
+      ENABLE_FEATURE_FLAGS: S.optional(S.Literal('true', 'false')),
     })
   )
 )
 
-export type SignalerConfig = S.Schema.To<typeof SignalerConfig>
+export type SignalerConfig = S.Schema.Type<typeof SignalerConfig>
 
 export type UpdateInstruction =
   | {
@@ -56,58 +56,60 @@ export type Instruction =
     }
   | UpdateInstruction
 
-export const SignalWorkflowInstruction = S.struct({
-  action: S.literal('signal'),
+export const SignalWorkflowInstruction = S.Struct({
+  action: S.Literal('signal'),
   args: SignalWorkflowInput,
 })
-export type SignalWorkflowInstruction = S.Schema.To<
+export type SignalWorkflowInstruction = S.Schema.Type<
   typeof SignalWorkflowInstruction
 >
-export const StartWorkflowInstruction = S.struct({
-  action: S.literal('start'),
+export const StartWorkflowInstruction = S.Struct({
+  action: S.Literal('start'),
   args: StartWorkflowInput,
 })
-export type StartWorkflowInstruction = S.Schema.To<
+export type StartWorkflowInstruction = S.Schema.Type<
   typeof StartWorkflowInstruction
 >
 
-export const SignalBatchInstruction = S.struct({
-  action: S.literal('signalBatch'),
+export const SignalBatchInstruction = S.Struct({
+  action: S.Literal('signalBatch'),
   args: SignalBatchInput,
 })
-export type SignalBatchInstruction = S.Schema.To<typeof SignalBatchInstruction>
+export type SignalBatchInstruction = S.Schema.Type<
+  typeof SignalBatchInstruction
+>
 
-export const SignalWithStartBatchInstruction = S.struct({
-  action: S.literal('signalWithStartBatch'),
+export const SignalWithStartBatchInstruction = S.Struct({
+  action: S.Literal('signalWithStartBatch'),
   args: SignalWithStartBatchInput,
 })
-export type SignalWithStartBatchInstruction = S.Schema.To<
+export type SignalWithStartBatchInstruction = S.Schema.Type<
   typeof SignalWithStartBatchInstruction
 >
 
-export const SignalWithStartInstruction = S.struct({
-  action: S.literal('signalWithStart'),
+export const SignalWithStartInstruction = S.Struct({
+  action: S.Literal('signalWithStart'),
   args: SignalWithStartInput,
 })
-export type SignalWithStartInstruction = S.Schema.To<
+export type SignalWithStartInstruction = S.Schema.Type<
   typeof SignalWithStartInstruction
 >
 
-export const UpdateInstruction = S.struct({
-  action: S.literal('update'),
+export const UpdateInstruction = S.Struct({
+  action: S.Literal('update'),
   args: SignalWorkflowInput,
 })
-// export type UpdateInstruction = S.Schema.To<typeof UpdateInstruction>
+// export type UpdateInstruction = S.Schema.Type<typeof UpdateInstruction>
 
-export const UpdateOrStartInstruction = S.struct({
-  action: S.literal('updateOrStart'),
+export const UpdateOrStartInstruction = S.Struct({
+  action: S.Literal('updateOrStart'),
   args: SignalWithStartInput,
 })
-export type UpdateOrStartInstruction = S.Schema.To<
+export type UpdateOrStartInstruction = S.Schema.Type<
   typeof UpdateOrStartInstruction
 >
 
-export const Instruction = S.union(
+export const Instruction = S.Union(
   SignalWorkflowInstruction,
   StartWorkflowInstruction,
   SignalBatchInstruction,
@@ -120,8 +122,8 @@ export const Instruction = S.union(
 export const isUpdateInstruction = (x: Instruction): x is UpdateInstruction =>
   x.action === 'update' || x.action === 'updateOrStart'
 
-export type UnknownEvent = S.Schema.To<typeof UnknownEvent>
-export const UnknownEvent = S.struct({
-  _tag: S.literal('UnknownWorkflowEvent'),
-  error: S.string,
+export type UnknownEvent = S.Schema.Type<typeof UnknownEvent>
+export const UnknownEvent = S.Struct({
+  _tag: S.Literal('UnknownWorkflowEvent'),
+  error: S.String,
 })

@@ -63,11 +63,11 @@ export class CustomClock implements XStateClockInterface, Clock.Clock {
     this.timeouts.delete(id)
   }
 
-  get currentTimeMillis(): Effect.Effect<never, never, number> {
+  get currentTimeMillis(): Effect.Effect<number> {
     return Effect.succeed(this.now())
   }
 
-  sleep(duration: Duration.Duration): Effect.Effect<never, never, void> {
+  sleep(duration: Duration.Duration): Effect.Effect<void> {
     const simulatedClockTimeout = this.setTimeout.bind(this)
     return Effect.async((resume) => {
       simulatedClockTimeout(() => {
@@ -76,7 +76,7 @@ export class CustomClock implements XStateClockInterface, Clock.Clock {
     })
   }
 
-  get currentTimeNanos(): Effect.Effect<never, never, bigint> {
+  get currentTimeNanos(): Effect.Effect<bigint> {
     return Effect.succeed(this.unsafeCurrentTimeNanos())
   }
 
@@ -121,11 +121,11 @@ export class TestClock extends SimulatedClock implements Clock.Clock {
     return super.clearTimeout(id)
   }
 
-  get currentTimeMillis(): Effect.Effect<never, never, number> {
+  get currentTimeMillis(): Effect.Effect<number> {
     return Effect.succeed(this.now())
   }
 
-  sleep(duration: Duration.Duration): Effect.Effect<never, never, void> {
+  sleep(duration: Duration.Duration): Effect.Effect<void> {
     const simulatedClockTimeout = this.setTimeout.bind(this)
     return Effect.async((resume) => {
       simulatedClockTimeout(() => {
@@ -134,7 +134,7 @@ export class TestClock extends SimulatedClock implements Clock.Clock {
     })
   }
 
-  get currentTimeNanos(): Effect.Effect<never, never, bigint> {
+  get currentTimeNanos(): Effect.Effect<bigint> {
     return Effect.succeed(this.unsafeCurrentTimeNanos())
   }
 

@@ -46,7 +46,7 @@ const machine = createMachine(
 )
 
 const signals = {
-  hey: S.struct({ type: S.literal('hey'), payload: S.string }),
+  hey: S.Struct({ type: S.Literal('hey'), payload: S.String }),
 }
 
 export const theWorkflow = makeWorkflow({

@@ -6,14 +6,14 @@ import { Effect } from 'effect'
  */
 export type EffectDef = {
   name: string
-  input: S.Schema<never, any>
-  output: S.Schema<never, any>
-  error: S.Schema<never, any>
+  input: S.Schema<any>
+  output: S.Schema<any>
+  error: S.Schema<any>
 }
 
-export type InputType<A extends EffectDef> = S.Schema.To<A['input']>
-export type OutputType<A extends EffectDef> = S.Schema.To<A['output']>
-export type ErrorType<A extends EffectDef> = S.Schema.To<A['error']>
+export type InputType<A extends EffectDef> = S.Schema.Type<A['input']>
+export type OutputType<A extends EffectDef> = S.Schema.Type<A['output']>
+export type ErrorType<A extends EffectDef> = S.Schema.Type<A['error']>
 
 /**
  * Adds to a base definition
@@ -47,14 +47,18 @@ export const annotateMethods = <
   }, {} as { [K in keyof T]: ReturnType<Annotators[K]> })
 
 export type EffectImpl<Sch extends EffectDef, R> = (
-  args: S.Schema.To<Sch['input']>
-) => Effect.Effect<R, S.Schema.To<Sch['error']>, S.Schema.To<Sch['output']>>
+  args: S.Schema.Type<Sch['input']>
+) => Effect.Effect<S.Schema.Type<Sch['output']>, S.Schema.Type<Sch['error']>, R>
 
 export type AnnotatedFn<Sch extends EffectDef, R> = {
   'diachronic.meta': Sch
 } & ((
-  args: S.Schema.To<Sch['input']>
-) => Effect.Effect<R, S.Schema.To<Sch['error']>, S.Schema.To<Sch['output']>>)
+  args: S.Schema.Type<Sch['input']>
+) => Effect.Effect<
+  S.Schema.Type<Sch['output']>,
+  S.Schema.Type<Sch['error']>,
+  R
+>)
 
 export const extend = <A extends EffectDef, B extends EffectDef>(
   a: A,

@@ -45,7 +45,7 @@ const sanitizeRoleName = (role: GCPIAMRole) =>
   role.toLowerCase().replace(/[\/.]/g, '-')
 
 export const GCPProviderConfig =
-  Context.Tag<GCPProviderConfig>('GCPProviderConfig')
+  Context.GenericTag<GCPProviderConfig>('GCPProviderConfig')
 
 /**
  * Constructs a GCP service account
@@ -111,7 +111,7 @@ export const gcpSAServiceAccountRoleBindings = (
   gcpSA: GCPServiceAccount,
   k8sSA: K8sServiceAccount,
   roles: GCPIAMRole[]
-): Effect.Effect<GCPProviderConfig, unknown, ServiceAccountIAMMember[]> =>
+): Effect.Effect<ServiceAccountIAMMember[], unknown, GCPProviderConfig> =>
   Effect.map(
     GCPProviderConfig,
     ({
@@ -156,7 +156,7 @@ export const gcpSAServiceAccountRoleBindings = (
 export const gcpSAProjectRoleBindings = (
   gcpSA: GCPServiceAccount,
   roles: GCPIAMRole[]
-): Effect.Effect<GCPProviderConfig, unknown, ProjectIAMMember[]> =>
+): Effect.Effect<ProjectIAMMember[], unknown, GCPProviderConfig> =>
   Effect.map(GCPProviderConfig, (config) =>
     roles.map((role) => ({
       apiVersion: 'cloudplatform.gcp.upbound.io/v1beta1',

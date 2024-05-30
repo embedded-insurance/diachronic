@@ -664,13 +664,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@effect-use/gcp-logging@npm:4.0.0":
-  version: 4.0.0
-  resolution: "@effect-use/gcp-logging@npm:4.0.0"
+"@effect-use/gcp-logging@npm:5.0.0":
+  version: 5.0.0
+  resolution: "@effect-use/gcp-logging@npm:5.0.0"
   dependencies:
     "@effect/schema": 0.61.5
     effect: 2.2.3
-  checksum: acea1cdd1b649919fa92c2f9bc4da129ec631a068b1864a96141068caeafa3558c8f8e57f1e71796ab1057de1e65350887f17c487b7d142d94818151bbfbbf6a
+  checksum: de4a3b929687a203d7d1300670047879be2a5cb10ec6162c1235645fe84cf311e766273f39e76d3f4d15bcc720a13369e2d6f77955f4f19471c739a34e4d8f41
   languageName: node
   linkType: hard
 
@@ -707,36 +707,37 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@effect-use/temporal-client@npm:3.0.0":
-  version: 3.0.0
-  resolution: "@effect-use/temporal-client@npm:3.0.0"
+"@effect-use/temporal-client@npm:4.0.0":
+  version: 4.0.0
+  resolution: "@effect-use/temporal-client@npm:4.0.0"
   dependencies:
-    "@effect-use/temporal-config": ^3.0.0
+    "@effect-use/temporal-config": ^4.0.0
     "@effect/schema": 0.61.5
     "@temporalio/client": 1.8.6
     "@temporalio/workflow": 1.8.6
     effect: 2.2.3
-  checksum: be474511274ee3046bbb74db2f2faf3de7fda3c70fd52cf99112b69a7cc9e779665c42d29fdd095ddc58d311533562d444fa61f2d9b192f70e43bb79523b1345
+  checksum: 08efe0e19fc7bd2e53329a73b087a1d08b497870e99e7e27038974d9f5052dbf4395b50bb508b62f396e82c025174db0fb15a5aecd2e8508b1002b1ef3be99f3
   languageName: node
   linkType: hard
 
-"@effect-use/temporal-config@npm:3.0.0":
-  version: 3.0.0
-  resolution: "@effect-use/temporal-config@npm:3.0.0"
+"@effect-use/temporal-config@npm:4.0.0":
+  version: 4.0.0
+  resolution: "@effect-use/temporal-config@npm:4.0.0"
   dependencies:
     "@effect/schema": 0.61.5
     effect: 2.2.3
-  checksum: 1bef8eaee41fa67332cdcccb9b2bc28119a68b0b45dcc07a7f8371abec1a497f2bc9f6e652870d2377edcfdaf270128d9b365256fa473a4755a02f719a1ab5e6
+  checksum: 51878599862c0dc7a032bf94e640e0c8572d55288f7152c3ba21c306383c241f7b62444d2dae21a077d8c9b8c0466119f7e502afe56d18e6c39820b198d38734
   languageName: node
   linkType: hard
 
-"@effect/schema@npm:0.61.5":
-  version: 0.61.5
-  resolution: "@effect/schema@npm:0.61.5"
+"@effect/schema@npm:0.67.14":
+  version: 0.67.14
+  resolution: "@effect/schema@npm:0.67.14"
+  dependencies:
+    fast-check: ^3.17.2
   peerDependencies:
-    effect: ^2.2.3
-    fast-check: ^3.13.2
-  checksum: 6943420df2580a74b73fcd7efa3dc34e00c725a1ad1080af23128f93b5a9161bd8cea6efeb52ab265b9da11087e248ecae3265771fe5db6b7e1c2bfd839c02de
+    effect: ^3.2.5
+  checksum: 929603e9aff64c041078748f64eeb62f859a7beb21ba5055480d62604b5f0246099496fb964691a37f56c58ee78660bde7b6a539cbd9af7eeda0386e654b1a69
   languageName: node
   linkType: hard
 
@@ -3063,7 +3064,7 @@ __metadata:
     rimraf: ^5.0.1
     ts-node: 10.9.1
     turbo: 1.10.13
-    typescript: 5.2.2
+    typescript: 5.4.5
   languageName: unknown
   linkType: soft
 
@@ -3118,10 +3119,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"effect@npm:2.2.3":
-  version: 2.2.3
-  resolution: "effect@npm:2.2.3"
-  checksum: 055c6bce498bcaef8b9998c9123045bcd5e9468b96292dd7ff336e2ea4f0c5ad4c9830fbcbc4c7c0c0a7e88286e731c0e624dfa47e86fce364ce3290d68035fe
+"effect@npm:3.2.5":
+  version: 3.2.5
+  resolution: "effect@npm:3.2.5"
+  checksum: 0f8e0a8849d25d6882d0e2f7a5d602723ff17725f972cf860b2b36f6b35108b4dbfa9a63ec0871cd188377c57054b3947d38abcb8e42ebdbf04548fce9290d6b
   languageName: node
   linkType: hard
 
@@ -3431,12 +3432,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-check@npm:^3.8.1":
-  version: 3.13.1
-  resolution: "fast-check@npm:3.13.1"
+"fast-check@npm:^3.19":
+  version: 3.19.0
+  resolution: "fast-check@npm:3.19.0"
   dependencies:
-    pure-rand: ^6.0.0
-  checksum: b8aa5ab50a447238cdb5c2f07db74dddebec35bc911a41ec21865c688d58323995733f02c80621fc42193dd78c86a626f6cfd273dcdf04e965c85f1e5c4d31c0
+    pure-rand: ^6.1.0
+  checksum: 7863849b45e66c2ea121510d99cb949ec55533822114421dde1d485c50f96850241d2119d212749b56871e06a0e034bcb6cc8fb5eb2f7d21d19e862ecaa19030
   languageName: node
   linkType: hard
 
@@ -5744,6 +5745,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pure-rand@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "pure-rand@npm:6.1.0"
+  checksum: 8d53bc02bed99eca0b65b505090152ee7e9bd67dd74f8ff32ba1c883b87234067c5bf68d2614759fb217d82594d7a92919e6df80f97885e7b12b42af4bd3316a
+  languageName: node
+  linkType: hard
+
 "queue-microtask@npm:^1.2.2":
   version: 1.2.3
   resolution: "queue-microtask@npm:1.2.3"
@@ -6998,23 +7006,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:5.2.2":
-  version: 5.2.2
-  resolution: "typescript@npm:5.2.2"
+"typescript@npm:5.4.5":
+  version: 5.4.5
+  resolution: "typescript@npm:5.4.5"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 7912821dac4d962d315c36800fe387cdc0a6298dba7ec171b350b4a6e988b51d7b8f051317786db1094bd7431d526b648aba7da8236607febb26cf5b871d2d3c
+  checksum: 53c879c6fa1e3bcb194b274d4501ba1985894b2c2692fa079db03c5a5a7140587a1e04e1ba03184605d35f439b40192d9e138eb3279ca8eee313c081c8bcd9b0
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@5.2.2#~builtin<compat/typescript>":
-  version: 5.2.2
-  resolution: "typescript@patch:typescript@npm%3A5.2.2#~builtin<compat/typescript>::version=5.2.2&hash=f3b441"
+"typescript@patch:typescript@npm%3A5.4.5#~builtin<compat/typescript>":
+  version: 5.4.5
+  resolution: "typescript@patch:typescript@npm%3A5.4.5#~builtin<compat/typescript>::version=5.4.5&hash=29ae49"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 0f4da2f15e6f1245e49db15801dbee52f2bbfb267e1c39225afdab5afee1a72839cd86000e65ee9d7e4dfaff12239d28beaf5ee431357fcced15fb08583d72ca
+  checksum: 2373c693f3b328f3b2387c3efafe6d257b057a142f9a79291854b14ff4d5367d3d730810aee981726b677ae0fd8329b23309da3b6aaab8263dbdccf1da07a3ba
   languageName: node
   linkType: hard
 

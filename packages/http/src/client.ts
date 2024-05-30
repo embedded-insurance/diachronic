@@ -13,9 +13,7 @@ import { GroupDef } from './types'
 export const isSchemaError = (e: any): e is ParseError =>
   isRecord(e) && e._tag === 'ParseError'
 
-export const validateURL = (
-  input: string
-): Effect.Effect<never, InvalidURL, URL> =>
+export const validateURL = (input: string): Effect.Effect<URL, InvalidURL> =>
   pipe(
     Effect.try(() => new URL(input)),
     Effect.mapError(
@@ -44,11 +42,11 @@ export const client = <Def extends GroupDef>(
           return [
             name,
             (
-              args: S.Schema.To<typeof def.input>,
+              args: S.Schema.Type<typeof def.input>,
               headers?: (typeof def)['diachronic.http']['request'] extends {
-                headers: S.Schema<never, any, any>
+                headers: S.Schema<any>
               }
-                ? S.Schema.To<
+                ? S.Schema.Type<
                     (typeof def)['diachronic.http']['request']['headers']
                   >
                 : never
@@ -97,16 +95,15 @@ export const client = <Def extends GroupDef>(
         })
       ) as {
         [K in keyof Def]: (
-          args: S.Schema.To<Def[K]['input']>,
+          args: S.Schema.Type<Def[K]['input']>,
           headers?: Def[K]['diachronic.http']['request'] extends {
-            headers: S.Schema<never, any, any>
+            headers: S.Schema<any>
           }
-            ? S.Schema.To<Def[K]['diachronic.http']['request']['headers']>
+            ? S.Schema.Type<Def[K]['diachronic.http']['request']['headers']>
             : never
         ) => Effect.Effect<
-          never,
-          InvalidURL | ParseError | S.Schema.To<Def[K]['error']>,
-          S.Schema.To<Def[K]['output']>
+          S.Schema.Type<Def[K]['output']>,
+          InvalidURL | ParseError | S.Schema.Type<Def[K]['error']>
         >
       }
   )

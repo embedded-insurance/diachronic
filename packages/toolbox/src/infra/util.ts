@@ -14,9 +14,9 @@ export const camelToKebabCase = <const S extends string>(str: S) =>
 // It signifies the runtime conext has a way to run commands
 // and provides a way to run commands
 export type Shell = {
-  exec: (cmd: string) => Effect.Effect<never, ExecError, ExecSuccess>
+  exec: (cmd: string) => Effect.Effect<ExecSuccess, ExecError>
 }
-const Shell = Context.Tag<Shell>('diachronic.Shell')
+const Shell = Context.GenericTag<Shell>('diachronic.Shell')
 
 export type ExecError = {
   error: ExecException
@@ -39,7 +39,7 @@ export const spawn = (
   cmd: string,
   options?: ChildProcess.ExecOptions,
   stdio?: { stdout?: boolean; stderr?: boolean }
-): Effect.Effect<never, ExecError, ChildProcess.ChildProcess> =>
+): Effect.Effect<ChildProcess.ChildProcess, ExecError> =>
   pipe(
     Effect.logDebug(`Streaming shell command:${cmd}`),
     Effect.map(() =>
@@ -64,12 +64,12 @@ export const exec = (
   cmd: string,
   options?: ChildProcess.ExecOptions,
   stdio?: { stdout?: boolean; stderr?: boolean }
-): Effect.Effect<never, ExecError, ExecSuccess> =>
+): Effect.Effect<ExecSuccess, ExecError> =>
   pipe(
     Effect.logDebug(`Executing shell command`),
     Effect.annotateLogs({ $: cmd }),
     Effect.flatMap(() =>
-      Effect.async<never, ExecError, ExecSuccess>((resume) => {
+      Effect.async<ExecSuccess, ExecError>((resume) => {
         const cp = ChildProcess.exec(
           cmd,
           options || {},
@@ -96,7 +96,7 @@ export const exec = (
  * @param path
  */
 export const readFile = (path: string) =>
-  Effect.async<never, NodeJS.ErrnoException, Buffer>((resume) => {
+  Effect.async<Buffer, NodeJS.ErrnoException>((resume) => {
     void fs.readFile(path, (err, data) => {
       if (err) {
         resume(Effect.fail(err))
@@ -114,7 +114,7 @@ export const ShellLayer = {
     }),
 }
 
-export const getRepoRoot = (): Effect.Effect<never, ExecError, string> =>
+export const getRepoRoot = (): Effect.Effect<string, ExecError> =>
   pipe(
     exec(`git rev-parse --show-toplevel`),
     Effect.map((x) => x.stdout.trim())
@@ -124,7 +124,7 @@ export const getRepoRoot = (): Effect.Effect<never, ExecError, string> =>
  * Get the description of a schema
  * @param x
  */
-export const getDescription = (x: S.Schema<never, any, any>): string | null =>
+export const getDescription = (x: S.Schema<any>): string | null =>
   pipe(AST.getAnnotation(AST.DescriptionAnnotationId)(x.ast), (a) =>
     a._tag === 'None' ? null : (a.value as string)
   )

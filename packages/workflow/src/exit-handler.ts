@@ -2,9 +2,9 @@ import './workflow-runtime'
 import { Cause, Exit } from 'effect'
 import * as S from '@effect/schema/Schema'
 
-const ParseError = S.struct({
-  _tag: S.literal('ParseError'),
-  errors: S.nonEmptyArray(S.any),
+const ParseError = S.Struct({
+  _tag: S.Literal('ParseError'),
+  errors: S.NonEmptyArray(S.Any),
 })
 
 export const handleExitFailure = (result: Exit.Exit<any, any>) => {

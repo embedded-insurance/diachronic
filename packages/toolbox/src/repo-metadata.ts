@@ -66,13 +66,14 @@ export const getWorkflowDeploymentNameFromWorkflowType = (
     const appName = workflowTypesToAppName[workflowType]
 
     return Effect.if(appName !== undefined, {
-      onTrue: Effect.succeed(appName),
-      onFalse: pipe(
-        Effect.logWarning(
-          `No mapping for workflow type ${workflowType}. Using default value.`
+      onTrue: () => Effect.succeed(appName),
+      onFalse: () =>
+        pipe(
+          Effect.logWarning(
+            `No mapping for workflow type ${workflowType}. Using default value.`
+          ),
+          Effect.tap(() => Effect.succeed(defaultValue))
         ),
-        Effect.tap(() => Effect.succeed(defaultValue))
-      ),
     })
   } catch (e) {
     console.error('getWorkflowDeploymentNameFromWorkflowType error', e)

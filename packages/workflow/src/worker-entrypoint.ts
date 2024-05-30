@@ -1,15 +1,15 @@
 import * as S from '@effect/schema/Schema'
 import { createWorker } from './worker'
 
-const RequiredConfig = S.struct({
-  TEMPORAL_ADDRESS: S.string,
-  TEMPORAL_NAMESPACE: S.string,
-  TEMPORAL_TASK_QUEUE: S.string,
+const RequiredConfig = S.Struct({
+  TEMPORAL_ADDRESS: S.String,
+  TEMPORAL_NAMESPACE: S.String,
+  TEMPORAL_TASK_QUEUE: S.String,
 })
 const OptionalConfig = S.partial(
-  S.struct({
-    WORKFLOWS_PATH: S.string,
-    ACTIVITIES_PATH: S.string,
+  S.Struct({
+    WORKFLOWS_PATH: S.String,
+    ACTIVITIES_PATH: S.String,
   })
 )
 const Config = S.extend(RequiredConfig, OptionalConfig)

@@ -1,19 +1,19 @@
 import * as S from '@effect/schema/Schema'
 
 const RequiredConfig = S.extend(
-  S.struct({
-    TEMPORAL_ADDRESS: S.string,
-    TEMPORAL_NAMESPACE: S.string,
-    TEMPORAL_TASK_QUEUE: S.string,
-    DIACHRONIC_CI_MQTT_BROKER_URL: S.string,
-    DIACHRONIC_CI_MQTT_TOPIC: S.string,
+  S.Struct({
+    TEMPORAL_ADDRESS: S.String,
+    TEMPORAL_NAMESPACE: S.String,
+    TEMPORAL_TASK_QUEUE: S.String,
+    DIACHRONIC_CI_MQTT_BROKER_URL: S.String,
+    DIACHRONIC_CI_MQTT_TOPIC: S.String,
   }),
-  S.union(
-    S.struct({
-      WORKFLOWS_PATH: S.string,
+  S.Union(
+    S.Struct({
+      WORKFLOWS_PATH: S.String,
     }),
-    S.struct({
-      ACTIVITIES_PATH: S.string,
+    S.Struct({
+      ACTIVITIES_PATH: S.String,
     })
   )
 )

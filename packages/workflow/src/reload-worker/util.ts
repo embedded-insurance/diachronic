@@ -29,12 +29,12 @@ export const exec = (
   cmd: string,
   options?: ChildProcess.ExecOptions,
   stdio?: { stdout?: boolean; stderr?: boolean }
-): Effect.Effect<never, ExecError, ExecSuccess> =>
+): Effect.Effect<ExecSuccess, ExecError> =>
   pipe(
     Effect.logDebug(`Executing shell command`),
     Effect.annotateLogs({ $: cmd }),
     Effect.flatMap(() =>
-      Effect.async<never, ExecError, ExecSuccess>((resume) => {
+      Effect.async<ExecSuccess, ExecError>((resume) => {
         const cp = ChildProcess.exec(
           cmd,
           options || {},
@@ -60,9 +60,9 @@ export const untar = (from: string, to: string) =>
   exec(`tar -xzf ${from} -C ${to}`)
 
 export const ensureDir = (dir: string) =>
-  Effect.async<never, NodeJS.ErrnoException, void>((resume) =>
+  Effect.async<void, NodeJS.ErrnoException>((resume) =>
     fs.mkdir(dir, { recursive: true }, (e) =>
-      resume(e ? Effect.fail(e) : Effect.succeed(Effect.unit))
+      resume(e ? Effect.fail(e) : Effect.succeed(Effect.void))
     )
   )
 

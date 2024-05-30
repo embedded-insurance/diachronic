@@ -11,14 +11,14 @@ export type WorkflowDeployEventPayload = {
   isDarkDeploy?: boolean
 }
 
-const WorkflowDeployEventPayload = S.struct({
-  workflowName: S.string,
-  versionId: S.string,
-  sha: S.string,
-  environment: S.union(S.literal('development'), S.literal('production')),
+const WorkflowDeployEventPayload = S.Struct({
+  workflowName: S.String,
+  versionId: S.String,
+  sha: S.String,
+  environment: S.Union(S.Literal('development'), S.Literal('production')),
   eventTime: ISODateString,
-  isNonMigratory: S.optional(S.boolean, { default: () => false }),
-  isDarkDeploy: S.optional(S.boolean, { default: () => false }),
+  isNonMigratory: S.optional(S.Boolean, { default: () => false }),
+  isDarkDeploy: S.optional(S.Boolean, { default: () => false }),
 })
 
 /**
@@ -55,35 +55,35 @@ export type WorkflowDeployEvent =
       payload: WorkflowDeployEventPayload
     }
 
-export const WorkflowDeploymentSuccessEvent = S.struct({
-  type: S.literal('diachronic.ci.workflow.deploy.success'),
+export const WorkflowDeploymentSuccessEvent = S.Struct({
+  type: S.Literal('diachronic.ci.workflow.deploy.success'),
   payload: WorkflowDeployEventPayload,
 })
 
-export const WorkflowDeployEvent = S.union(
+export const WorkflowDeployEvent = S.Union(
   WorkflowDeploymentSuccessEvent,
-  S.struct({
-    type: S.literal('diachronic.ci.workflow.deploy.pending'),
+  S.Struct({
+    type: S.Literal('diachronic.ci.workflow.deploy.pending'),
     payload: WorkflowDeployEventPayload,
   }),
-  S.struct({
-    type: S.literal('diachronic.ci.workflow.deploy.queued'),
+  S.Struct({
+    type: S.Literal('diachronic.ci.workflow.deploy.queued'),
     payload: WorkflowDeployEventPayload,
   }),
-  S.struct({
-    type: S.literal('diachronic.ci.workflow.deploy.waiting'),
+  S.Struct({
+    type: S.Literal('diachronic.ci.workflow.deploy.waiting'),
     payload: WorkflowDeployEventPayload,
   }),
-  S.struct({
-    type: S.literal('diachronic.ci.workflow.deploy.in_progress'),
+  S.Struct({
+    type: S.Literal('diachronic.ci.workflow.deploy.in_progress'),
     payload: WorkflowDeployEventPayload,
   }),
-  S.struct({
-    type: S.literal('diachronic.ci.workflow.deploy.error'),
+  S.Struct({
+    type: S.Literal('diachronic.ci.workflow.deploy.error'),
     payload: WorkflowDeployEventPayload,
   }),
-  S.struct({
-    type: S.literal('diachronic.ci.workflow.deploy.failure'),
+  S.Struct({
+    type: S.Literal('diachronic.ci.workflow.deploy.failure'),
     payload: WorkflowDeployEventPayload,
   })
 )

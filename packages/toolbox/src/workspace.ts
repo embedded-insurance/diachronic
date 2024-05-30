@@ -10,18 +10,18 @@ import { exec, getRepoRoot, readFile } from './infra/util'
 /**
  * Represents a (yarn) workspace / monorepo package
  */
-export const Workspace = S.struct({ location: S.string, name: S.string })
-export type Workspace = S.Schema.To<typeof Workspace>
+export const Workspace = S.Struct({ location: S.String, name: S.String })
+export type Workspace = S.Schema.Type<typeof Workspace>
 
-export const Workspaces = S.array(Workspace)
-export type Workspaces = S.Schema.To<typeof Workspaces>
+export const Workspaces = S.Array(Workspace)
+export type Workspaces = S.Schema.Type<typeof Workspaces>
 
 export const listAllWorkspaces = asAnnotatedEffect(
   def({
     name: 'listAllWorkspaces',
-    input: S.undefined,
+    input: S.Undefined,
     output: Workspaces,
-    error: S.unknown,
+    error: S.Unknown,
     'diachronic.cli': {
       name: 'listAllWorkspaces',
     },
@@ -48,17 +48,17 @@ export const listWorkspaceDependents = asAnnotatedEffect(
   def({
     name: 'listWorkspaceDependents',
     input: pipe(
-      S.union(S.struct({ workspaces: S.array(S.string) }), S.undefined),
+      S.Union(S.Struct({ workspaces: S.Array(S.String) }), S.Undefined),
       S.description('The workspaces to list dependents for')
     ),
-    output: S.array(
-      S.struct({
-        type: S.literal('dependency', 'devDependency'),
+    output: S.Array(
+      S.Struct({
+        type: S.Literal('dependency', 'devDependency'),
         source: Workspace,
         target: Workspace,
       })
     ),
-    error: S.unknown,
+    error: S.Unknown,
     'diachronic.cli': {
       path: ['workspace', 'deps'],
     },

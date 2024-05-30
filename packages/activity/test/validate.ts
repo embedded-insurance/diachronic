@@ -12,21 +12,21 @@ interface MyDep1 {
   mydep1: string
 }
 
-const MyDep1 = Context.Tag<MyDep1>()
+const MyDep1 = Context.GenericTag<MyDep1>("@services/MyDep1")
 
 interface MyDep2 {
   mydep2: string
 }
 
-const MyDep2 = Context.Tag<MyDep2>()
+const MyDep2 = Context.GenericTag<MyDep2>("@services/MyDep2")
 
 describe('validate', () => {
   test('works with inline wrap', () => {
     const schema = def({
       name: 'hi',
-      input: S.struct({ a: S.string }),
-      output: S.literal('output'),
-      error: S.literal('error'),
+      input: S.Struct({ a: S.String }),
+      output: S.Literal('output'),
+      error: S.Literal('error'),
     })
 
     const justimpl = pipe(
@@ -100,9 +100,9 @@ describe('validate', () => {
 
     const schema = def({
       name: 'hi',
-      input: S.struct({ a: S.string }),
-      output: S.literal('output'),
-      error: S.literal('error'),
+      input: S.Struct({ a: S.String }),
+      output: S.Literal('output'),
+      error: S.Literal('error'),
     })
 
     const base = pipe(
@@ -134,7 +134,7 @@ describe('validate', () => {
     const wrapped = pipe(
       (input: { a: string }) => Effect.succeed('output'),
       (fn) => {
-        const validate = S.decode(S.struct({ a: S.string }))
+        const validate = S.decode(S.Struct({ a: S.String }))
         return (input: { a: string }) =>
           pipe(validate(input), Effect.flatMap(fn))
       }
@@ -165,7 +165,7 @@ describe('validate', () => {
     >(
       a: A extends { 'diachronic.meta': any } & ((
         ...x: infer I
-      ) => Effect.Effect<infer R, infer E, infer O>)
+      ) => Effect.Effect<infer O, infer E, infer R>)
         ? true
         : false
     ) => {
@@ -183,8 +183,8 @@ describe('validate', () => {
       // R1,E1,A1
     >(
       f: (
-        a: (i: I) => Effect.Effect<R0, E0, A0>
-      ) => <R1, E1, A1>(i: I) => Effect.Effect<R1, E1, A1>
+        a: (i: I) => Effect.Effect<A0, E0, R0>
+      ) => <R1, E1, A1>(i: I) => Effect.Effect<A1, E1, R1>
     ) => {
       return f
       // let fn = (input: Parameters<typeof a>[0]) =>
@@ -197,12 +197,12 @@ describe('validate', () => {
   })
 })
 
-type EffectFn<R, E, A, I> = (i: I) => Effect.Effect<R, E, A>
+type EffectFn<R, E, A, I> = (i: I) => Effect.Effect<A, E, R>
 
 type EffectFnMap = <R, E, A, I, R1, E1, A1, Self extends EffectFn<R, E, A, I>>(
   self: Self,
-  f: (self: Self) => (i: I) => Effect.Effect<R1, E1, A1>
-) => (i: I) => Effect.Effect<R | R1, E | E1, A | A1>
+  f: (self: Self) => (i: I) => Effect.Effect<A1, E1, R1>
+) => (i: I) => Effect.Effect<A | A1, E | E1, R | R1>
 
 // const effectFnMap = <R, E, A, I, R1, E1, A1,
 //   Self extends EffectFn<R, E, A, I>
@@ -272,7 +272,7 @@ Effect.flatMap((a) => a)
 // type EffectFn = <R, E, A, I>(
 //   f: (i: I) => Effect.Effect<R, E, A>
 // ) => (i: I) => Effect.Effect<R, E, A>
-const effectFn = <R, E, A, I>(f: (i: I) => Effect.Effect<R, E, A>) => f
+const effectFn = <R, E, A, I>(f: (i: I) => Effect.Effect<A, E, R>) => f
 const myfn = (input: { a: string }) => Effect.succeed('output')
 const myfn2 = effectFn((a: { s: string }) => Effect.succeed('output'))
 const myMap = <Fn extends EffectFn>(f: (a: Fn) => Fn) => {}
@@ -287,7 +287,7 @@ const mymiddleware = <
   //   E | Effect.Effect.Error<Ret>,
   //   A | Effect.Effect.Success<Ret>
   // >
-  Impl extends <R, E, A>(x: Input) => Effect.Effect<R, E, A>,
+  Impl extends <R, E, A>(x: Input) => Effect.Effect<A, E, R>,
   // Impl extends (x: Input) => Effect.Effect<unknown, unknown, unknown>,
   RetEffect extends ReturnType<Impl>
 >(
@@ -298,7 +298,7 @@ const mymiddleware = <
   //   E|Effect.Effect.Error<ReturnType<Impl>> | Effect.Effect.Error<Ret>,
   //   A|Effect.Effect.Success<ReturnType<Impl>> | Effect.Effect.Success<Ret>
   // >
-  const validate = S.decode(S.struct({ a: S.string }))
+  const validate = S.decode(S.Struct({ a: S.String }))
   return (input) => pipe(validate(input), Effect.flatMap(fn)) as any
 }
 const wrapped = pipe(myfn, mymiddleware)

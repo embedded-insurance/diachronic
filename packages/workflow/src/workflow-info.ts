@@ -5,7 +5,7 @@ import {
 } from '@temporalio/workflow'
 
 export type WorkflowInfo = () => TemporalWorkflowInfo
-export const WorkflowInfo = Context.Tag<WorkflowInfo>()
+export const WorkflowInfo = Context.GenericTag<WorkflowInfo>("@services/WorkflowInfo")
 
 export const WorkflowInfoLayer = (
   workflowInfo: () => TemporalWorkflowInfo = temporalWorkflowInfo

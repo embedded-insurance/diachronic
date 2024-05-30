@@ -39,7 +39,7 @@ import { dissoc } from 'ramda'
  * @param interpreter
  */
 export const forwardSignalsToXState = <
-  EventNameToEventDecoderMap extends Record<string, S.Schema<never, any, any>>
+  EventNameToEventDecoderMap extends Record<string, S.Schema<any>>
 >(
   eventMap: EventNameToEventDecoderMap,
   interpreter: Actor<any, any>
@@ -47,7 +47,7 @@ export const forwardSignalsToXState = <
   Object.entries(eventMap).forEach(([eventName, decoder]) => {
     const signal =
       defineSignal<
-        S.Schema.To<
+        S.Schema.Type<
           EventNameToEventDecoderMap[keyof EventNameToEventDecoderMap]
         >
       >(eventName)
@@ -142,10 +142,10 @@ const getContinuationXStateNode = (
 /**
  * Arguments passed to a workflow that is continuing from a previous run
  */
-const Continuation = S.struct({
+const Continuation = S.Struct({
   state: XStateStateValue,
-  context: S.unknown,
-  timers: S.unknown,
+  context: S.Unknown,
+  timers: S.Unknown,
 })
 type Continuation = {
   state: StateValue
@@ -176,10 +176,10 @@ const isValidContinuation = (x: unknown): x is Continuation =>
   S.is(Continuation)(x)
 
 type WorkflowDefinition = {
-  context: S.Schema<never, any, any>
-  state: S.Schema<never, any, any>
-  signals: Record<string, S.Schema<never, any, any>>
-  timers: Record<string, S.Schema<never, any, any>>
+  context: S.Schema<any>
+  state: S.Schema<any>
+  signals: Record<string, S.Schema<any>>
+  timers: Record<string, S.Schema<any>>
 }
 
 /**
@@ -203,15 +203,11 @@ export type MigrationFnV1<
   state: Prev['migrationStates']
   context: Prev['context']
   timers: Prev['delays']
-}) => Effect.Effect<
-  never,
-  never,
-  {
-    state: Next['migrationStates'] // extends MetaMachine<any, infer States> ? States : never
-    context: Next['context']
-    timers: Next['delays']
-  }
->
+}) => Effect.Effect<{
+  state: Next['migrationStates'] // extends MetaMachine<any, infer States> ? States : never
+  context: Next['context']
+  timers: Next['delays']
+}>
 /**
  * Defines a machine that can be migrated from or to
  * Requires MigrationStateIds which can be generated from
@@ -314,7 +310,7 @@ export const makeWorkflow = <
 }: {
   name: string
   machine: Next['machine']
-  signals: Record<string, S.Schema<never, any, any>>
+  signals: Record<string, S.Schema<any>>
   receive?: Prev extends any ? MigrationFnV1<Prev, Next> : never
   db?: DbFns<any, Next['context']>
   logger?: {

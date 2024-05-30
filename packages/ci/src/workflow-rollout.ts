@@ -73,10 +73,10 @@ const activities = mapGroupToScheduleActivities(
   workflowDefinitions.rollout['temporal.workflow'].activities
 )
 
-export const RolloutCtx = Context.Tag<{
+export const RolloutCtx = Context.GenericTag<{
   db: DbFx<RolloutDb>
   fx: typeof activities
-}>()
+}>("@services/RolloutCtx")
 export const isGeneralTrafficStrategy = (x: FlagStrategy) =>
   x.name === 'flexibleRollout' && x.title === 'All other traffic'
 
@@ -140,8 +140,8 @@ const isAutomatedGeneralTrafficRolloutEnabled = (
       expected: expectedPercent,
       strategy,
     }),
-    Effect.flatMap(() => Effect.unit)
-  )
+    Effect.flatMap(() => Effect.void)
+  );
 }
 
 // Written for a single flag that controls both workflow start

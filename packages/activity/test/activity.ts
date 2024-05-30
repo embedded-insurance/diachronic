@@ -8,9 +8,9 @@ import * as Activity from '../src/activity'
 
 const sampleDef = Activity.activityDef({
   name: 'hello',
-  input: S.struct({ someInput: S.string }),
-  output: S.number,
-  error: S.string,
+  input: S.Struct({ someInput: S.String }),
+  output: S.Number,
+  error: S.String,
   'temporal.activity': {
     defaultOptions: { activityId: 'foo' },
   },
@@ -23,7 +23,7 @@ const sampleGroupDef = Activity.defGroup({
 
 interface MyDep {}
 
-const MyDep = Context.Tag<MyDep>('MyDep')
+const MyDep = Context.GenericTag<MyDep>('MyDep')
 
 describe('implement an activity', () => {
   test('with no dependencies', () => {

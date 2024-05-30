@@ -45,23 +45,19 @@ const fakeFx = (
   getRunningWorkflowIds: function (args: {
     readonly workflowName?: string | undefined
     readonly taskQueue: string
-  }): Effect.Effect<never, unknown, readonly string[]> {
+  }): Effect.Effect<readonly string[], unknown> {
     return Effect.succeed(state.oldRunningWorkflowIds)
   },
   signalMigration: function (args: {
     readonly taskQueue: string
     readonly workflowId: string
-  }): Effect.Effect<never, unknown, unknown> {
+  }): Effect.Effect<unknown, unknown> {
     return Effect.succeed('OK')
   },
   signalMigrationBatch: function (args: {
     readonly taskQueue: string
     readonly workflowIds: readonly string[]
-  }): Effect.Effect<
-    never,
-    unknown,
-    { successes: string[]; failures: string[] }
-  > {
+  }): Effect.Effect<{ successes: string[]; failures: string[] }, unknown> {
     return Effect.succeed({
       successes: args.workflowIds as string[],
       failures: [],
@@ -70,7 +66,7 @@ const fakeFx = (
   getWorkflowDeployments: function (args: {
     readonly workflowName?: string
     readonly versionId?: string
-  }): Effect.Effect<never, unknown, readonly unknown[]> {
+  }): Effect.Effect<readonly unknown[], unknown> {
     return Effect.succeed([
       {
         apiVersion: 'apps/v1',
@@ -89,14 +85,14 @@ const fakeFx = (
   deleteKubernetesDeployment: function (args: {
     readonly name: string
     readonly namespace: string
-  }): Effect.Effect<never, unknown, string> {
+  }): Effect.Effect<string, unknown> {
     return Effect.succeed('OK')
   },
   deleteWorkflowVersionFlag: function (args: {
     readonly environment?: string | undefined
     readonly workflowName: string
     readonly versionId: string
-  }): Effect.Effect<never, unknown, unknown> {
+  }): Effect.Effect<unknown, unknown> {
     return Effect.succeed('OK')
   },
 })

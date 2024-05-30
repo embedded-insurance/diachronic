@@ -9,9 +9,9 @@ import {
   Success,
 } from '../src'
 
-const Postgres = Context.Tag<{
-  getData: (args: any) => Effect.Effect<never, unknown, unknown>
-}>()
+const Postgres = Context.GenericTag<{
+  getData: (args: any) => Effect.Effect<unknown, unknown>
+}>("@services/Postgres")
 
 const TestFail = Layer.succeed(
   Postgres,
@@ -25,21 +25,21 @@ test('simple 2', async () => {
   const defs = {
     getData: {
       name: 'getData',
-      input: S.any,
-      output: S.any,
-      error: S.any,
+      input: S.Any,
+      output: S.Any,
+      error: S.Any,
       'diachronic.http': {
         method: 'GET',
         path: '/data/:id',
         request: {
           type: 'json',
-          params: S.struct({ id: S.string }),
+          params: S.Struct({ id: S.String }),
         },
         response: {
           json: [
             {
-              status: S.literal(200),
-              body: S.struct({ helloWorld: S.boolean }),
+              status: S.Literal(200),
+              body: S.Struct({ helloWorld: S.Boolean }),
             },
           ],
         },
@@ -113,21 +113,21 @@ test('handling success', async () => {
   const defs = {
     getData: {
       name: 'getData',
-      input: S.any,
-      output: S.any,
-      error: S.any,
+      input: S.Any,
+      output: S.Any,
+      error: S.Any,
       'diachronic.http': {
         method: 'GET',
         path: '/data/:id',
         request: {
           type: 'json',
-          params: S.struct({ id: S.string }),
+          params: S.Struct({ id: S.String }),
         },
         response: {
           json: [
             {
-              status: S.literal(200),
-              body: S.struct({ helloWorld: S.boolean }),
+              status: S.Literal(200),
+              body: S.Struct({ helloWorld: S.Boolean }),
             },
           ],
         },

@@ -10,20 +10,20 @@ interface MyDep1 {
   prop: true
 }
 
-const MyDep1 = Context.Tag<MyDep1>('MyDep1')
+const MyDep1 = Context.GenericTag<MyDep1>('MyDep1')
 
 interface MyDep2 {
   prop2: true
 }
 
-const MyDep2 = Context.Tag<MyDep2>('MyDep2')
+const MyDep2 = Context.GenericTag<MyDep2>('MyDep2')
 
 const makeBuildWorkflowBundle = () => {
   const base = def({
     name: 'buildWorkflowBundle',
-    input: S.struct({ workflowName: S.string }),
-    output: S.struct({ workflowBundle: S.string }),
-    error: S.literal('i am a type 2'),
+    input: S.Struct({ workflowName: S.String }),
+    output: S.Struct({ workflowBundle: S.String }),
+    error: S.Literal('i am a type 2'),
   })
   const withAct = pipe(
     base,
@@ -90,9 +90,9 @@ const deriveDefaults = <
 
 const base = def({
   name: 'buildWorkflowBundle',
-  input: S.struct({ workflowName: S.string }),
-  output: S.struct({ workflowBundle: S.string }),
-  error: S.literal('i am a type 2'),
+  input: S.Struct({ workflowName: S.String }),
+  output: S.Struct({ workflowBundle: S.String }),
+  error: S.Literal('i am a type 2'),
 })
 const impl = pipe(
   base,

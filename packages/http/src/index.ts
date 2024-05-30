@@ -81,7 +81,7 @@ export const isHTTPErrorResponse = (
 export const makeRequestParser = <const A extends Def>(def: A) =>
   pipe(def['diachronic.http'].request, (spec) => {
     const { type, ...ks } = spec
-    return S.struct(ks) as unknown as HTTPInputSchema<A['diachronic.http']>
+    return S.Struct(ks) as unknown as HTTPInputSchema<A['diachronic.http']>;
   })
 
 /**
@@ -95,7 +95,7 @@ export const implement = <const A extends Def, R>(
     args: HTTPInput<A['diachronic.http']>,
     req: FastifyRequest,
     res: FastifyReply
-  ) => Effect.Effect<R, HTTPErrorResponse, JSONResponseType<A>>
+  ) => Effect.Effect<JSONResponseType<A>, HTTPErrorResponse, R>
 ): RouteImpl<A, R> => {
   const reqSpec = makeRequestParser(def)
   const method = def['diachronic.http'].method
@@ -129,7 +129,7 @@ export const implementGroup = <
       args: HTTPInput<Sch[K]['diachronic.http']>,
       req: FastifyRequest,
       res: FastifyReply
-    ) => Effect.Effect<R, HTTPErrorResponse, JSONResponseType<Sch[K]>>
+    ) => Effect.Effect<JSONResponseType<Sch[K]>, HTTPErrorResponse, R>
   }
 >(
   _sch: Sch,
@@ -181,7 +181,7 @@ export const createServer = <
       f: (
         req: FastifyRequest,
         res: FastifyReply
-      ) => Effect.Effect<R, HTTPErrorResponse, HTTPSuccessResponse>
+      ) => Effect.Effect<HTTPSuccessResponse, HTTPErrorResponse, R>
     ) => {
       server[method](path, (req, res) =>
         pipe(
@@ -209,7 +209,7 @@ export const createServer = <
         )
       )
     },
-  }
+  };
 }
 
 export const createServer2 = <
@@ -237,9 +237,9 @@ export const createServer2 = <
         req: FastifyRequest,
         res: FastifyReply
       ) => Effect.Effect<
-        RuntimeDeps<RT>,
+        HTTPSuccessResponse,
         HTTPErrorResponse,
-        HTTPSuccessResponse
+        RuntimeDeps<RT>
       >
     ) => {
       app[method](path, (req, res) =>
@@ -267,5 +267,5 @@ export const createServer2 = <
         )
       )
     },
-  }
+  };
 }

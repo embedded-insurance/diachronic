@@ -42,14 +42,14 @@ export const getIds = async (
   return result
 }
 
-const TemporalQueryParams = S.struct({
-  taskQueue: S.optional(S.string),
-  workflowName: S.optional(S.string),
-  startTime: S.optional(S.string),
-  endTime: S.optional(S.string),
-  executionStatus: S.optional(S.union(S.literal('Running'), S.string)),
+const TemporalQueryParams = S.Struct({
+  taskQueue: S.optional(S.String),
+  workflowName: S.optional(S.String),
+  startTime: S.optional(S.String),
+  endTime: S.optional(S.String),
+  executionStatus: S.optional(S.Union(S.Literal('Running'), S.String)),
 })
-export type TemporalQueryParams = S.Schema.To<typeof TemporalQueryParams>
+export type TemporalQueryParams = S.Schema.Type<typeof TemporalQueryParams>
 
 const capitalize = (s: string) => s[0].toUpperCase() + s.slice(1)
 

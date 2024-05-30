@@ -17,11 +17,9 @@ export type CLIDef = EffectDefWith<{
 }>
 export type CLIGroupDef = Record<string, CLIDef>
 export type CLIGroup<T extends CLIGroupDef> = {
-  [K in keyof T]: (args: S.Schema.To<T[K]['input']>) => Effect.Effect<
-    never,
-    // unknown,
-    S.Schema.To<T[K]['error']>,
-    S.Schema.To<T[K]['output']>
+  [K in keyof T]: (args: S.Schema.Type<T[K]['input']>) => Effect.Effect<
+    S.Schema.Type<T[K]['output']>, // unknown,
+    S.Schema.Type<T[K]['error']>
   >
 }
 

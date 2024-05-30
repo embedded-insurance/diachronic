@@ -7,7 +7,7 @@ import * as AST from '@effect/schema/AST'
  * @param x
  * @param tagKey
  */
-export const extractStringTagsFromUnion = <T extends S.Schema<never, any, any>>(
+export const extractStringTagsFromUnion = <T extends S.Schema<any>>(
   x: T,
   tagKey = 'type'
 ) => {

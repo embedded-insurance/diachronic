@@ -7,15 +7,15 @@ import * as S from '@effect/schema/Schema'
 import { UnknownException } from 'effect/Cause'
 
 export type MQTTClient = mqtt.MqttClient
-export const MQTTClient = Context.Tag<MQTTClient>('mqtt/MqttClient')
+export const MQTTClient = Context.GenericTag<MQTTClient>('mqtt/MqttClient')
 
 // todo. return effectified methods
 type Client = {
   publish: (
     topic: string,
     message: string | Buffer
-  ) => Effect.Effect<MQTTClient, unknown, unknown>
-  subscribe: (topic: string) => Effect.Effect<MQTTClient, unknown, unknown>
+  ) => Effect.Effect<unknown, unknown, MQTTClient>
+  subscribe: (topic: string) => Effect.Effect<unknown, unknown, MQTTClient>
 }
 
 // FIXME. this blows up on generate .dts...????
@@ -67,9 +67,9 @@ export const MQTTTest = (args: { brokerURL: string }, impl = MQTTTestImpl()) =>
 export class MQTTConnectionRefusedError extends S.TaggedError<MQTTConnectionRefusedError>()(
   'MQTTConnectionRefusedError',
   {
-    url: S.string,
-    message: S.string,
-    stack: S.optional(S.any),
+    url: S.String,
+    message: S.String,
+    stack: S.optional(S.Any),
   }
 ) {
   public nonRetryable = false

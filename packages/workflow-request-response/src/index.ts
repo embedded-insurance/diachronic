@@ -24,19 +24,15 @@ const DEFAULT_TIMEOUT = Duration.millis(5000)
 export const workflowUpdate = (
   instr: UpdateInstruction,
   requestTimeout: Duration.Duration = DEFAULT_TIMEOUT
-): Effect.Effect<TemporalClient | MQTTClient | UUIDGenerator, any, any> =>
+): Effect.Effect<any, any, TemporalClient | MQTTClient | UUIDGenerator> =>
   pipe(
     Effect.Do,
     Effect.bind(
       'reply',
-      (): Effect.Effect<
-        MQTTClient | UUIDGenerator,
-        unknown,
-        {
-          topic: string
-          listener: Effect.Effect<never, unknown, any>
-        }
-      > =>
+      (): Effect.Effect<{
+        topic: string
+        listener: Effect.Effect<any, unknown>
+      }, unknown, MQTTClient | UUIDGenerator> =>
         Effect.map(Effect.all([MQTTClient, UUIDGenerator]), ([mqtt, uuid]) => {
           const requestId = uuid()
           const topic = `v1/request-response/${requestId}`
@@ -72,11 +68,11 @@ export const workflowUpdate = (
 
               mqtt.on('message', callback)
               mqtt.subscribe(topic)
-            }) as Effect.Effect<never, unknown, any>,
-          }
+            }) as Effect.Effect<any, unknown>,
+          };
         })
     ),
-    Effect.flatMap(({ reply }): Effect.Effect<TemporalClient, unknown, any> => {
+    Effect.flatMap(({ reply }): Effect.Effect<any, unknown, TemporalClient> => {
       if (instr.action === 'update') {
         const input = instr.args
         const signalEffect = signal({

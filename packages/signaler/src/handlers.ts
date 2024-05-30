@@ -32,11 +32,7 @@ export const sendInstruction = ({
 }) =>
   isUpdateInstruction(instruction)
     ? workflowUpdate(instruction, defaultWorkflowUpdateRequestTimeout)
-    : (fns[instruction.action](instruction.args as any) as Effect.Effect<
-        TemporalClient,
-        any,
-        any
-      >)
+    : (fns[instruction.action](instruction.args as any) as Effect.Effect<any, any, TemporalClient>)
 
 export const handler = implement(instruction, ({ body }) =>
   pipe(
