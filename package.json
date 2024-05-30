@@ -50,9 +50,6 @@
   "engines": {
     "node": ">=20"
   },
-  "publishConfig": {
-    "access": "restricted"
-  },
   "repository": {
     "directory": ".",
     "type": "git",
