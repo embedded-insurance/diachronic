@@ -22,8 +22,8 @@
     "release": "yarn workspaces foreach --from '@diachronic/*' --no-private npm publish --tolerate-republish && yarn changeset tag"
   },
   "devDependencies": {
+    "@changesets/cli": "2.26.1",
     "@types/node": "20",
-    "changeset": "^0.2.6",
     "rimraf": "^5.0.1",
     "ts-node": "10.9.1",
     "turbo": "1.10.13",
