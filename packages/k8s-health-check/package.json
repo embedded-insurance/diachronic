@@ -1,5 +1,6 @@
 {
   "name": "@diachronic/k8s-health-check",
+  "version": "0.0.0",
   "author": {
     "name": "Embedded Insurance",
     "email": "opensource@embeddedinsurance.com",
