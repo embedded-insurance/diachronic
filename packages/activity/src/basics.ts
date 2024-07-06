@@ -292,7 +292,7 @@ const schemaMiddleware = <Def extends EffectsDef, Fx extends Effects<Def>>(
   impl: Fx
 ) => {
   const decode = (sch: S.Schema<any, any>, a: unknown) =>
-    S.decode(sch)(a, { errors: 'all' })
+    S.decode(sch)(a, { errors: 'all', onExcessProperty: 'preserve' })
   // return true
 
   return map(impl, (f: any, key: any) => {

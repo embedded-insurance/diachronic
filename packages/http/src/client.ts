@@ -9,6 +9,7 @@ import {
 import { ParseError } from '@effect/schema/ParseResult'
 import { isRecord } from 'effect/Predicate'
 import { GroupDef } from './types'
+import { decode } from '@diachronic/util/decode'
 
 export const isSchemaError = (e: any): e is ParseError =>
   isRecord(e) && e._tag === 'ParseError'
@@ -52,10 +53,8 @@ export const client = <Def extends GroupDef>(
                 : never
             ) => {
               return pipe(
-                S.decode(def.input)(args, {
-                  errors: 'all',
-                  onExcessProperty: 'preserve',
-                }),
+                args,
+                decode(def.input),
                 Effect.flatMap((a) => {
                   const body = JSON.stringify(a)
                   return Effect.tryPromise(() =>

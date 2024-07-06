@@ -13,9 +13,9 @@ export type ValidateOptions = {
   error?: AST.ParseOptions
 }
 const defaults: ValidateOptions = {
-  input: { errors: 'all' },
-  output: { errors: 'all' },
-  error: { errors: 'all' },
+  input: { errors: 'all', onExcessProperty: 'preserve' },
+  output: { errors: 'all', onExcessProperty: 'preserve' },
+  error: { errors: 'all', onExcessProperty: 'preserve' },
 }
 // fixme. run options conditionally & efficiently
 export const validate = (options: ValidateOptions = defaults) =>
