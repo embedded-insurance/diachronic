@@ -18,7 +18,7 @@
     "test": "turbo test --continue",
     "typecheck": "turbo typecheck --continue",
     "clean": "turbo clean && rimraf node_modules",
-    "version": "yarn changeset version",
+    "changeset-version": "yarn changeset version",
     "release": "yarn workspaces foreach --from '@diachronic/*' --worktree --no-private npm publish --tolerate-republish && yarn changeset tag"
   },
   "devDependencies": {
