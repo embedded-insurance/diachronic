@@ -19,7 +19,7 @@
     "typecheck": "turbo typecheck --continue",
     "clean": "turbo clean && rimraf node_modules",
     "version": "yarn changeset version",
-    "release": "yarn workspaces foreach --from '@diachronic/*' --no-private npm publish --tolerate-republish && yarn changeset tag"
+    "release": "yarn workspaces foreach --from '@diachronic/*' --worktree --no-private npm publish --tolerate-republish && yarn changeset tag"
   },
   "devDependencies": {
     "@changesets/cli": "2.26.1",
