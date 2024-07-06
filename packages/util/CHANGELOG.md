@@ -1,5 +1,12 @@
 # @diachronic/util
 
+## 0.0.2
+
+### Patch Changes
+
+- 06db319: upgrade deps
+- 816410f: refactor: add decode function with preferred options
+
 ## 0.0.1
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # @diachronic/toolbox
 
+## 0.0.2
+
+### Patch Changes
+
+- 06db319: upgrade deps
+- 816410f: refactor: add decode function with preferred options
+- Updated dependencies [06db319]
+- Updated dependencies [816410f]
+  - @diachronic/migrate@0.0.2
+  - @diachronic/workflow@0.0.2
+
 ## 0.0.1
 
 ### Patch Changes
