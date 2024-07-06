@@ -17,7 +17,6 @@ import {
   TimerDataEntry,
 } from './interpreter'
 import {
-  Actor,
   AnyState,
   AnyStateMachine,
   StateMachine,
@@ -31,57 +30,8 @@ import * as Effect from 'effect/Effect'
 import { canMigrate } from './can-migrate'
 import { pipe } from 'effect/Function'
 import { dissoc } from 'ramda'
-
-/**
- * Forwards Temporal signals to an XState `interpreter`
- * Signals are named by the keys of `eventMap`
- * @param eventMap
- * @param interpreter
- */
-export const forwardSignalsToXState = <
-  EventNameToEventDecoderMap extends Record<string, S.Schema<any>>
->(
-  eventMap: EventNameToEventDecoderMap,
-  interpreter: Actor<any, any>
-) => {
-  Object.entries(eventMap).forEach(([eventName, decoder]) => {
-    const signal =
-      defineSignal<
-        S.Schema.Type<
-          EventNameToEventDecoderMap[keyof EventNameToEventDecoderMap]
-        >
-      >(eventName)
-    setHandler(signal, (payload) => {
-      pipe(
-        S.decode(decoder)(
-          {
-            type: eventName,
-            meta: payload
-              ? payload['diachronic.workflow.request.meta']
-              : undefined,
-            payload: payload
-              ? dissoc('diachronic.workflow.request.meta', payload)
-              : payload,
-          },
-          { errors: 'all' }
-        ),
-        Effect.tap((event) =>
-          pipe(
-            Effect.logDebug('Forwarding event to state machine'),
-            Effect.annotateLogs({ event })
-          )
-        ),
-        Effect.map((event) => interpreter.send(event)),
-        Effect.tapErrorCause((e) =>
-          Effect.logError('Error forwarding event to state machine', e)
-        ),
-        Effect.withLogSpan('forwardSignalsToXState'),
-        Effect.either,
-        Effect.runSync
-      )
-    })
-  })
-}
+import { decode } from '@diachronic/util/decode'
+import { ArrayFormatter } from '@effect/schema'
 
 /**
  * Signal sent to a workflow that will cause it to migrate to a new version via ContinueAsNew
@@ -286,6 +236,26 @@ const defaultLogImpl = {
   debug: () => {},
   info: () => {},
   error: () => {},
+}
+/**
+ * Transforms Temporal signals into the form diachronic workflows consume
+ * Request/response signals have their metadata mapped to an extra `meta` property when present
+ * so they may be replied to
+ * @param signalName
+ * @param signalArg
+ */
+export const mapTemporalSignal = (signalName: string, signalArg: unknown) => {
+  const payload = signalArg
+    ? dissoc('diachronic.workflow.request.meta', signalArg as any)
+    : signalArg
+  const meta = signalArg
+    ? (signalArg as any)['diachronic.workflow.request.meta']
+    : undefined
+  return {
+    type: signalName,
+    meta,
+    payload,
+  }
 }
 
 /**
@@ -536,12 +506,12 @@ export const makeWorkflow = <
       const handleMigrate = async (args: MigrateSignalPayload) => {
         log.info('Migrate signal received', args)
         const data = args
-        log.info('about to wait')
+        log.debug('about to wait')
         // defer executing the body of this function until other async operations are complete
         // this includes receiving signals
         // it's ok to do this for every time the function is called (in event of duplicate migration signals)
         await sleep(0)
-        log.info('waited')
+        log.debug('waited')
 
         // remove the old one in case this is called more than once
         if (okToMigrateSubscription) {
@@ -634,26 +604,28 @@ export const makeWorkflow = <
             return handleReset(args as ResetSignalPayload)
 
           default: {
+            const event = mapTemporalSignal(signalName, args)
             const decoder = signals[signalName]
             if (!decoder) {
-              log.error('No decoder for signal', { signalName, args })
+              log.error('No decoder for signal. Sending it anyway.', {
+                signalName,
+                args,
+              })
               interpreter.send({ type: signalName, payload: args })
               return
             }
+
             pipe(
-              S.decode(decoder)(
-                {
-                  type: signalName,
-                  meta: args
-                    ? args['diachronic.workflow.request.meta']
-                    : undefined,
-                  payload: args
-                    ? dissoc('diachronic.workflow.request.meta', args)
-                    : args,
-                },
-                { errors: 'all' }
+              decode(decoder)(event),
+              Effect.tapErrorTag('ParseError', (e) =>
+                pipe(
+                  Effect.logError('Error decoding signal'),
+                  Effect.annotateLogs({
+                    received: event,
+                    errors: ArrayFormatter.formatErrorSync(e),
+                  })
+                )
               ),
-              Effect.tapErrorCause(Effect.logError),
               Effect.tap((evt) =>
                 pipe(
                   Effect.logTrace('sending signal to xstate interpreter'),

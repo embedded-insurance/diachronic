@@ -6,6 +6,7 @@ import { asAnnotatedEffect } from '@diachronic/activity/fnobj'
 import * as path from 'path'
 import * as R from 'ramda'
 import { exec, getRepoRoot, readFile } from './infra/util'
+import { decode } from '@diachronic/util/decode'
 
 /**
  * Represents a (yarn) workspace / monorepo package
@@ -39,7 +40,7 @@ export const listAllWorkspaces = asAnnotatedEffect(
             .map((x) => JSON.parse(x))
         )
       ),
-      Effect.flatMap((x) => S.decode(Workspaces)(x, { errors: 'all' })),
+      Effect.flatMap(decode(Workspaces)),
       Effect.withLogSpan('listAllWorkspaces')
     )
 )
