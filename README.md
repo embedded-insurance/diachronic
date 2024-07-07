@@ -1,9 +1,7 @@
 # diachronic
 
 > "Diachronic" refers to an approach or analysis that is concerned with the way in which something, especially language,
-> has developed and evolved over time. It is often used in contrast with "synchronic," which refers to the analysis of a
-> subject, such as a language, at a particular moment in time without considering historical context. In linguistics, a
-> diachronic analysis would look at how languages change and evolve, examining historical and evolutionary aspects.
+> has developed and evolved over time.
 >
 > -- _ChatGPT, personal communication, February 2024._
 
