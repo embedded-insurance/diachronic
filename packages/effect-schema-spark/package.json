@@ -1,7 +1,7 @@
 {
   "name": "@diachronic/effect-schema-spark",
   "version": "0.0.0",
-  "description": "",
+  "description": "Generate Apache Spark schema from `@effect/schema` type definitions",
   "main": "src/index.ts",
   "exports": {
     ".": "./src/index.ts",
