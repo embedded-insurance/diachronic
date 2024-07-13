@@ -36,6 +36,9 @@
     "webpack": "^5.88.2"
   },
   "dependencies": {
+    "@diachronic/migrate": "workspace:^",
+    "@diachronic/util": "workspace:^",
+    "@diachronic/workflow": "workspace:^",
     "@effect/schema": "0.61.5",
     "@temporalio/testing": "1.8.6",
     "@temporalio/worker": "1.8.6",
