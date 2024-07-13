@@ -1,5 +1,13 @@
 # @diachronic/ci
 
+## 0.0.3
+
+### Patch Changes
+
+- c69ed44: migrate package logging
+- Updated dependencies [c69ed44]
+  - @diachronic/feature-flag-client@0.0.3
+
 ## 0.0.2
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@diachronic/feature-flag-client",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "main": "src/index.ts",
   "exports": {
