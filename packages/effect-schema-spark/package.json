@@ -1,6 +1,6 @@
 {
   "name": "@diachronic/effect-schema-spark",
-  "version": "0.0.2",
+  "version": "0.0.0",
   "description": "",
   "main": "src/index.ts",
   "exports": {
@@ -42,7 +42,7 @@
     "access": "public"
   },
   "repository": {
-    "directory": "packages/feature-flag-client",
+    "directory": "packages/effect-schema-spark",
     "type": "git",
     "url": "https://github.com/embedded-insurance/diachronic.git"
   }
