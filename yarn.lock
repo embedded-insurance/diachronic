@@ -700,6 +700,24 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@diachronic/effect-schema-spark@workspace:packages/effect-schema-spark":
+  version: 0.0.0-use.local
+  resolution: "@diachronic/effect-schema-spark@workspace:packages/effect-schema-spark"
+  dependencies:
+    "@effect/schema": "npm:0.36.3"
+    "@types/jest": "npm:^29.5.3"
+    "@types/node": "npm:18"
+    "@types/ramda": "npm:^0.29.9"
+    effect: "npm:^2.0.0-next.36"
+    jest: "npm:29.5.0"
+    prettier: "npm:2.8.8"
+    ramda: "npm:^0.29.1"
+    ts-jest: "npm:29.1.0"
+    ts-node: "npm:^10.9.1"
+    typescript: "npm:5.2.2"
+  languageName: unknown
+  linkType: soft
+
 "@diachronic/feature-flag-client@workspace:^, @diachronic/feature-flag-client@workspace:packages/feature-flag-client":
   version: 0.0.0-use.local
   resolution: "@diachronic/feature-flag-client@workspace:packages/feature-flag-client"
