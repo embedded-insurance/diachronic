@@ -32,6 +32,7 @@ import { pipe } from 'effect/Function'
 import { dissoc } from 'ramda'
 import { decode } from '@diachronic/util/decode'
 import { ArrayFormatter } from '@effect/schema'
+import { defaultLogImpl, Logger } from './logger'
 
 /**
  * Signal sent to a workflow that will cause it to migrate to a new version via ContinueAsNew
@@ -80,12 +81,17 @@ export const getSnapshot = defineQuery<WorkflowSnapshot>(getSnapshotQueryName)
 const getContinuationXStateNode = (
   state: StateValue,
   context: any,
-  machine: AnyStateMachine
+  machine: AnyStateMachine,
+  log: Logger
 ): AnyState | Error => {
   try {
     return machine.resolveStateValue(state, context)
   } catch (e) {
-    console.error('Could not resolve continuation state', e)
+    log.error(
+      'Could not resolve continuation state',
+      { error: e },
+      'getContinuationXStateNode'
+    )
     return e as Error
   }
 }
@@ -232,11 +238,7 @@ export type DbFns<DbSnapshot, WorkflowContext> = {
    */
   onNewDbSnapshot: (dbSnapshotValue: DbSnapshot) => Promise<any>
 }
-const defaultLogImpl = {
-  debug: () => {},
-  info: () => {},
-  error: () => {},
-}
+
 /**
  * Transforms Temporal signals into the form diachronic workflows consume
  * Request/response signals have their metadata mapped to an extra `meta` property when present
@@ -356,7 +358,8 @@ export const makeWorkflow = <
         const continuationState = getContinuationXStateNode(
           continuationData.state,
           continuationData.context,
-          machine
+          machine,
+          log
         )
 
         if (continuationState instanceof Error) {
@@ -372,6 +375,7 @@ export const makeWorkflow = <
         interpreter = interpret(machine, {
           state: continuationState,
           clock: new CustomClock(),
+          log,
         })
         const initialState = interpreter.getPersistedState()
 
@@ -403,7 +407,8 @@ export const makeWorkflow = <
             interpreter,
             machine,
             continuationState,
-            delayEventsInStateNotRestored
+            delayEventsInStateNotRestored,
+            log
           )
         } else {
           log.info(
@@ -423,7 +428,8 @@ export const makeWorkflow = <
             interpreter,
             continuationData.timers,
             initialState.value,
-            machine
+            machine,
+            log
           )
         } else {
           log.debug('Migration function provided no timers to restore')
@@ -433,7 +439,7 @@ export const makeWorkflow = <
         currentContext = initialState.context
       } else {
         // todo. add clock to arguments?
-        interpreter = interpret(machine, { clock: new CustomClock() })
+        interpreter = interpret(machine, { clock: new CustomClock(), log })
         const initialState = interpreter.getPersistedState()
         if (!initialState) {
           throw new Error('Could not get persisted state')
