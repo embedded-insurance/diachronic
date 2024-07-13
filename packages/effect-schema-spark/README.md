@@ -83,7 +83,7 @@ schemas = {'getUser': {'output': get_user_output}}
 from pyspark.sql.functions import *
 
 df = (
-    spark.table("temporal.activities")
+    spark.table("temporal.activity_calls")
     .where(col("activity_type") == 'getUser')
     .withColumn("output", from_json("output", schemas['getUser']['output']))
 )
