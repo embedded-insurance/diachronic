@@ -8221,6 +8221,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "toaster@workspace:examples/toaster"
   dependencies:
+    "@diachronic/migrate": "workspace:^"
+    "@diachronic/util": "workspace:^"
+    "@diachronic/workflow": "workspace:^"
     "@effect/schema": "npm:0.61.5"
     "@temporalio/testing": "npm:1.8.6"
     "@temporalio/worker": "npm:1.8.6"
