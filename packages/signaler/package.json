@@ -21,20 +21,28 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@diachronic/feature-flag-client": "workspace:^",
+    "@diachronic/http": "workspace:^",
+    "@diachronic/k8s-health-check": "workspace:^",
+    "@diachronic/util": "workspace:^",
     "@diachronic/workflow-request-response": "workspace:^",
-    "@effect-use/temporal-client": "3.0.0",
-    "@effect/schema": "0.61.5",
-    "effect": "2.2.3"
+    "@effect-use/http-client": "4.0.0",
+    "@effect-use/temporal-client": "4.0.0",
+    "@effect/schema": "0.67.14",
+    "effect": "3.2.5",
+    "fastify": "4.23.2"
   },
   "devDependencies": {
-    "@temporalio/worker": "^1.7.4",
+    "@temporalio/worker": "1.8.6",
+    "@types/jest": "29.5.3",
     "@types/ms": "^0.7.31",
     "@types/node": "20",
-    "@types/ramda": "^0.29.2",
-    "fast-check": "^3.8.1",
+    "@types/ramda": "0.30.0",
+    "fast-check": "^3.19",
+    "jest": "29.5.0",
     "prettier": "2.8.8",
     "ts-node": "^10.9.1",
-    "typescript": "5.2.2"
+    "typescript": "5.4.5"
   },
   "engines": {
     "node": ">=18"

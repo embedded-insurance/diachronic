@@ -21,19 +21,19 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@effect/schema": "0.36.3",
-    "effect": "^2.0.0-next.36",
-    "ramda": "^0.29.1"
+    "@effect/schema": "0.67.14",
+    "effect": "3.2.5",
+    "ramda": "0.30.0"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.3",
+    "@types/jest": "29.5.3",
     "@types/node": "18",
-    "@types/ramda": "^0.29.9",
+    "@types/ramda": "0.30.0",
     "jest": "29.5.0",
     "prettier": "2.8.8",
     "ts-jest": "29.1.0",
     "ts-node": "^10.9.1",
-    "typescript": "5.2.2"
+    "typescript": "5.4.5"
   },
   "engines": {
     "node": ">=18"

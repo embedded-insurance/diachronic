@@ -37,8 +37,8 @@ Diachronic also stores the event object that was passed to the timer function or
 This event is available to you in the migration function so you could do something like:
 
 ```typescript
-import { TimerData } from '@diachronic/migrate/src/interpreterport'
-import { getDelayFunctionName } from '@diachronic/migrate/src/analysis'
+import { TimerData } from '@diachronic/migrate/interpreter'
+import { getDelayFunctionName } from '@diachronic/migrate/analysis'
 
 const migrationFunction = (args: { context: any, timers: TimerData }) => {
 

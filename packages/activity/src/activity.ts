@@ -1,24 +1,24 @@
 import { Effect } from 'effect'
-import {
-  EffectDef,
-  EffectDefWith,
-  ErrorType,
-  InputType,
-  OutputType,
-} from './single'
 import { scheduleActivity, ActivityOptions } from '@temporalio/workflow'
 import * as R from 'ramda'
-import { asEffect, asEffectGroup } from './effect'
-import { defSchema } from './multi'
 import * as S from '@effect/schema/Schema'
 import * as Runtime from 'effect/Runtime'
 import { pipe } from 'effect/Function'
 import * as Layer from 'effect/Layer'
 import * as Scope from 'effect/Scope'
 import * as Exit from 'effect/Exit'
-import { getFailure, toApplicationFailure } from '@diachronic/workflow/errors'
 import { ParseResult } from '@effect/schema'
-import { TemporalLogLayer } from '@diachronic/workflow/workflow-logging'
+import { defSchema } from './multi'
+import type {
+  EffectDef,
+  EffectDefWith,
+  ErrorType,
+  InputType,
+  OutputType,
+} from './single'
+import { asEffect, asEffectGroup } from './effect'
+import { ActivitiesLogLayer } from './logging'
+import { getFailure, toApplicationFailure } from './errors'
 
 const key = 'temporal.activity' as const
 type Key = typeof key
@@ -302,7 +302,7 @@ export const makeActivitiesAsync: MakeActivitiesAsync = async (
 
 export const makeActivitiesRuntime = <E, A>(
   layer: Layer.Layer<A, E, Scope.Scope> | Layer.Layer<A, E>,
-  logLayer: Layer.Layer<never> = TemporalLogLayer('Info')
+  logLayer: Layer.Layer<never> = ActivitiesLogLayer('Info')
 ): Promise<{
   runtime: Runtime.Runtime<A>
   close: Effect.Effect<void>

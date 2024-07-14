@@ -26,25 +26,27 @@
     "url": "https://embeddedinsurance.com"
   },
   "license": "MIT",
+  "dependencies": {
+    "@diachronic/util": "workspace:^",
+    "@diachronic/workflow": "workspace:^",
+    "@effect/schema": "0.67.14",
+    "effect": "3.2.5",
+    "ramda": "0.30.0",
+    "xstate": "5.0.0-beta.27"
+  },
   "devDependencies": {
-    "@types/jest": "^29.5.2",
+    "@temporalio/testing": "1.8.6",
+    "@types/jest": "29.5.3",
     "@types/node": "18",
-    "@types/ramda": "^0.29.4",
-    "fast-check": "^3.8.1",
+    "@types/ramda": "0.30.0",
+    "fast-check": "^3.19",
     "jest": "29.5.0",
     "prettier": "2.8.8",
     "ts-jest": "29.1.0",
     "ts-node": "^10.9.1",
     "turbo": "^1.10.6",
-    "typescript": "5.2.2",
+    "typescript": "5.4.5",
     "webpack": "^5.88.2"
-  },
-  "dependencies": {
-    "@diachronic/workflow": "workspace:^",
-    "@effect/schema": "0.61.5",
-    "effect": "2.2.3",
-    "ramda": "0.29.0",
-    "xstate": "beta.27"
   },
   "engines": {
     "node": ">=20"
