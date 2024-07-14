@@ -30,12 +30,15 @@
     "@diachronic/util": "workspace:^",
     "@diachronic/workflow": "workspace:^",
     "@effect/schema": "0.67.14",
+    "@temporalio/client": "1.8.6",
+    "@temporalio/workflow": "1.8.6",
     "effect": "3.2.5",
     "ramda": "0.30.0",
     "xstate": "5.0.0-beta.27"
   },
   "devDependencies": {
     "@temporalio/testing": "1.8.6",
+    "@temporalio/worker": "1.8.6",
     "@types/jest": "29.5.3",
     "@types/node": "18",
     "@types/ramda": "0.30.0",

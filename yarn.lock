@@ -696,7 +696,9 @@ __metadata:
     "@diachronic/util": "workspace:^"
     "@diachronic/workflow": "workspace:^"
     "@effect-use/temporal-client": "npm:4.0.0"
+    "@effect/schema": "npm:0.67.14"
     "@temporalio/testing": "npm:1.8.6"
+    "@temporalio/worker": "npm:1.8.6"
     "@temporalio/workflow": "npm:1.8.6"
     "@types/jest": "npm:29.5.3"
     "@types/luxon": "npm:^3.4.2"
@@ -795,7 +797,10 @@ __metadata:
     "@diachronic/util": "workspace:^"
     "@diachronic/workflow": "workspace:^"
     "@effect/schema": "npm:0.67.14"
+    "@temporalio/client": "npm:1.8.6"
     "@temporalio/testing": "npm:1.8.6"
+    "@temporalio/worker": "npm:1.8.6"
+    "@temporalio/workflow": "npm:1.8.6"
     "@types/jest": "npm:29.5.3"
     "@types/node": "npm:18"
     "@types/ramda": "npm:0.30.0"
@@ -824,6 +829,7 @@ __metadata:
     "@diachronic/workflow-request-response": "workspace:^"
     "@effect-use/http-client": "npm:4.0.0"
     "@effect-use/temporal-client": "npm:4.0.0"
+    "@effect-use/temporal-config": "npm:4.0.0"
     "@effect/schema": "npm:0.67.14"
     "@temporalio/worker": "npm:1.8.6"
     "@types/jest": "npm:29.5.3"
@@ -854,6 +860,7 @@ __metadata:
     "@effect-use/http-client": "npm:4.0.0"
     "@effect-use/temporal-client": "npm:4.0.0"
     "@effect/schema": "npm:0.67.14"
+    "@temporalio/client": "npm:1.8.6"
     "@temporalio/worker": "npm:1.8.6"
     "@temporalio/workflow": "npm:1.8.6"
     "@types/ms": "npm:^0.7.31"
@@ -883,6 +890,7 @@ __metadata:
     "@types/js-yaml": "npm:4.0.9"
     "@types/uuid": "npm:^9.0.8"
     effect: "npm:3.2.5"
+    fast-check: "npm:^3.19"
     jest: "npm:29.5.0"
     js-yaml: "npm:4.1.0"
     ts-jest: "npm:29.1.0"
@@ -901,6 +909,7 @@ __metadata:
     "@effect-use/http-client": "npm:4.0.0"
     "@effect-use/temporal-client": "npm:4.0.0"
     "@effect-use/temporal-config": "npm:4.0.0"
+    "@effect/schema": "npm:0.67.14"
     "@temporalio/testing": "npm:1.8.6"
     "@temporalio/worker": "npm:1.8.6"
     "@temporalio/workflow": "npm:1.8.6"
@@ -914,7 +923,6 @@ __metadata:
     ts-node: "npm:^10.9.1"
     tsup: "npm:^7.2.0"
     typescript: "npm:5.4.5"
-    xstate: "npm:5.0.0-beta.27"
   languageName: unknown
   linkType: soft
 
@@ -931,6 +939,7 @@ __metadata:
     "@effect-use/http-client": "npm:4.0.0"
     "@effect-use/temporal-client": "npm:4.0.0"
     "@effect-use/temporal-config": "npm:4.0.0"
+    "@effect/schema": "npm:0.67.14"
     "@temporalio/testing": "npm:1.8.6"
     "@temporalio/worker": "npm:1.8.6"
     "@temporalio/workflow": "npm:1.8.6"
@@ -2493,7 +2502,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/types@npm:^4.0.0":
+"@yarnpkg/types@npm:4.0.0":
   version: 4.0.0
   resolution: "@yarnpkg/types@npm:4.0.0"
   dependencies:
@@ -3656,7 +3665,7 @@ __metadata:
   dependencies:
     "@changesets/cli": "npm:2.26.1"
     "@types/node": "npm:20"
-    "@yarnpkg/types": "npm:^4.0.0"
+    "@yarnpkg/types": "npm:4.0.0"
     rimraf: "npm:^5.0.1"
     ts-node: "npm:10.9.1"
     turbo: "npm:1.10.13"
@@ -8265,6 +8274,7 @@ __metadata:
     "@effect/schema": "npm:0.67.14"
     "@temporalio/testing": "npm:1.8.6"
     "@temporalio/worker": "npm:1.8.6"
+    "@temporalio/workflow": "npm:1.8.6"
     "@types/jest": "npm:29.5.3"
     "@types/node": "npm:20"
     "@types/ramda": "npm:0.30.0"

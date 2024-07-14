@@ -29,6 +29,7 @@
     "@effect-use/gcp-gcs": "4.0.0",
     "@effect-use/http-client": "4.0.0",
     "@effect/schema": "0.67.14",
+    "@temporalio/client": "1.8.6",
     "@temporalio/workflow": "1.8.6",
     "chokidar": "^3.6.0",
     "effect": "3.2.5",

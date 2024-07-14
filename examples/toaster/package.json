@@ -3,7 +3,7 @@
   "version": "0.0.2",
   "description": "",
   "private": true,
-  "main": "index.js",
+  "main": "src/index.ts",
   "scripts": {
     "start": "ts-node src/index.ts",
     "clean": "rimraf node_modules & rimraf dist & rimraf .turbo",
@@ -22,7 +22,19 @@
     "url": "https://embeddedinsurance.com"
   },
   "license": "MIT",
+  "dependencies": {
+    "@diachronic/migrate": "workspace:^",
+    "@diachronic/util": "workspace:^",
+    "@diachronic/workflow": "workspace:^",
+    "@effect/schema": "0.67.14",
+    "effect": "3.2.5",
+    "ramda": "0.30.0",
+    "xstate": "5.0.0-beta.27"
+  },
   "devDependencies": {
+    "@temporalio/testing": "1.8.6",
+    "@temporalio/worker": "1.8.6",
+    "@temporalio/workflow": "1.8.6",
     "@types/jest": "29.5.3",
     "@types/node": "20",
     "@types/ramda": "0.30.0",
@@ -34,17 +46,6 @@
     "turbo": "^1.10.6",
     "typescript": "5.4.5",
     "webpack": "^5.88.2"
-  },
-  "dependencies": {
-    "@diachronic/migrate": "workspace:^",
-    "@diachronic/util": "workspace:^",
-    "@diachronic/workflow": "workspace:^",
-    "@effect/schema": "0.67.14",
-    "@temporalio/testing": "1.8.6",
-    "@temporalio/worker": "1.8.6",
-    "effect": "3.2.5",
-    "ramda": "0.30.0",
-    "xstate": "5.0.0-beta.27"
   },
   "engines": {
     "node": ">=20"

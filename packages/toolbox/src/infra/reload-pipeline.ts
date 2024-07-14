@@ -309,7 +309,7 @@ const build = ({
           return pipe(
             Effect.logError('🛑 Build failed'),
             Effect.tap(() =>
-              // @ts-expect-error
+              // @ts-ignore
               Effect.forEach(errors, (x) => Effect.logError(x.right))
             ),
             Effect.flatMap(() => Effect.fail({ errors, successes }))

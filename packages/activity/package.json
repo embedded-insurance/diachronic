@@ -2,13 +2,14 @@
   "name": "@diachronic/activity",
   "version": "0.0.2",
   "description": "",
-  "main": "src/index.ts",
+  "main": "src/index",
   "exports": {
     ".": "./src/index.ts",
     "./*": "./src/*.ts"
   },
   "scripts": {
     "clean": "rimraf node_modules & rimraf dist & rimraf .turbo",
+    "build": "tsc",
     "test": "jest",
     "format": "prettier --write .",
     "typecheck": "tsc --noEmit"

@@ -6,7 +6,9 @@
     ".": "./src/index.ts",
     "./*": "./src/*.ts"
   },
+  "main": "dist/index.js",
   "scripts": {
+    "build": "tsc",
     "clean": "rimraf node_modules & rimraf dist & rimraf .turbo",
     "test": "jest",
     "format": "prettier --write .",
@@ -25,12 +27,11 @@
     "@effect-use/gcp-logging": "5.0.0",
     "@effect-use/http-client": "4.0.0",
     "@effect-use/temporal-client": "4.0.0",
+    "@effect/schema": "0.67.14",
     "@temporalio/worker": "1.8.6",
     "@temporalio/workflow": "1.8.6",
     "effect": "3.2.5",
-    "mqtt": "5.0.5",
-    "tsup": "^7.2.0",
-    "xstate": "5.0.0-beta.27"
+    "mqtt": "5.0.5"
   },
   "devDependencies": {
     "@effect-use/temporal-config": "4.0.0",
@@ -41,6 +42,7 @@
     "prettier": "2.8.8",
     "ts-jest": "29.1.0",
     "ts-node": "^10.9.1",
+    "tsup": "^7.2.0",
     "typescript": "5.4.5"
   },
   "engines": {

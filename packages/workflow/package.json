@@ -29,6 +29,7 @@
     "@effect-use/gcp-logging": "5.0.0",
     "@effect-use/http-client": "4.0.0",
     "@effect-use/temporal-client": "4.0.0",
+    "@effect/schema": "0.67.14",
     "@temporalio/worker": "1.8.6",
     "@temporalio/workflow": "1.8.6",
     "effect": "3.2.5",

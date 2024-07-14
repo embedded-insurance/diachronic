@@ -24,7 +24,7 @@
   "devDependencies": {
     "@changesets/cli": "2.26.1",
     "@types/node": "20",
-    "@yarnpkg/types": "^4.0.0",
+    "@yarnpkg/types": "4.0.0",
     "rimraf": "^5.0.1",
     "ts-node": "10.9.1",
     "turbo": "1.10.13",

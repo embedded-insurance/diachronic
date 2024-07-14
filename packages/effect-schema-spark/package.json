@@ -2,7 +2,7 @@
   "name": "@diachronic/effect-schema-spark",
   "version": "0.0.1",
   "description": "Generate Apache Spark schema from `@effect/schema` type definitions",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
   "exports": {
     ".": "./src/index.ts",
     "./*": "./src/*.ts"
@@ -10,6 +10,7 @@
   "scripts": {
     "clean": "rimraf node_modules & rimraf dist & rimraf .turbo",
     "test": "jest",
+    "build": "tsc",
     "format": "prettier --write .",
     "typecheck": "tsc --noEmit"
   },
