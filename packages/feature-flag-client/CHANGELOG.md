@@ -1,5 +1,13 @@
 # @diachronic/feature-flag-client
 
+## 0.0.4
+
+### Patch Changes
+
+- a11a775: fix(deps): fix package dependencies
+- Updated dependencies [a11a775]
+  - @diachronic/toolbox@0.0.4
+
 ## 0.0.3
 
 ### Patch Changes
