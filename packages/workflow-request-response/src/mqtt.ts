@@ -6,7 +6,45 @@ import * as Effect from 'effect/Effect'
 import * as S from '@effect/schema/Schema'
 import { UnknownException } from 'effect/Cause'
 
-export type MQTTClient = mqtt.MqttClient
+export type MQTTClient = Omit<
+  mqtt.MqttClient,
+  | '_applyTopicAlias'
+  | '_checkDisconnecting'
+  | '_checkPing'
+  | '_cleanUp'
+  | '_clearReconnect'
+  | '_deferredReconnect'
+  | '_firstConnection'
+  | '_flush'
+  | '_flushStoreProcessingQueue'
+  | '_flushVolatile'
+  | '_invokeAllStoreProcessingQueue'
+  | '_invokeStoreProcessingQueue'
+  | '_nextId'
+  | '_noop'
+  | '_onConnect'
+  | '_packetIdsDuringStoreProcessing'
+  | '_reconnect'
+  | '_removeOutgoingAndStoreMessage'
+  | '_removeTopicAliasAndRecoverTopicName'
+  | '_resubscribe'
+  | '_resubscribeTopics'
+  | '_sendPacket'
+  | '_setupPingTimer'
+  | '_setupReconnect'
+  | '_shiftPingInterval'
+  | '_storeAndSend'
+  | '_storePacket'
+  | '_storeProcessing'
+  | '_storeProcessingQueue'
+  | '_writePacket'
+  | 'connackPacket'
+  | 'connackTimer'
+  | 'reconnectTimer'
+  | 'streamBuilder'
+  | 'topicAliasRecv'
+  | 'topicAliasSend'
+>
 export const MQTTClient = Context.GenericTag<MQTTClient>('mqtt/MqttClient')
 
 // todo. return effectified methods
@@ -19,50 +57,50 @@ type Client = {
 }
 
 // FIXME. this blows up on generate .dts...????
-export const MQTTTestImpl = () => {
-  let subscriptions = {} as Record<string, Array<(x: any) => void>>
+// export const MQTTTestImpl = () => {
+//   let subscriptions = {} as Record<string, Array<(x: any) => void>>
+//
+//   class _MQTTTestImpl extends MQTTClient {
+//     constructor() {
+//       super({} as any, {} as any)
+//     }
+//
+//     connect(): this {
+//       return this
+//     }
+//
+//     override subscribe(topic: string): mqtt.MqttClient {
+//       subscriptions[topic] = subscriptions[topic] || []
+//       subscriptions[topic].push((x) => {
+//         this.emit.bind(this)('message', topic, x, '' as any)
+//       })
+//       return this
+//     }
+//
+//     async subscribeAsync(topic: string) {
+//       subscriptions[topic] = subscriptions[topic] || []
+//       let fn = (x: any) => {
+//         this.emit.bind(this)('message', topic, x, '' as any)
+//       }
+//       subscriptions[topic].push(fn)
+//       return []
+//     }
+//
+//     async publishAsync(
+//       topic: string,
+//       message: string | Buffer,
+//       opts?: any
+//     ): Promise<undefined> {
+//       subscriptions[topic]?.forEach((x) => x(message))
+//       return
+//     }
+//   }
+//
+//   return new _MQTTTestImpl()
+// }
 
-  class _MQTTTestImpl extends mqtt.MqttClient {
-    constructor() {
-      super({} as any, {} as any)
-    }
-
-    connect(): this {
-      return this
-    }
-
-    override subscribe(topic: string): mqtt.MqttClient {
-      subscriptions[topic] = subscriptions[topic] || []
-      subscriptions[topic].push((x) => {
-        this.emit.bind(this)('message', topic, x, '' as any)
-      })
-      return this
-    }
-
-    async subscribeAsync(topic: string) {
-      subscriptions[topic] = subscriptions[topic] || []
-      let fn = (x: any) => {
-        this.emit.bind(this)('message', topic, x, '' as any)
-      }
-      subscriptions[topic].push(fn)
-      return []
-    }
-
-    async publishAsync(
-      topic: string,
-      message: string | Buffer,
-      opts?: any
-    ): Promise<undefined> {
-      subscriptions[topic]?.forEach((x) => x(message))
-      return
-    }
-  }
-
-  return new _MQTTTestImpl()
-}
-
-export const MQTTTest = (args: { brokerURL: string }, impl = MQTTTestImpl()) =>
-  Layer.succeed(MQTTClient, MQTTClient.of(impl))
+// export const MQTTTest = (args: { brokerURL: string }, impl = MQTTTestImpl()) =>
+//   Layer.succeed(MQTTClient, MQTTClient.of(impl))
 
 export class MQTTConnectionRefusedError extends S.TaggedError<MQTTConnectionRefusedError>()(
   'MQTTConnectionRefusedError',

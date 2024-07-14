@@ -1,14 +1,4 @@
-import {
-  Context,
-  Effect,
-  Exit,
-  Fiber,
-  Layer,
-  pipe,
-  Ref,
-  Runtime,
-  Unify,
-} from 'effect'
+import { Context, Effect, Exit, Layer, pipe, Ref, Runtime, Unify } from 'effect'
 import * as R from 'ramda'
 import * as wf from '@temporalio/workflow'
 import { WorkflowDeployEventPayload } from './types'

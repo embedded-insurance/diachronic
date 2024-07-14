@@ -6,19 +6,19 @@ import { implement } from '../src/fnobj'
 import { Context, Effect } from 'effect'
 import { validate, ValidateOptions } from '../src/validate'
 import { makeWrapOther, wrap, wrapOther } from '../src/validation'
-import { isSchemaError } from '@diachronic/http/client'
+// import { isSchemaError } from '@diachronic/http/client'
 
 interface MyDep1 {
   mydep1: string
 }
 
-const MyDep1 = Context.GenericTag<MyDep1>("@services/MyDep1")
+const MyDep1 = Context.GenericTag<MyDep1>('@services/MyDep1')
 
 interface MyDep2 {
   mydep2: string
 }
 
-const MyDep2 = Context.GenericTag<MyDep2>("@services/MyDep2")
+const MyDep2 = Context.GenericTag<MyDep2>('@services/MyDep2')
 
 describe('validate', () => {
   test('works with inline wrap', () => {

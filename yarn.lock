@@ -666,13 +666,21 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@diachronic/activity@workspace:packages/activity"
   dependencies:
-    "@types/jest": "npm:^29.5.3"
+    "@diachronic/workflow-request-response": "workspace:^"
+    "@effect-use/gcp-logging": "npm:5.0.0"
+    "@effect/schema": "npm:0.67.14"
+    "@temporalio/activity": "npm:1.8.6"
+    "@temporalio/workflow": "npm:1.8.6"
+    "@types/jest": "npm:29.5.3"
     "@types/node": "npm:20"
+    "@types/ramda": "npm:0.30.0"
+    effect: "npm:3.2.5"
     jest: "npm:29.5.0"
     prettier: "npm:2.8.8"
+    ramda: "npm:0.30.0"
     ts-jest: "npm:29.1.0"
     ts-node: "npm:^10.9.1"
-    typescript: "npm:5.2.2"
+    typescript: "npm:5.4.5"
   languageName: unknown
   linkType: soft
 
@@ -682,21 +690,30 @@ __metadata:
   dependencies:
     "@diachronic/activity": "workspace:^"
     "@diachronic/feature-flag-client": "workspace:^"
+    "@diachronic/migrate": "workspace:^"
+    "@diachronic/signaler": "workspace:^"
+    "@diachronic/toolbox": "workspace:^"
     "@diachronic/util": "workspace:^"
-    "@effect-use/temporal-client": "npm:3.0.0"
-    "@temporalio/workflow": "npm:^1.8.6"
-    "@types/jest": "npm:^29.5.1"
+    "@diachronic/workflow": "workspace:^"
+    "@effect-use/temporal-client": "npm:4.0.0"
+    "@effect/schema": "npm:0.67.14"
+    "@temporalio/testing": "npm:1.8.6"
+    "@temporalio/worker": "npm:1.8.6"
+    "@temporalio/workflow": "npm:1.8.6"
+    "@types/jest": "npm:29.5.3"
     "@types/luxon": "npm:^3.4.2"
     "@types/node": "npm:20"
-    effect: "npm:2.2.3"
+    "@types/ramda": "npm:0.30.0"
+    effect: "npm:3.2.5"
     eventemitter3: "npm:^5.0.1"
-    fast-check: "npm:^3.8.1"
+    fast-check: "npm:^3.19"
     jest: "npm:29.5.0"
     luxon: "npm:3.4.3"
     prettier: "npm:2.8.8"
+    ramda: "npm:0.30.0"
     ts-jest: "npm:29.1.0"
     ts-node: "npm:^10.9.1"
-    typescript: "npm:5.2.2"
+    typescript: "npm:5.4.5"
   languageName: unknown
   linkType: soft
 
@@ -704,17 +721,17 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@diachronic/effect-schema-spark@workspace:packages/effect-schema-spark"
   dependencies:
-    "@effect/schema": "npm:0.36.3"
-    "@types/jest": "npm:^29.5.3"
+    "@effect/schema": "npm:0.67.14"
+    "@types/jest": "npm:29.5.3"
     "@types/node": "npm:18"
-    "@types/ramda": "npm:^0.29.9"
-    effect: "npm:^2.0.0-next.36"
+    "@types/ramda": "npm:0.30.0"
+    effect: "npm:3.2.5"
     jest: "npm:29.5.0"
     prettier: "npm:2.8.8"
-    ramda: "npm:^0.29.1"
+    ramda: "npm:0.30.0"
     ts-jest: "npm:29.1.0"
     ts-node: "npm:^10.9.1"
-    typescript: "npm:5.2.2"
+    typescript: "npm:5.4.5"
   languageName: unknown
   linkType: soft
 
@@ -723,50 +740,53 @@ __metadata:
   resolution: "@diachronic/feature-flag-client@workspace:packages/feature-flag-client"
   dependencies:
     "@diachronic/toolbox": "workspace:^"
-    "@effect-use/http-client": "npm:^1.0.1"
-    "@effect/schema": "npm:0.36.3"
-    "@types/jest": "npm:^29.5.3"
+    "@effect-use/http-client": "npm:4.0.0"
+    "@effect/schema": "npm:0.67.14"
+    "@types/jest": "npm:29.5.3"
     "@types/node": "npm:18"
-    "@types/ramda": "npm:^0.29.9"
-    effect: "npm:^2.0.0-next.36"
+    "@types/ramda": "npm:0.30.0"
+    effect: "npm:3.2.5"
     jest: "npm:29.5.0"
     prettier: "npm:2.8.8"
-    ramda: "npm:^0.29.1"
+    ramda: "npm:0.30.0"
     ts-jest: "npm:29.1.0"
     ts-node: "npm:^10.9.1"
-    typescript: "npm:5.2.2"
+    typescript: "npm:5.4.5"
     unleash-client: "npm:^5.3.0"
   languageName: unknown
   linkType: soft
 
-"@diachronic/http@workspace:packages/http":
+"@diachronic/http@workspace:^, @diachronic/http@workspace:packages/http":
   version: 0.0.0-use.local
   resolution: "@diachronic/http@workspace:packages/http"
   dependencies:
-    "@effect-use/http-client": "npm:2.0.0"
-    "@effect/schema": "npm:0.61.5"
-    "@types/jest": "npm:^29.5.3"
+    "@diachronic/activity": "workspace:^"
+    "@diachronic/util": "workspace:^"
+    "@effect-use/http-client": "npm:4.0.0"
+    "@effect/schema": "npm:0.67.14"
+    "@types/jest": "npm:29.5.3"
     "@types/node": "npm:20"
-    effect: "npm:^2.0.0-next.36"
-    fastify: "npm:^4.23.2"
+    effect: "npm:3.2.5"
+    fastify: "npm:4.23.2"
     jest: "npm:29.5.0"
     prettier: "npm:2.8.8"
     ts-jest: "npm:29.1.0"
     ts-node: "npm:^10.9.1"
-    typescript: "npm:5.2.2"
+    typescript: "npm:5.4.5"
   languageName: unknown
   linkType: soft
 
-"@diachronic/k8s-health-check@workspace:packages/k8s-health-check":
+"@diachronic/k8s-health-check@workspace:^, @diachronic/k8s-health-check@workspace:packages/k8s-health-check":
   version: 0.0.0-use.local
   resolution: "@diachronic/k8s-health-check@workspace:packages/k8s-health-check"
   dependencies:
-    "@effect/schema": "npm:0.61.5"
-    "@types/jest": "npm:^29.5.5"
-    effect: "npm:2.2.3"
-    fastify: "npm:^4.23.2"
-    jest: "npm:^29.7.0"
-    ts-jest: "npm:^29.1.1"
+    "@effect/schema": "npm:0.67.14"
+    "@types/jest": "npm:29.5.3"
+    effect: "npm:3.2.5"
+    fastify: "npm:4.23.2"
+    jest: "npm:29.5.0"
+    ts-jest: "npm:29.1.0"
+    typescript: "npm:5.4.5"
   languageName: unknown
   linkType: soft
 
@@ -774,41 +794,55 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@diachronic/migrate@workspace:packages/migrate"
   dependencies:
+    "@diachronic/util": "workspace:^"
     "@diachronic/workflow": "workspace:^"
-    "@effect/schema": "npm:0.61.5"
-    "@types/jest": "npm:^29.5.2"
+    "@effect/schema": "npm:0.67.14"
+    "@temporalio/client": "npm:1.8.6"
+    "@temporalio/testing": "npm:1.8.6"
+    "@temporalio/worker": "npm:1.8.6"
+    "@temporalio/workflow": "npm:1.8.6"
+    "@types/jest": "npm:29.5.3"
     "@types/node": "npm:18"
-    "@types/ramda": "npm:^0.29.4"
-    effect: "npm:2.2.3"
-    fast-check: "npm:^3.8.1"
+    "@types/ramda": "npm:0.30.0"
+    effect: "npm:3.2.5"
+    fast-check: "npm:^3.19"
     jest: "npm:29.5.0"
     prettier: "npm:2.8.8"
-    ramda: "npm:0.29.0"
+    ramda: "npm:0.30.0"
     ts-jest: "npm:29.1.0"
     ts-node: "npm:^10.9.1"
     turbo: "npm:^1.10.6"
-    typescript: "npm:5.2.2"
+    typescript: "npm:5.4.5"
     webpack: "npm:^5.88.2"
-    xstate: "npm:beta.27"
+    xstate: "npm:5.0.0-beta.27"
   languageName: unknown
   linkType: soft
 
-"@diachronic/signaler@workspace:packages/signaler":
+"@diachronic/signaler@workspace:^, @diachronic/signaler@workspace:packages/signaler":
   version: 0.0.0-use.local
   resolution: "@diachronic/signaler@workspace:packages/signaler"
   dependencies:
+    "@diachronic/feature-flag-client": "workspace:^"
+    "@diachronic/http": "workspace:^"
+    "@diachronic/k8s-health-check": "workspace:^"
+    "@diachronic/util": "workspace:^"
     "@diachronic/workflow-request-response": "workspace:^"
-    "@effect-use/temporal-client": "npm:3.0.0"
-    "@effect/schema": "npm:0.61.5"
-    "@temporalio/worker": "npm:^1.7.4"
+    "@effect-use/http-client": "npm:4.0.0"
+    "@effect-use/temporal-client": "npm:4.0.0"
+    "@effect-use/temporal-config": "npm:4.0.0"
+    "@effect/schema": "npm:0.67.14"
+    "@temporalio/worker": "npm:1.8.6"
+    "@types/jest": "npm:29.5.3"
     "@types/ms": "npm:^0.7.31"
     "@types/node": "npm:20"
-    "@types/ramda": "npm:^0.29.2"
-    effect: "npm:2.2.3"
-    fast-check: "npm:^3.8.1"
+    "@types/ramda": "npm:0.30.0"
+    effect: "npm:3.2.5"
+    fast-check: "npm:^3.19"
+    fastify: "npm:4.23.2"
+    jest: "npm:29.5.0"
     prettier: "npm:2.8.8"
     ts-node: "npm:^10.9.1"
-    typescript: "npm:5.2.2"
+    typescript: "npm:5.4.5"
   languageName: unknown
   linkType: soft
 
@@ -816,23 +850,34 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@diachronic/toolbox@workspace:packages/toolbox"
   dependencies:
+    "@diachronic/activity": "workspace:^"
+    "@diachronic/k8s-health-check": "workspace:^"
     "@diachronic/migrate": "workspace:^"
+    "@diachronic/util": "workspace:^"
     "@diachronic/workflow": "workspace:^"
-    "@effect-use/gcp-gcs": "npm:3.0.0"
-    "@effect-use/http-client": "npm:1.0.0"
-    "@effect-use/temporal-client": "npm:3.0.0"
-    "@effect/schema": "npm:0.61.5"
-    "@temporalio/worker": "npm:^1.7.4"
-    "@temporalio/workflow": "npm:^1.7.2"
+    "@diachronic/workflow-request-response": "workspace:^"
+    "@effect-use/gcp-gcs": "npm:4.0.0"
+    "@effect-use/http-client": "npm:4.0.0"
+    "@effect-use/temporal-client": "npm:4.0.0"
+    "@effect/schema": "npm:0.67.14"
+    "@temporalio/client": "npm:1.8.6"
+    "@temporalio/worker": "npm:1.8.6"
+    "@temporalio/workflow": "npm:1.8.6"
     "@types/ms": "npm:^0.7.31"
     "@types/node": "npm:20"
-    "@types/ramda": "npm:^0.29.2"
-    effect: "npm:2.2.3"
-    fast-check: "npm:^3.8.1"
+    "@types/ramda": "npm:0.30.0"
+    "@types/yargs": "npm:^17.0.32"
+    chokidar: "npm:^3.6.0"
+    effect: "npm:3.2.5"
+    fast-check: "npm:^3.19"
     js-yaml: "npm:^4.1.0"
     ms: "npm:^2.1.3"
     prettier: "npm:2.8.8"
+    ramda: "npm:0.30.0"
     ts-node: "npm:^10.9.1"
+    typescript: "npm:5.4.5"
+    xstate: "npm:5.0.0-beta.27"
+    yargs: "npm:^17.7.2"
   languageName: unknown
   linkType: soft
 
@@ -840,14 +885,16 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@diachronic/util@workspace:packages/util"
   dependencies:
-    "@effect/schema": "npm:0.61.5"
-    "@types/jest": "npm:^29.5.5"
+    "@effect/schema": "npm:0.67.14"
+    "@types/jest": "npm:29.5.3"
     "@types/js-yaml": "npm:4.0.9"
     "@types/uuid": "npm:^9.0.8"
-    effect: "npm:2.2.3"
-    jest: "npm:^29.7.0"
+    effect: "npm:3.2.5"
+    fast-check: "npm:^3.19"
+    jest: "npm:29.5.0"
     js-yaml: "npm:4.1.0"
-    ts-jest: "npm:^29.1.1"
+    ts-jest: "npm:29.1.0"
+    typescript: "npm:5.4.5"
     uuid: "npm:9.0.1"
   languageName: unknown
   linkType: soft
@@ -856,25 +903,26 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@diachronic/workflow-request-response@workspace:packages/workflow-request-response"
   dependencies:
-    "@effect-use/gcp-gcs": "npm:^1.1.4"
-    "@effect-use/gcp-logging": "npm:4.0.0"
-    "@effect-use/http-client": "npm:2.0.0"
-    "@effect-use/temporal-client": "npm:3.0.0"
-    "@effect-use/temporal-config": "npm:3.0.0"
-    "@temporalio/testing": "npm:^1.8.6"
-    "@temporalio/worker": "npm:^1.8.5"
-    "@temporalio/workflow": "npm:^1.8.6"
-    "@types/jest": "npm:^29.5.3"
+    "@diachronic/util": "workspace:^"
+    "@effect-use/gcp-gcs": "npm:4.0.0"
+    "@effect-use/gcp-logging": "npm:5.0.0"
+    "@effect-use/http-client": "npm:4.0.0"
+    "@effect-use/temporal-client": "npm:4.0.0"
+    "@effect-use/temporal-config": "npm:4.0.0"
+    "@effect/schema": "npm:0.67.14"
+    "@temporalio/testing": "npm:1.8.6"
+    "@temporalio/worker": "npm:1.8.6"
+    "@temporalio/workflow": "npm:1.8.6"
+    "@types/jest": "npm:29.5.3"
     "@types/node": "npm:20"
-    effect: "npm:2.2.3"
+    effect: "npm:3.2.5"
     jest: "npm:29.5.0"
     mqtt: "npm:5.0.5"
     prettier: "npm:2.8.8"
     ts-jest: "npm:29.1.0"
     ts-node: "npm:^10.9.1"
     tsup: "npm:^7.2.0"
-    typescript: "npm:5.2.2"
-    xstate: "npm:beta.27"
+    typescript: "npm:5.4.5"
   languageName: unknown
   linkType: soft
 
@@ -882,24 +930,31 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@diachronic/workflow@workspace:packages/workflow"
   dependencies:
-    "@effect-use/gcp-gcs": "npm:1.1.4"
-    "@effect-use/gcp-logging": "npm:4.0.0"
-    "@effect-use/http-client": "npm:2.0.0"
-    "@effect-use/temporal-client": "npm:3.0.0"
-    "@effect-use/temporal-config": "npm:3.0.0"
-    "@temporalio/testing": "npm:^1.8.6"
-    "@temporalio/worker": "npm:^1.8.5"
-    "@temporalio/workflow": "npm:^1.8.6"
-    "@types/jest": "npm:^29.5.3"
+    "@diachronic/activity": "workspace:^"
+    "@diachronic/k8s-health-check": "workspace:^"
+    "@diachronic/util": "workspace:^"
+    "@diachronic/workflow-request-response": "workspace:^"
+    "@effect-use/gcp-gcs": "npm:4.0.0"
+    "@effect-use/gcp-logging": "npm:5.0.0"
+    "@effect-use/http-client": "npm:4.0.0"
+    "@effect-use/temporal-client": "npm:4.0.0"
+    "@effect-use/temporal-config": "npm:4.0.0"
+    "@effect/schema": "npm:0.67.14"
+    "@temporalio/testing": "npm:1.8.6"
+    "@temporalio/worker": "npm:1.8.6"
+    "@temporalio/workflow": "npm:1.8.6"
+    "@types/jest": "npm:29.5.3"
     "@types/node": "npm:20"
-    effect: "npm:2.2.3"
+    "@types/ramda": "npm:0.30.0"
+    effect: "npm:3.2.5"
     jest: "npm:29.5.0"
     prettier: "npm:2.8.8"
+    ramda: "npm:0.30.0"
     ts-jest: "npm:29.1.0"
     ts-node: "npm:^10.9.1"
     tsup: "npm:^7.2.0"
-    typescript: "npm:5.2.2"
-    xstate: "npm:beta.27"
+    typescript: "npm:5.4.5"
+    xstate: "npm:5.0.0-beta.27"
   languageName: unknown
   linkType: soft
 
@@ -1141,7 +1196,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/error@npm:^3.4.0":
+"@fastify/error@npm:^3.2.0":
   version: 3.4.1
   resolution: "@fastify/error@npm:3.4.1"
   checksum: 10/4d63660f7d4a0d6091abf869208d30898bde82f513ca7be542243d9d740df743dd4be293e7db30858fca612dd512d28a818ea06dc674e06b445278fcefcdda92
@@ -2131,33 +2186,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:^29.5.1":
-  version: 29.5.12
-  resolution: "@types/jest@npm:29.5.12"
+"@types/jest@npm:29.5.3":
+  version: 29.5.3
+  resolution: "@types/jest@npm:29.5.3"
   dependencies:
     expect: "npm:^29.0.0"
     pretty-format: "npm:^29.0.0"
-  checksum: 10/312e8dcf92cdd5a5847d6426f0940829bca6fe6b5a917248f3d7f7ef5d85c9ce78ef05e47d2bbabc40d41a930e0e36db2d443d2610a9e3db9062da2d5c904211
-  languageName: node
-  linkType: hard
-
-"@types/jest@npm:^29.5.2":
-  version: 29.5.5
-  resolution: "@types/jest@npm:29.5.5"
-  dependencies:
-    expect: "npm:^29.0.0"
-    pretty-format: "npm:^29.0.0"
-  checksum: 10/85bf86fd31ed9b76c26abc6bf771d09a9a8ff9362c81be353b8cf8ba102e09741b7f6951dca09aaa56d5fb410291e1eb5650b508da2fb3d36a0f035a91552a0d
-  languageName: node
-  linkType: hard
-
-"@types/jest@npm:^29.5.3, @types/jest@npm:^29.5.5":
-  version: 29.5.11
-  resolution: "@types/jest@npm:29.5.11"
-  dependencies:
-    expect: "npm:^29.0.0"
-    pretty-format: "npm:^29.0.0"
-  checksum: 10/798f4c89407d9457bea1256de74c26f2b279f6c789c0e3311cd604cc75cdab333b9a29b00c51b0090d31abdf11cc788b4103282851a653bef6daf72edf97eef2
+  checksum: 10/e8b4eda3ba379b21fcd5c2d1d531ec94f636676f1690f06ff3f7b8dc199c2cec711d4c4e122175f05d50040e5dec69f3c13ef88bd825f0b1a1ac1332eb072c12
   languageName: node
   linkType: hard
 
@@ -2228,21 +2263,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ramda@npm:^0.29.2, @types/ramda@npm:^0.29.9":
-  version: 0.29.10
-  resolution: "@types/ramda@npm:0.29.10"
+"@types/ramda@npm:0.30.0":
+  version: 0.30.0
+  resolution: "@types/ramda@npm:0.30.0"
   dependencies:
-    types-ramda: "npm:^0.29.7"
-  checksum: 10/79450e385f25cc5766553879a46fdaab8e2ea06733ca755cbd5f41fb383de171d2c4612050e3fe83ce5bc68beae1cb3d5e016a2dd54042534c5b2906c8236784
-  languageName: node
-  linkType: hard
-
-"@types/ramda@npm:^0.29.4":
-  version: 0.29.6
-  resolution: "@types/ramda@npm:0.29.6"
-  dependencies:
-    types-ramda: "npm:^0.29.5"
-  checksum: 10/b8198f90295e40b0f2aa6dc18c60535a88ecd6e2afdb421e0616398b9cbed03f2a760e9d712258ab8fdebe7da9e21ecf31d2bc9cae6d31406b0095ce8c4c8591
+    types-ramda: "npm:^0.30.0"
+  checksum: 10/abe9d9c872778d2598298a0c4805fa715618fe79a4d7e203c71076bc72e28c97f04ffb108274cbfc33b0407a5aa3c2c37f609705a175d4102418e292e4e55a22
   languageName: node
   linkType: hard
 
@@ -2290,6 +2316,15 @@ __metadata:
   version: 21.0.1
   resolution: "@types/yargs-parser@npm:21.0.1"
   checksum: 10/b9e1a5758af6adbefcc04677d6387e48e5f35977fa83d8487aea9c1fe562876e3f266f60c5853e9ae55f91559528354494693c24993495ae74a18e9cee98edaa
+  languageName: node
+  linkType: hard
+
+"@types/yargs@npm:^17.0.32":
+  version: 17.0.32
+  resolution: "@types/yargs@npm:17.0.32"
+  dependencies:
+    "@types/yargs-parser": "npm:*"
+  checksum: 10/1e2b2673847011ce43607df690d392f137d95a2d6ea85aa319403eadda2ef4277365efd4982354d8843f2611ef3846c88599660aaeb537fa9ccddae83c2a89de
   languageName: node
   linkType: hard
 
@@ -2464,6 +2499,15 @@ __metadata:
   version: 4.2.2
   resolution: "@xtuc/long@npm:4.2.2"
   checksum: 10/7217bae9fe240e0d804969e7b2af11cb04ec608837c78b56ca88831991b287e232a0b7fce8d548beaff42aaf0197ffa471d81be6ac4c4e53b0148025a2c076ec
+  languageName: node
+  linkType: hard
+
+"@yarnpkg/types@npm:4.0.0":
+  version: 4.0.0
+  resolution: "@yarnpkg/types@npm:4.0.0"
+  dependencies:
+    tslib: "npm:^2.4.0"
+  checksum: 10/f9670e120761a4d17461df2f01aa4b92213fbdd063501a36145d11ea01bd87ba01d44615cba3d6bc8f9bfc39a03a9a6452bf0436c7fb0c9c5311352b975349e6
   languageName: node
   linkType: hard
 
@@ -3195,6 +3239,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chokidar@npm:^3.6.0":
+  version: 3.6.0
+  resolution: "chokidar@npm:3.6.0"
+  dependencies:
+    anymatch: "npm:~3.1.2"
+    braces: "npm:~3.0.2"
+    fsevents: "npm:~2.3.2"
+    glob-parent: "npm:~5.1.2"
+    is-binary-path: "npm:~2.1.0"
+    is-glob: "npm:~4.0.1"
+    normalize-path: "npm:~3.0.0"
+    readdirp: "npm:~3.6.0"
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  checksum: 10/c327fb07704443f8d15f7b4a7ce93b2f0bc0e6cea07ec28a7570aa22cd51fcf0379df589403976ea956c369f25aa82d84561947e227cd925902e1751371658df
+  languageName: node
+  linkType: hard
+
 "chownr@npm:^2.0.0":
   version: 2.0.0
   resolution: "chownr@npm:2.0.0"
@@ -3377,10 +3440,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cookie@npm:^0.5.0":
-  version: 0.5.0
-  resolution: "cookie@npm:0.5.0"
-  checksum: 10/aae7911ddc5f444a9025fbd979ad1b5d60191011339bce48e555cb83343d0f98b865ff5c4d71fecdfb8555a5cafdc65632f6fce172f32aaf6936830a883a0380
+"cookie@npm:^0.6.0":
+  version: 0.6.0
+  resolution: "cookie@npm:0.6.0"
+  checksum: 10/c1f8f2ea7d443b9331680598b0ae4e6af18a618c37606d1bbdc75bec8361cce09fe93e727059a673f2ba24467131a9fb5a4eec76bb1b149c1b3e1ccb268dc583
   languageName: node
   linkType: hard
 
@@ -3602,6 +3665,7 @@ __metadata:
   dependencies:
     "@changesets/cli": "npm:2.26.1"
     "@types/node": "npm:20"
+    "@yarnpkg/types": "npm:4.0.0"
     rimraf: "npm:^5.0.1"
     ts-node: "npm:10.9.1"
     turbo: "npm:1.10.13"
@@ -4120,7 +4184,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-content-type-parse@npm:^1.1.0":
+"fast-content-type-parse@npm:^1.0.0":
   version: 1.1.0
   resolution: "fast-content-type-parse@npm:1.1.0"
   checksum: 10/8637228a19b11296992af5d9b5f5ae84c6f27a465cf36a901b303b784ce0ca6f10502375da59958eb2b9c4949b98e5cc460ecb4bd777d22c3fa236c1e8da1ed8
@@ -4161,7 +4225,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-json-stringify@npm:^5.7.0, fast-json-stringify@npm:^5.8.0":
+"fast-json-stringify@npm:^5.7.0":
   version: 5.10.0
   resolution: "fast-json-stringify@npm:5.10.0"
   dependencies:
@@ -4217,27 +4281,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fastify@npm:^4.23.2":
-  version: 4.25.2
-  resolution: "fastify@npm:4.25.2"
+"fastify@npm:4.23.2":
+  version: 4.23.2
+  resolution: "fastify@npm:4.23.2"
   dependencies:
     "@fastify/ajv-compiler": "npm:^3.5.0"
-    "@fastify/error": "npm:^3.4.0"
+    "@fastify/error": "npm:^3.2.0"
     "@fastify/fast-json-stringify-compiler": "npm:^4.3.0"
     abstract-logging: "npm:^2.0.1"
     avvio: "npm:^8.2.1"
-    fast-content-type-parse: "npm:^1.1.0"
-    fast-json-stringify: "npm:^5.8.0"
-    find-my-way: "npm:^7.7.0"
-    light-my-request: "npm:^5.11.0"
-    pino: "npm:^8.17.0"
-    process-warning: "npm:^3.0.0"
+    fast-content-type-parse: "npm:^1.0.0"
+    fast-json-stringify: "npm:^5.7.0"
+    find-my-way: "npm:^7.6.0"
+    light-my-request: "npm:^5.9.1"
+    pino: "npm:^8.12.0"
+    process-warning: "npm:^2.2.0"
     proxy-addr: "npm:^2.0.7"
     rfdc: "npm:^1.3.0"
-    secure-json-parse: "npm:^2.7.0"
-    semver: "npm:^7.5.4"
-    toad-cache: "npm:^3.3.0"
-  checksum: 10/9c5791c0da779412107d01f3e2befc2698a55966f9995b72af2f6c1854d2da004fb7c11222fed3931b73b58f7f49b83af79aaf6b484735f7a317b5d456e32080
+    secure-json-parse: "npm:^2.5.0"
+    semver: "npm:^7.5.0"
+    toad-cache: "npm:^3.2.0"
+  checksum: 10/5f50173437059ccc4fff92178ee4f3078ca248edf1f57278f858ab511164ecfb623bff5ab676bdcfd31482e0dfbc86cb157ef93f7e000357002a1854ad69ad31
   languageName: node
   linkType: hard
 
@@ -4268,7 +4332,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"find-my-way@npm:^7.7.0":
+"find-my-way@npm:^7.6.0":
   version: 7.7.0
   resolution: "find-my-way@npm:7.7.0"
   dependencies:
@@ -5316,7 +5380,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-cli@npm:^29.5.0, jest-cli@npm:^29.7.0":
+"jest-cli@npm:^29.5.0":
   version: 29.7.0
   resolution: "jest-cli@npm:29.7.0"
   dependencies:
@@ -5727,25 +5791,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest@npm:^29.7.0":
-  version: 29.7.0
-  resolution: "jest@npm:29.7.0"
-  dependencies:
-    "@jest/core": "npm:^29.7.0"
-    "@jest/types": "npm:^29.6.3"
-    import-local: "npm:^3.0.2"
-    jest-cli: "npm:^29.7.0"
-  peerDependencies:
-    node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
-  peerDependenciesMeta:
-    node-notifier:
-      optional: true
-  bin:
-    jest: bin/jest.js
-  checksum: 10/97023d78446098c586faaa467fbf2c6b07ff06e2c85a19e3926adb5b0effe9ac60c4913ae03e2719f9c01ae8ffd8d92f6b262cedb9555ceeb5d19263d8c6362a
-  languageName: node
-  linkType: hard
-
 "joycon@npm:^3.0.1":
   version: 3.1.1
   resolution: "joycon@npm:3.1.1"
@@ -5915,14 +5960,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"light-my-request@npm:^5.11.0":
-  version: 5.11.0
-  resolution: "light-my-request@npm:5.11.0"
+"light-my-request@npm:^5.9.1":
+  version: 5.13.0
+  resolution: "light-my-request@npm:5.13.0"
   dependencies:
-    cookie: "npm:^0.5.0"
-    process-warning: "npm:^2.0.0"
+    cookie: "npm:^0.6.0"
+    process-warning: "npm:^3.0.0"
     set-cookie-parser: "npm:^2.4.1"
-  checksum: 10/e4e35b5c7afe73611dcd328018a70f9ac33d25909d726d6ae85b8198fcdc8fb4b79fc079bc71f608f0d7631e1d4d4d88d6c322d3e243b1eee50469a1bd0f5862
+  checksum: 10/29407ecd0fcc240fbc4ac53457247e7f796962aaa228e9c5057bb4a7d84fda4f14eaaf39212f2dbfe0869b78a2a42ec82ec4a597a181b9ee19ac23a636c0160d
   languageName: node
   linkType: hard
 
@@ -6829,13 +6874,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pino-abstract-transport@npm:v1.1.0":
-  version: 1.1.0
-  resolution: "pino-abstract-transport@npm:1.1.0"
+"pino-abstract-transport@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "pino-abstract-transport@npm:1.2.0"
   dependencies:
     readable-stream: "npm:^4.0.0"
     split2: "npm:^4.0.0"
-  checksum: 10/39b4496c9e4289e8d44a1d01adfa8dfeebb374e14b7a6451a4f3713561aeb9e181c64ff0272921667abcb95aceb312ab2761b82e253db23a456ab3dd35a42675
+  checksum: 10/6ec1d19a7ff3347fd21576f744c31c3e38ca4463ae638818408f43698c936f96be6a0bc750af5f7c1ae81873183bfcb062b7a0d12dc159a1813ea900c388c693
   languageName: node
   linkType: hard
 
@@ -6846,24 +6891,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pino@npm:^8.17.0":
-  version: 8.17.2
-  resolution: "pino@npm:8.17.2"
+"pino@npm:^8.12.0":
+  version: 8.21.0
+  resolution: "pino@npm:8.21.0"
   dependencies:
     atomic-sleep: "npm:^1.0.0"
     fast-redact: "npm:^3.1.1"
     on-exit-leak-free: "npm:^2.1.0"
-    pino-abstract-transport: "npm:v1.1.0"
+    pino-abstract-transport: "npm:^1.2.0"
     pino-std-serializers: "npm:^6.0.0"
     process-warning: "npm:^3.0.0"
     quick-format-unescaped: "npm:^4.0.3"
     real-require: "npm:^0.2.0"
     safe-stable-stringify: "npm:^2.3.1"
     sonic-boom: "npm:^3.7.0"
-    thread-stream: "npm:^2.0.0"
+    thread-stream: "npm:^2.6.0"
   bin:
     pino: bin.js
-  checksum: 10/90b74e4db3b3f8664b13def3eb4e39585a842396fd7a000ef00f2329076c889126f91bdaff0f653b9b5dd5a612dddde6ff87599ad046b47a264e8f7bfabb0ea8
+  checksum: 10/5a054eab533ab91b20f63497b86070f0a6b40e4688cde9de66d23e03d6046c4e95d69c3f526dea9f30bcbc5874c7fbf0f91660cded4753946fd02261ca8ac340
   languageName: node
   linkType: hard
 
@@ -6947,7 +6992,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"process-warning@npm:^2.0.0":
+"process-warning@npm:^2.2.0":
   version: 2.3.2
   resolution: "process-warning@npm:2.3.2"
   checksum: 10/64cea6878a60e5d1d3648c1736c127b46d5830092bc189ff65b90abbbf746d69ca91eaeec3284f95b0a58965bb016813da787004b556f764ba439addf2eabdb0
@@ -7076,17 +7121,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ramda@npm:0.29.0":
-  version: 0.29.0
-  resolution: "ramda@npm:0.29.0"
-  checksum: 10/b156660f2c58b4a13bcc4f1a0eabc1145d8db11d33d26a2fb03cd6adf3983a1c1f2bbaaf708c421029e9b09684262d056752623f7e62b79a503fb9217dec69d4
-  languageName: node
-  linkType: hard
-
-"ramda@npm:^0.29.1":
-  version: 0.29.1
-  resolution: "ramda@npm:0.29.1"
-  checksum: 10/5824249efa18f3c013ea0bae6cdcc167ef357fff5441586b7ad98759e902b1397297d92b50bdc317f49fe73fa6b0e17f806f4d0f7a95270f05c25afa733a8fc5
+"ramda@npm:0.30.0":
+  version: 0.30.0
+  resolution: "ramda@npm:0.30.0"
+  checksum: 10/18112bc9328bbbdc7b1e59ad5e548e7636813defe00446a083720d7fe8247df23b9b049348f7a10edeec0d2be6813fc19427a5cff792f6e1404079f4136d75f8
   languageName: node
   linkType: hard
 
@@ -7457,7 +7495,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"secure-json-parse@npm:^2.7.0":
+"secure-json-parse@npm:^2.5.0":
   version: 2.7.0
   resolution: "secure-json-parse@npm:2.7.0"
   checksum: 10/974386587060b6fc5b1ac06481b2f9dbbb0d63c860cc73dc7533f27835fdb67b0ef08762dbfef25625c15bc0a0c366899e00076cb0d556af06b71e22f1dede4c
@@ -7490,6 +7528,15 @@ __metadata:
   bin:
     semver: bin/semver.js
   checksum: 10/1ef3a85bd02a760c6ef76a45b8c1ce18226de40831e02a00bad78485390b98b6ccaa31046245fc63bba4a47a6a592b6c7eedc65cc47126e60489f9cc1ce3ed7e
+  languageName: node
+  linkType: hard
+
+"semver@npm:^7.5.0":
+  version: 7.6.2
+  resolution: "semver@npm:7.6.2"
+  bin:
+    semver: bin/semver.js
+  checksum: 10/296b17d027f57a87ef645e9c725bff4865a38dfc9caf29b26aa084b85820972fbe7372caea1ba6857162fa990702c6d9c1d82297cecb72d56c78ab29070d2ca2
   languageName: node
   linkType: hard
 
@@ -8160,12 +8207,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"thread-stream@npm:^2.0.0":
-  version: 2.4.1
-  resolution: "thread-stream@npm:2.4.1"
+"thread-stream@npm:^2.6.0":
+  version: 2.7.0
+  resolution: "thread-stream@npm:2.7.0"
   dependencies:
     real-require: "npm:^0.2.0"
-  checksum: 10/baac5bf555912f216a2494bf3f66377733a843306cddd233b1c5ad63084307266f61af35d6122e3936c657836d5db4a14da34300cd25930e013943b807a29c9b
+  checksum: 10/03e743a2ccb2af5fa695d2e4369113336ee9b9f09c4453d50a222cbb4ae3af321bff658e0e5bf8bfbce9d7f5a7bf6262d12a2a365e160f4e76380ec624d32e7b
   languageName: node
   linkType: hard
 
@@ -8210,7 +8257,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"toad-cache@npm:^3.3.0":
+"toad-cache@npm:^3.2.0":
   version: 3.7.0
   resolution: "toad-cache@npm:3.7.0"
   checksum: 10/cdc62aacc047e94eab21697943e117bbb1938168a03e5e85fdba28ab6ea66f4796ff16b219019a64d2115048378f9dd1f4e62c78c1f1d4961d0b3d23f9a9374d
@@ -8224,23 +8271,24 @@ __metadata:
     "@diachronic/migrate": "workspace:^"
     "@diachronic/util": "workspace:^"
     "@diachronic/workflow": "workspace:^"
-    "@effect/schema": "npm:0.61.5"
+    "@effect/schema": "npm:0.67.14"
     "@temporalio/testing": "npm:1.8.6"
     "@temporalio/worker": "npm:1.8.6"
-    "@types/jest": "npm:^29.5.2"
+    "@temporalio/workflow": "npm:1.8.6"
+    "@types/jest": "npm:29.5.3"
     "@types/node": "npm:20"
-    "@types/ramda": "npm:^0.29.4"
-    effect: "npm:2.2.3"
-    fast-check: "npm:^3.8.1"
+    "@types/ramda": "npm:0.30.0"
+    effect: "npm:3.2.5"
+    fast-check: "npm:^3.19"
     jest: "npm:29.5.0"
     prettier: "npm:2.8.8"
-    ramda: "npm:0.29.0"
+    ramda: "npm:0.30.0"
     ts-jest: "npm:29.1.0"
     ts-node: "npm:^10.9.1"
     turbo: "npm:^1.10.6"
-    typescript: "npm:5.2.2"
+    typescript: "npm:5.4.5"
     webpack: "npm:^5.88.2"
-    xstate: "npm:beta.27"
+    xstate: "npm:5.0.0-beta.27"
   languageName: unknown
   linkType: soft
 
@@ -8316,39 +8364,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-jest@npm:^29.1.1":
-  version: 29.1.2
-  resolution: "ts-jest@npm:29.1.2"
-  dependencies:
-    bs-logger: "npm:0.x"
-    fast-json-stable-stringify: "npm:2.x"
-    jest-util: "npm:^29.0.0"
-    json5: "npm:^2.2.3"
-    lodash.memoize: "npm:4.x"
-    make-error: "npm:1.x"
-    semver: "npm:^7.5.3"
-    yargs-parser: "npm:^21.0.1"
-  peerDependencies:
-    "@babel/core": ">=7.0.0-beta.0 <8"
-    "@jest/types": ^29.0.0
-    babel-jest: ^29.0.0
-    jest: ^29.0.0
-    typescript: ">=4.3 <6"
-  peerDependenciesMeta:
-    "@babel/core":
-      optional: true
-    "@jest/types":
-      optional: true
-    babel-jest:
-      optional: true
-    esbuild:
-      optional: true
-  bin:
-    ts-jest: cli.js
-  checksum: 10/5e40e7b933a1f3aa0d304d3c53913d1a7125fc79cd44e22b332f6e25dfe13008ddc7ac647066bb4f914d76083f7e8949f0bc156d793c30f3419f4ffd8180968b
-  languageName: node
-  linkType: hard
-
 "ts-node@npm:10.9.1, ts-node@npm:^10.9.1":
   version: 10.9.1
   resolution: "ts-node@npm:10.9.1"
@@ -8398,6 +8413,13 @@ __metadata:
   version: 2.6.2
   resolution: "tslib@npm:2.6.2"
   checksum: 10/bd26c22d36736513980091a1e356378e8b662ded04204453d353a7f34a4c21ed0afc59b5f90719d4ba756e581a162ecbf93118dc9c6be5acf70aa309188166ca
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^2.4.0":
+  version: 2.6.3
+  resolution: "tslib@npm:2.6.3"
+  checksum: 10/52109bb681f8133a2e58142f11a50e05476de4f075ca906d13b596ae5f7f12d30c482feb0bff167ae01cfc84c5803e575a307d47938999246f5a49d174fc558c
   languageName: node
   linkType: hard
 
@@ -8690,21 +8712,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"types-ramda@npm:^0.29.5":
-  version: 0.29.5
-  resolution: "types-ramda@npm:0.29.5"
+"types-ramda@npm:^0.30.0":
+  version: 0.30.1
+  resolution: "types-ramda@npm:0.30.1"
   dependencies:
     ts-toolbelt: "npm:^9.6.0"
-  checksum: 10/762d3ec9935a01e061d35d29dca1b35e3bfd298b4b16809b1be3db2c5e28d94e22c76c2a3efb29b694a8c66e983309f322d62aeb8327ca488396c6ce38277b71
-  languageName: node
-  linkType: hard
-
-"types-ramda@npm:^0.29.7":
-  version: 0.29.8
-  resolution: "types-ramda@npm:0.29.8"
-  dependencies:
-    ts-toolbelt: "npm:^9.6.0"
-  checksum: 10/3a345f7a5685efd2545d53ef65a2bedbb83ab98b375a52d6629a3bccd35acec73bc3b3b4bcc0fd186b7d964fc73ac6425be2a41583fabc1f0242d57154d24ff7
+  checksum: 10/b865c8f97df911b82b51b3cb4afa9b52b971d344dd79d203cd118e424a03761aebfea538c643f6283f700a3b4000d07d2168e353691b5caff076542bad78e420
   languageName: node
   linkType: hard
 

@@ -21,19 +21,21 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@effect-use/http-client": "2.0.0",
-    "@effect/schema": "0.61.5",
-    "effect": "^2.0.0-next.36",
-    "fastify": "^4.23.2"
+    "@diachronic/activity": "workspace:^",
+    "@diachronic/util": "workspace:^",
+    "@effect-use/http-client": "4.0.0",
+    "@effect/schema": "0.67.14",
+    "effect": "3.2.5",
+    "fastify": "4.23.2"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.3",
+    "@types/jest": "29.5.3",
     "@types/node": "20",
     "jest": "29.5.0",
     "prettier": "2.8.8",
     "ts-jest": "29.1.0",
     "ts-node": "^10.9.1",
-    "typescript": "5.2.2"
+    "typescript": "5.4.5"
   },
   "engines": {
     "node": ">=20"
