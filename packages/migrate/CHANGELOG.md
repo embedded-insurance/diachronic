@@ -1,5 +1,11 @@
 # @diachronic/migrate
 
+## 0.0.3
+
+### Patch Changes
+
+- c69ed44: migrate package logging
+
 ## 0.0.2
 
 ### Patch Changes
