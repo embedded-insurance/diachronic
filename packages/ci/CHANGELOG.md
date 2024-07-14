@@ -1,5 +1,16 @@
 # @diachronic/ci
 
+## 0.0.4
+
+### Patch Changes
+
+- a11a775: fix(deps): fix package dependencies
+- Updated dependencies [a11a775]
+  - @diachronic/activity@0.0.3
+  - @diachronic/feature-flag-client@0.0.4
+  - @diachronic/util@0.0.3
+  - @diachronic/workflow@0.0.3
+
 ## 0.0.3
 
 ### Patch Changes

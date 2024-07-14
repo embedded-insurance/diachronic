@@ -1,6 +1,6 @@
 {
   "name": "@diachronic/workflow-request-response",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Workflow update implementation using the MQTT protocol.",
   "exports": {
     ".": "./src/index.ts",
